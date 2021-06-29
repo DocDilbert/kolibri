@@ -1,0 +1,18 @@
+{
+  "configurations" : [
+    {
+      "name" : "Launch App",
+      "type" : "lldb",
+      "request" : "launch",
+      "program" : "${workspaceFolder}/build/interp",
+      "args" : [ "build/main.pas"],
+    },
+
+    {
+      "name" : "Launch Tests",
+      "type" : "lldb",
+      "request" : "launch",
+      "program" : "${workspaceFolder}/build/tests",
+    }
+  ]
+}

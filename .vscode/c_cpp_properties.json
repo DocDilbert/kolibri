@@ -1,0 +1,35 @@
+{
+    "env": {
+        "myDefaultIncludePath": [
+            "${workspaceFolder}/src"
+        ]
+    },
+    "configurations": [
+        {
+            "name": "Mac",
+            "intelliSenseMode": "macos-clang-arm64",
+            "includePath": [
+                "${myDefaultIncludePath}"
+            ],
+            "macFrameworkPath": [
+                "/System/Library/Frameworks"
+            ],
+            "defines": [
+                "FOO",
+                "BAR=100"
+            ],
+            "compilerPath": "/usr/bin/clang",
+            "cStandard": "c11",
+            "cppStandard": "c++14",
+            "browse": {
+                "path": [
+                    "${workspaceFolder}/src"
+                ],
+                "limitSymbolsToIncludedHeaders": true,
+                "databaseFilename": ""
+            },
+            "configurationProvider": "ms-vscode.cmake-tools"
+        }
+    ],
+    "version": 4
+}
