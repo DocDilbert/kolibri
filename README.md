@@ -1,3 +1,3 @@
 # kolibri
 
-lexer/parser/interperter generator
+lexer/parser/interperter generator. 
