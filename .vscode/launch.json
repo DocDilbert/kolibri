@@ -4,8 +4,9 @@
       "name" : "Launch App",
       "type" : "lldb",
       "request" : "launch",
+      "cwd": "${workspaceFolder}/build",
       "program" : "${workspaceFolder}/build/interp",
-      "args" : [ "build/main.pas"],
+      "args" : [ "main.pas"],
     },
 
     {
