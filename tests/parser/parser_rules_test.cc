@@ -24,7 +24,7 @@ class MockAstTraits {
   using pointer_type = string;
 };
 
-using NonTermType=std::string;
+using NonTermType = std::string;
 
 using MockToken = string;
 using MockIterator = vector<MockToken>::iterator;
@@ -40,8 +40,8 @@ class MockParserFactory : public IParserFactory<NonTermType, string> {
   MOCK_METHOD2(CreateNonTerm, nonterm_type(parser::RuleId rule_id, nonterm_type nonterm));
 
   MOCK_METHOD2(CreateNonTermList, nonterm_type(parser::RuleId rule_id, std::vector<nonterm_type> statements));
-  MOCK_METHOD3(CreateTermNonTermList, nonterm_type(parser::RuleId rule_id, std::vector<term_type> terms, std::vector<nonterm_type> nonterms ));
-  
+  MOCK_METHOD3(CreateTermNonTermList, nonterm_type(parser::RuleId rule_id, std::vector<term_type> terms, std::vector<nonterm_type> nonterms));
+
   MOCK_METHOD3(CreateTermNonTerm, nonterm_type(parser::RuleId rule_id, term_type term, nonterm_type nonterm));
   MOCK_METHOD3(CreateNonTermNonTerm, nonterm_type(parser::RuleId rule_id, nonterm_type lhs, nonterm_type rhs));
   MOCK_METHOD4(CreateNonTermTermNonTerm, nonterm_type(parser::RuleId rule_id, nonterm_type lhs, term_type term, nonterm_type rhs));

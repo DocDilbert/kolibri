@@ -4,6 +4,7 @@
 #include "base/ast_factory.h"
 #include "base/ast_types.h"
 #include "languages/pascal/pascal_token.h"
+#include "languages/pascal/pascal_lexer.h"
 #include "parser/i_parser_factory.h"
 #include "parser/parser.h"
 #include "parser/parser_productions.h"

@@ -6,7 +6,7 @@
 #include "base/i_ast_factory.h"
 #include "base/token.h"
 #include "languages/calc/calc_token.h"
-
+#include "languages/calc/calc_lexer.h"
 #include "parser/parser.h"
 #include "parser/parser_productions.h"
 #include "parser/parser_rules.h"
@@ -120,7 +120,7 @@ class CalcTokenPredicate {
 namespace parser {
 // clang-format off
 template <typename TNonTerm, typename Iterator>
-using CalculatorGrammar = ParserGrammar<
+using CalculatorGrammar= ParserGrammar<
     TNonTerm, Iterator,
 
     // Rule #0
@@ -174,6 +174,10 @@ using CalculatorGrammar = ParserGrammar<
   >;
 }
 // clang-format on
+
+using CalcGrammar = parser::CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, languages::calc::CalcToken>>, languages::calc::CalcLexer::iterator_type>;
+using CalcParser = parser::Parser<CalcGrammar>;
+
 
 // TODO: Namespace languages/calc einführen
 #endif

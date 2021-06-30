@@ -27,7 +27,7 @@ TEST(IntegrationTest, Num) {
   CalcLexer lexer(line, strlen(line));
   AstFactory<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> ast_factory;
   CalcParserFactory parser_factory(ast_factory);
-  Parser<CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcLexer::iterator_type>> parser(parser_factory);
+  CalcParser parser(parser_factory);
 
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
   CalcInterpreter<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> CalcInterpreter;
@@ -43,7 +43,7 @@ TEST(IntegrationTest, Minus_Num) {
   CalcLexer lexer(line, strlen(line));
   AstFactory<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> ast_factory;
   CalcParserFactory parser_factory(ast_factory);
-  Parser<CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcLexer::iterator_type>> parser(parser_factory);
+  CalcParser parser(parser_factory);
 
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
   CalcInterpreter<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> CalcInterpreter;
@@ -59,7 +59,7 @@ TEST(IntegrationTest, Equation_1_plus_2) {
   CalcLexer lexer(line, strlen(line));
   AstFactory<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> ast_factory;
   CalcParserFactory parser_factory(ast_factory);
-  Parser<CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcLexer::iterator_type>> parser(parser_factory);
+  CalcParser parser(parser_factory);
 
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
   CalcInterpreter<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> CalcInterpreter;
@@ -75,7 +75,7 @@ TEST(IntegrationTest, Equation_m_1_p_2) {
   CalcLexer lexer(line, strlen(line));
   AstFactory<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> ast_factory;
   CalcParserFactory parser_factory(ast_factory);
-  Parser<CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcLexer::iterator_type>> parser(parser_factory);
+  CalcParser parser(parser_factory);
 
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
   CalcInterpreter<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> CalcInterpreter;
@@ -91,7 +91,7 @@ TEST(IntegrationTest, Equation_lp_1_p_2_rp) {
   CalcLexer lexer(line, strlen(line));
   AstFactory<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> ast_factory;
   CalcParserFactory parser_factory(ast_factory);
-  Parser<CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcLexer::iterator_type>> parser(parser_factory);
+  CalcParser parser(parser_factory);
 
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
   CalcInterpreter<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> CalcInterpreter;
@@ -107,7 +107,7 @@ TEST(IntegrationTest, Equation_lp_1_p_2_rp_mul_3) {
   CalcLexer lexer(line, strlen(line));
   AstFactory<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> ast_factory;
   CalcParserFactory parser_factory(ast_factory);
-  Parser<CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcLexer::iterator_type>> parser(parser_factory);
+  CalcParser parser(parser_factory);
 
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
   CalcInterpreter<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> CalcInterpreter;
@@ -123,7 +123,7 @@ TEST(IntegrationTest, Equation_lp_1_p_2_rp_mul_lp_2_p_1_rp) {
   CalcLexer lexer(line, strlen(line));
   AstFactory<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> ast_factory;
   CalcParserFactory parser_factory(ast_factory);
-  Parser<CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcLexer::iterator_type>> parser(parser_factory);
+  CalcParser parser(parser_factory);
 
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
   CalcInterpreter<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> CalcInterpreter;

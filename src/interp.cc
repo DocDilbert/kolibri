@@ -33,7 +33,6 @@ struct IntTag {
 };
 
 // TODO: Klasse zu CalcParser zusammenführen 
-using CGrammar = CalculatorGrammar<std::shared_ptr<Ast<MakeShared, CalcToken>>, CalcLexer::iterator_type>;
 
 void doPascal(string content) {
   IntTag<Tag1>::type d;
