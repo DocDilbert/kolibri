@@ -47,7 +47,7 @@ class MatcherString<StringProvider, true> {
       cmp++;
     }
 
-    // special case ... given input string is not long enough
+        // special case ... given input string is not long enough
     if (*cmp != '\0') {
       return begin;
     }
@@ -155,13 +155,14 @@ class LexerRules {
       return FactoryEOF().Create(begin, end);
     }
 
-    return MatchRecursive<Args...>(begin, end);
+    return MatchRecursive<Args...>(begin, end); 
   };
 
   const char* GetPosition() { return it_; }
 
  private:
   const char* it_;
+
   template <typename T1>
   value_type MatchRecursive(const char* begin, const char* end) {
     T1 t1;
@@ -173,6 +174,7 @@ class LexerRules {
     it_ = begin + 1;
     return FactoryUNK().Create(begin, it_);
   }
+
 
   template <typename T1, typename T2, typename... Rules>
   value_type MatchRecursive(const char* begin, const char* end) {
@@ -186,6 +188,7 @@ class LexerRules {
 
     return MatchRecursive<T2, Rules...>(begin, end);
   }
+
 };
 
 }  // namespace lexer
