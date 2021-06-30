@@ -55,6 +55,9 @@ class MatcherPredicate {
  public:
   const char* Parse(const char* begin, const char* end) {
     Predicate pred;
+    if (begin == end) {
+      return begin;
+    }
     if (pred(*begin)) {
       return begin + 1;
     }
