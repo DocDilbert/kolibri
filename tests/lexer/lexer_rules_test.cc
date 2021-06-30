@@ -107,37 +107,37 @@ class MockMatcher {
 
 
 TEST_F(SequenceRuleTest, oneMatcherWithMatch) {
-  SequenceRule<MockTokenFactory, MockMatcher<'A'>> rule_atomic;
+  SequenceRule<MockTokenFactory, MockMatcher<'A'>> seq_rule;
   const char* test_str = "AB";
-  auto* result_ptr = rule_atomic.Match(test_str, &test_str[strlen(test_str)]);
-  auto  result_create = rule_atomic.Create(test_str, result_ptr );
+  auto* result_ptr = seq_rule.Match(test_str, &test_str[strlen(test_str)]);
+  auto  result_create = seq_rule.Create(test_str, result_ptr );
   EXPECT_EQ(&test_str[1], result_ptr);
   EXPECT_EQ("MockTokenFactory: A", result_create);
 }
 
-TEST_F(SequenceRuleTest, twoMatcherWithMatch) {
-  SequenceRule<MockTokenFactory, MockMatcher<'A'>, MockMatcher<'B'>> rule_atomic;
+TEST_F(SequenceRuleTest, twoMatchersWithMatch) {
+  SequenceRule<MockTokenFactory, MockMatcher<'A'>, MockMatcher<'B'>> seq_rule;
   const char* test_str = "AB";
-  auto* result_ptr = rule_atomic.Match(test_str, &test_str[strlen(test_str)]);
-  auto  result_create = rule_atomic.Create(test_str, result_ptr );
+  auto* result_ptr = seq_rule.Match(test_str, &test_str[strlen(test_str)]);
+  auto  result_create = seq_rule.Create(test_str, result_ptr );
   EXPECT_EQ(&test_str[2], result_ptr);
   EXPECT_EQ("MockTokenFactory: AB", result_create);
 }
 
-TEST_F(SequenceRuleTest, twoMatcherWithFirstNoMatch) {
-  SequenceRule<MockTokenFactory, MockMatcher<'_'>, MockMatcher<'B'>> rule_atomic;
+TEST_F(SequenceRuleTest, twoMatchersWithFirstNoMatch) {
+  SequenceRule<MockTokenFactory, MockMatcher<'_'>, MockMatcher<'B'>> seq_rule;
   const char* test_str = "AB";
-  auto* result_ptr = rule_atomic.Match(test_str, &test_str[strlen(test_str)]);
-  auto  result_create = rule_atomic.Create(test_str, result_ptr );
+  auto* result_ptr = seq_rule.Match(test_str, &test_str[strlen(test_str)]);
+  auto  result_create = seq_rule.Create(test_str, result_ptr );
   EXPECT_EQ(&test_str[0], result_ptr);
   EXPECT_EQ("MockTokenFactory: ", result_create);
 }
 
-TEST_F(SequenceRuleTest, twoMatcherWithSecondNoMatch) {
-  SequenceRule<MockTokenFactory, MockMatcher<'A'>, MockMatcher<'_'>> rule_atomic;
+TEST_F(SequenceRuleTest, twoMatchersWithSecondNoMatch) {
+  SequenceRule<MockTokenFactory, MockMatcher<'A'>, MockMatcher<'_'>> seq_rule;
   const char* test_str = "AB";
-  auto* result_ptr = rule_atomic.Match(test_str, &test_str[strlen(test_str)]);
-  auto  result_create = rule_atomic.Create(test_str, result_ptr );
+  auto* result_ptr = seq_rule.Match(test_str, &test_str[strlen(test_str)]);
+  auto  result_create = seq_rule.Create(test_str, result_ptr );
   EXPECT_EQ(&test_str[0], result_ptr);
   EXPECT_EQ("MockTokenFactory: ", result_create);
 }
