@@ -46,6 +46,11 @@ class MatcherString<StringProvider, true> {
       }
       cmp++;
     }
+
+    // special case ... given input string is not long enough
+    if (*cmp != '\0') {
+      return begin;
+    }
     return pos;
   }
 };
