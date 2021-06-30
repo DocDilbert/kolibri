@@ -14,6 +14,7 @@ using ::testing::Ref;
 using ::testing::Return;
 
 using MockToken = std::string;
+
 class MockType {
  public:
   using value_type = MockType;

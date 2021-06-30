@@ -1,5 +1,5 @@
 #include "base/ast.h"
-
+#include "base/ast_types.h" // TODO: Diese Abhängigkeit muss entfernt werden.
 #include <gmock/gmock.h>  // Brings in Google Mock.
 #include <gtest/gtest.h>
 
@@ -14,13 +14,8 @@ using ::testing::Return;
 
 using MockToken = std::string;
 
-template <typename T>
-class MakeShared4 {
- public:
-  using type = std::shared_ptr<T>;
-};
 
-class MockAstVisitor : public IAstVisitor<std::shared_ptr<Ast<MakeShared4, MockToken>>, MockToken> {
+class MockAstVisitor : public IAstVisitor<std::shared_ptr<Ast<MakeShared, MockToken>>, MockToken> {
  public:
   MOCK_METHOD0(VisitNop, void());
   MOCK_METHOD2(VisitProgram, void(nonterm_type left, nonterm_type right));
@@ -35,7 +30,7 @@ class MockAstVisitor : public IAstVisitor<std::shared_ptr<Ast<MakeShared4, MockT
 
 TEST(AstTest, Num) {
   MockAstVisitor mock_visitor;
-  shared_ptr<Ast<MakeShared4, MockToken>> num1 = std::make_shared<AstConst<MakeShared4, MockToken>>(ConstType::INTEGER, "2");
+  shared_ptr<Ast<MakeShared, MockToken>> num1 = std::make_shared<AstConst<MakeShared, MockToken>>(ConstType::INTEGER, "2");
   EXPECT_CALL(mock_visitor, VisitIntegerConst(ConstType::INTEGER, "2")).Times(1);
   EXPECT_CALL(mock_visitor, VisitId).Times(0);
   EXPECT_CALL(mock_visitor, VisitNop).Times(0);
@@ -46,10 +41,10 @@ TEST(AstTest, Num) {
 
 TEST(AstTest, BinOp) {
   MockAstVisitor mock_visitor;
-  shared_ptr<Ast<MakeShared4, MockToken>> num1 = std::make_shared<AstConst<MakeShared4, MockToken>>(ConstType::INTEGER, "2");
-  shared_ptr<Ast<MakeShared4, MockToken>> num2 = std::make_shared<AstConst<MakeShared4, MockToken>>(ConstType::INTEGER, "3");
+  shared_ptr<Ast<MakeShared, MockToken>> num1 = std::make_shared<AstConst<MakeShared, MockToken>>(ConstType::INTEGER, "2");
+  shared_ptr<Ast<MakeShared, MockToken>> num2 = std::make_shared<AstConst<MakeShared, MockToken>>(ConstType::INTEGER, "3");
   auto& n = *num1;
-  shared_ptr<Ast<MakeShared4, MockToken>> op = std::make_shared<AstBinaryOp<MakeShared4, MockToken>>(BinaryOpType::INTEGER_DIV, num1, num2);
+  shared_ptr<Ast<MakeShared, MockToken>> op = std::make_shared<AstBinaryOp<MakeShared, MockToken>>(BinaryOpType::INTEGER_DIV, num1, num2);
   EXPECT_CALL(mock_visitor, VisitIntegerConst).Times(0);
   EXPECT_CALL(mock_visitor, VisitId).Times(0);
   EXPECT_CALL(mock_visitor, VisitNop).Times(0);

@@ -17,15 +17,7 @@ using ::testing::Ref;
 using ::testing::Return;
 using ::testing::SetArgReferee;
 
-class MockAstTraits {
- public:
-  using value_type = string;
-  using reference_type = string;
-  using pointer_type = string;
-};
-
 using NonTermType = std::string;
-
 using MockToken = string;
 using MockIterator = vector<MockToken>::iterator;
 
