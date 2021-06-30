@@ -32,8 +32,6 @@ struct IntTag {
   typedef Tag<int> type;
 };
 
-// TODO: Klasse zu CalcParser zusammenführen 
-
 void doPascal(string content) {
   IntTag<Tag1>::type d;
   PascalLexer lexer(content.c_str(), strlen(content.c_str()));

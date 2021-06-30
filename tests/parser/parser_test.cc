@@ -17,20 +17,15 @@ using namespace std;
 using ::testing::_;
 using ::testing::Return;
 
-class MockAstTraits {
- public:
-  using value_type = string;
-  using reference_type = string;
-  using pointer_type = string;
-};
-
 using NonTermType = std::string;
 using MockToken = Token<CalcTokenId, CalcTokenIdConverter>;
+using MockIterator = vector<MockToken>::iterator;
+using MockGrammar = CalculatorGrammar<NonTermType, MockIterator>;
 
-template <typename T>
-class MockParserFactory : public IParserFactory<T, CalcToken> {
+
+class MockParserFactory : public IParserFactory<NonTermType, CalcToken> {
  public:
-  using nonterm_type = T;
+  using nonterm_type = NonTermType;
   using term_type = MockToken;
 
   MOCK_METHOD0(CreateNull, nonterm_type());
@@ -45,14 +40,12 @@ class MockParserFactory : public IParserFactory<T, CalcToken> {
   MOCK_METHOD4(CreateNonTermTermNonTerm, nonterm_type(parser::RuleId rule_id, nonterm_type lhs, term_type term, nonterm_type rhs));
 };
 
-using MockIterator = vector<MockToken>::iterator;
-using MockGrammar = CalculatorGrammar<NonTermType, MockIterator>;
 
 TEST(ParserTest, Integer) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::INTEGER, "3", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
   EXPECT_CALL(mock_parser_factory, CreateNull).WillRepeatedly(Return("NULL"));
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "3", 1))).Times(1).WillOnce(Return("3"));
@@ -67,7 +60,7 @@ TEST(ParserTest, Integer_With_Brace) {
   input.push_back(MockToken(CalcTokenId::INTEGER, "3", 1));
   input.push_back(MockToken(CalcTokenId::RPARENS, ")", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
   EXPECT_CALL(mock_parser_factory, CreateNull).WillRepeatedly(Return("NULL"));
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "3", 1))).Times(1).WillOnce(Return("3"));
@@ -84,7 +77,7 @@ TEST(ParserTest, Integer_With_Double_Brace) {
   input.push_back(MockToken(CalcTokenId::RPARENS, ")", 1));
   input.push_back(MockToken(CalcTokenId::RPARENS, ")", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "3", 1))).Times(1).WillOnce(Return("3"));
   EXPECT_CALL(mock_parser_factory, CreateNull()).WillRepeatedly(Return("NULL"));
@@ -99,7 +92,7 @@ TEST(ParserTest, Equation_3_plus_2) {
   input.push_back(MockToken(CalcTokenId::PLUS));
   input.push_back(MockToken(CalcTokenId::INTEGER, "2", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
 
   EXPECT_CALL(mock_parser_factory, CreateNull).WillRepeatedly(Return("NULL"));
@@ -119,7 +112,7 @@ TEST(ParserTest, UnaryInteger) {
   input.push_back(MockToken(CalcTokenId::MINUS, "-", 1));
   input.push_back(MockToken(CalcTokenId::INTEGER, "3", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
 
   EXPECT_CALL(mock_parser_factory, CreateNull).WillRepeatedly(Return("NULL"));
@@ -137,7 +130,7 @@ TEST(ParserTest, Equation_1_plus_3) {
   input.push_back(MockToken(CalcTokenId::PLUS));
   input.push_back(MockToken(CalcTokenId::INTEGER, "3", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
   EXPECT_CALL(mock_parser_factory, CreateNull).WillRepeatedly(Return("NULL"));
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "1", 1))).Times(1).WillOnce(Return("1"));
@@ -155,7 +148,7 @@ TEST(ParserTest, Equation_1_plus_minus_3) {
   input.push_back(MockToken(CalcTokenId::MINUS));
   input.push_back(MockToken(CalcTokenId::INTEGER, "3", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
   EXPECT_CALL(mock_parser_factory, CreateNull).WillRepeatedly(Return("NULL"));
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "1", 1))).WillOnce(Return("1"));
@@ -175,7 +168,7 @@ TEST(ParserTest, Equation_1_plus_2_plus_3) {
   input.push_back(MockToken(CalcTokenId::PLUS));
   input.push_back(MockToken(CalcTokenId::INTEGER, "3", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "1", 1))).Times(1).WillOnce(Return("1"));
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "2", 1))).Times(1).WillOnce(Return("2"));
@@ -197,7 +190,7 @@ TEST(ParserTest, Equation_1_plus_2_minus_3) {
   input.push_back(MockToken(CalcTokenId::MINUS));
   input.push_back(MockToken(CalcTokenId::INTEGER, "3", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "1", 1))).Times(1).WillOnce(Return("1"));
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "2", 1))).Times(1).WillOnce(Return("2"));
@@ -219,7 +212,7 @@ TEST(ParserTest, Equation_2_mul_2_mul_3) {
   input.push_back(MockToken(CalcTokenId::MULTIPLY));
   input.push_back(MockToken(CalcTokenId::INTEGER, "3", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
 
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "2", 1))).WillOnce(Return("2")).WillOnce(Return("2"));
@@ -240,7 +233,7 @@ TEST(ParserTest, Equation_2_plus_7_mul_4) {
   input.push_back(MockToken(CalcTokenId::MULTIPLY));
   input.push_back(MockToken(CalcTokenId::INTEGER, "4", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "2", 1))).WillOnce(Return("2"));
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "7", 1))).WillOnce(Return("7"));
@@ -263,7 +256,7 @@ TEST(ParserTest, Equation_lp_2_plus_7_rp_mul_4) {
   input.push_back(MockToken(CalcTokenId::MULTIPLY));
   input.push_back(MockToken(CalcTokenId::INTEGER, "4", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "2", 1))).WillOnce(Return("2"));
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "7", 1))).WillOnce(Return("7"));
@@ -290,7 +283,7 @@ TEST(ParserTest, Equation_lp_1_plus_2_rp_mul_lp_2_plus_1_rp) {
   input.push_back(MockToken(CalcTokenId::INTEGER, "1", 1));
   input.push_back(MockToken(CalcTokenId::RPARENS, ")", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "1", 1))).WillOnce(Return("1")).WillOnce(Return("1"));
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "2", 1))).WillOnce(Return("2")).WillOnce(Return("2"));
@@ -314,7 +307,7 @@ TEST(ParserTest, Equation_2_mul_2_mul_3_div_4) {
   input.push_back(MockToken(CalcTokenId::DIVIDE, "/", 1));
   input.push_back(MockToken(CalcTokenId::INTEGER, "4", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "2", 1))).WillOnce(Return("2")).WillOnce(Return("2"));
   EXPECT_CALL(mock_parser_factory, CreateTerm(RuleId::kRule2, MockToken(CalcTokenId::INTEGER, "3", 1))).WillOnce(Return("3"));
@@ -334,7 +327,7 @@ TEST(ParserTest, OneInteger_With_Missing_Closing_Brace) {
   input.push_back(MockToken(CalcTokenId::LPARENS, "(", 1));
   input.push_back(MockToken(CalcTokenId::INTEGER, "3", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
   EXPECT_CALL(mock_parser_factory, CreateNull()).WillRepeatedly(Return("NULL"));
   EXPECT_CALL(mock_parser_factory, CreateTerm).WillOnce(Return("Num"));
@@ -349,7 +342,7 @@ TEST(ParserTest, WrongFormat) {
   input.push_back(MockToken(CalcTokenId::INTEGER, "1", 1));
   input.push_back(MockToken(CalcTokenId::INTEGER, "3", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
   EXPECT_CALL(mock_parser_factory, CreateNull()).WillRepeatedly(Return("NULL"));
   EXPECT_CALL(mock_parser_factory, CreateTerm).WillOnce(Return("Num"));
@@ -363,7 +356,7 @@ TEST(ParserTest, WrongFormat2) {
   input.push_back(MockToken(CalcTokenId::INTEGER, "1", 1));
   input.push_back(MockToken(CalcTokenId::PLUS, "+", 1));
 
-  MockParserFactory<NonTermType> mock_parser_factory;
+  MockParserFactory mock_parser_factory;
   Parser<MockGrammar> parser(mock_parser_factory);
   EXPECT_CALL(mock_parser_factory, CreateNull()).WillRepeatedly(Return("NULL"));
   EXPECT_CALL(mock_parser_factory, CreateTerm).WillOnce(Return("Num"));
