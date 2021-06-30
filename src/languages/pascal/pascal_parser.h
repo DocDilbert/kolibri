@@ -12,6 +12,9 @@
 
 // clang-format on
 
+namespace languages {
+namespace pascal {
+
 template <languages::pascal::PascalTokenId Id>
 class PascalTokenPredicate {
  public:
@@ -220,80 +223,79 @@ class PascalParserFactory
 };
 
 // clang-format off
-namespace parser {
   
 template <typename TNonTerm, typename Iterator>
-using PascalGrammar = ParserGrammar<
+using PascalGrammar = parser::ParserGrammar<
     TNonTerm, Iterator,
  
     // Rule #0 - program
     // program : PROGRAM variable SEMI block DOT
-    Rule<NonTermNonTermProduction, 
-      SequenceExpr<
-        TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::PROGRAM>>,
-        NonTermExpr<RuleId::kRule13>, 
-        TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::SEMI>>,
-        NonTermExpr<RuleId::kRule1>, 
-        TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::DOT>>
+    parser::Rule<parser::NonTermNonTermProduction, 
+      parser::SequenceExpr<
+        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::PROGRAM>>,
+        parser::NonTermExpr<parser::RuleId::kRule13>, 
+        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::SEMI>>,
+        parser::NonTermExpr<parser::RuleId::kRule1>, 
+        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::DOT>>
       >
     >,
 
     // Rule #1 - block
     // block : declarations compound_statement
-    Rule<NonTermNonTermProduction, 
-      SequenceExpr<
-        NonTermExpr<RuleId::kRule2>, 
-        NonTermExpr<RuleId::kRule5>
+    parser::Rule<parser::NonTermNonTermProduction, 
+      parser::SequenceExpr<
+        parser::NonTermExpr<parser::RuleId::kRule2>, 
+        parser::NonTermExpr<parser::RuleId::kRule5>
       >
     >,
 
     // Rule #2 - declarations
     // declarations : VAR (variable_declaration SEMI)+
     //              | empty
-    Rule<NonTermListProduction, 
-      OrderedChoiceExpr<
-        SequenceExpr<
-          TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::VAR>>,
-          NMatchesOrMoreExpr<1,
-              SequenceExpr<
-                NonTermExpr<RuleId::kRule3>,
-                TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::SEMI>>
+    parser::Rule<parser::NonTermListProduction, 
+      parser::OrderedChoiceExpr<
+        parser::SequenceExpr<
+          parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::VAR>>,
+          parser::NMatchesOrMoreExpr<1,
+              parser::SequenceExpr<
+                parser::NonTermExpr<parser::RuleId::kRule3>,
+                parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::SEMI>>
               >
           >
         >,
-        NonTermExpr<RuleId::kRule9>
+        parser::NonTermExpr<parser::RuleId::kRule9>
       >
     >,
 
     // Rule #3
     // variable_declaration : ID (COMMA ID)* COLON type_spec
-    Rule<TermNonTermListProduction, 
-      SequenceExpr<
-        TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::ID>>,
-        NMatchesOrMoreExpr<0,
-          SequenceExpr<
-            TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::COMMA>>,
-            TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::ID>>
+    parser::Rule<parser::TermNonTermListProduction, 
+      parser::SequenceExpr<
+        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::ID>>,
+        parser::NMatchesOrMoreExpr<0,
+          parser::SequenceExpr<
+            parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::COMMA>>,
+            parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::ID>>
           >
         >,
-        TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::COLON>>,
-        NonTermExpr<RuleId::kRule4>
+        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::COLON>>,
+        parser::NonTermExpr<parser::RuleId::kRule4>
       >
     >,
  
     // Rule #4 - type_spec
     // type_spec : INTEGER | REAL
-    Rule<TermProduction, 
-      OrderedChoiceExpr<
-        TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::INTEGER>>,
-        TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::REAL>>
+    parser::Rule<parser::TermProduction, 
+      parser::OrderedChoiceExpr<
+        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::INTEGER>>,
+        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::REAL>>
       >
     >,
 
     // Rule #5 - compound_statement
     // compound_statement : BEGIN statement_list END
-    Rule<NonTermProduction, 
-      SequenceExpr<TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::BEGIN>>, NonTermExpr<RuleId::kRule6>, TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::END>>>
+    parser::Rule<parser::NonTermProduction, 
+      parser::SequenceExpr<parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::BEGIN>>, parser::NonTermExpr<parser::RuleId::kRule6>, parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::END>>>
     >,
 
     // Rule #6 - statement_list
@@ -302,13 +304,13 @@ using PascalGrammar = ParserGrammar<
     // Alternativ:
     //
     // statement_list : statement (SEMI statement)*
-    Rule<NonTermListProduction, 
-      SequenceExpr<
-        NonTermExpr<RuleId::kRule7>,
-        NMatchesOrMoreExpr<0,
-          SequenceExpr<
-            TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::SEMI>>, 
-            NonTermExpr<RuleId::kRule7>
+    parser::Rule<parser::NonTermListProduction, 
+      parser::SequenceExpr<
+        parser::NonTermExpr<parser::RuleId::kRule7>,
+        parser::NMatchesOrMoreExpr<0,
+          parser::SequenceExpr<
+            parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::SEMI>>, 
+            parser::NonTermExpr<parser::RuleId::kRule7>
           >
         >
       >
@@ -318,34 +320,34 @@ using PascalGrammar = ParserGrammar<
     // statement : compound_statement
     //          | assignment_statement
     //          | empty
-    OrderedChoiceRules< 
-      Rule<BypassLastTermProduction, NonTermExpr<RuleId::kRule5>>,
-      Rule<BypassLastTermProduction, NonTermExpr<RuleId::kRule8>>,
-      Rule<BypassLastTermProduction, NonTermExpr<RuleId::kRule9>>
+    parser::OrderedChoiceRules< 
+      parser::Rule<parser::BypassLastTermProduction, parser::NonTermExpr<parser::RuleId::kRule5>>,
+      parser::Rule<parser::BypassLastTermProduction, parser::NonTermExpr<parser::RuleId::kRule8>>,
+      parser::Rule<parser::BypassLastTermProduction, parser::NonTermExpr<parser::RuleId::kRule9>>
     >,
 
     // Rule #8 - assignment_statement
     // assignment_statement : variable ASSIGN expr
-    Rule<NonTermTermNonTermProduction,
-      SequenceExpr< NonTermExpr<RuleId::kRule13>, TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::ASSIGN>>, NonTermExpr<RuleId::kRule10>>
+    parser::Rule<parser::NonTermTermNonTermProduction,
+      parser::SequenceExpr< parser::NonTermExpr<parser::RuleId::kRule13>, parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::ASSIGN>>, parser::NonTermExpr<parser::RuleId::kRule10>>
     >,
 
     // Rule #9 - empty
     // empty :
-    Rule<EmptyProduction, EmptyExpr>,
+    parser::Rule<parser::EmptyProduction, parser::EmptyExpr>,
 
     // Rule #10 - expr
     // expr : term ((PLUS | MINUS) term)*
-    Rule<NonTermTermNonTermSequenceProduction,
-      SequenceExpr<
-        NonTermExpr<RuleId::kRule11>,
-        NMatchesOrMoreExpr<0,
-          SequenceExpr<
-            OrderedChoiceExpr<
-              TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::PLUS>>, 
-              TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::MINUS>>
+    parser::Rule<parser::NonTermTermNonTermSequenceProduction,
+      parser::SequenceExpr<
+        parser::NonTermExpr<parser::RuleId::kRule11>,
+        parser::NMatchesOrMoreExpr<0,
+          parser::SequenceExpr<
+            parser::OrderedChoiceExpr<
+              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::PLUS>>, 
+              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::MINUS>>
             >, 
-            NonTermExpr<RuleId::kRule11>
+            parser::NonTermExpr<parser::RuleId::kRule11>
           >
         >
       >
@@ -353,17 +355,17 @@ using PascalGrammar = ParserGrammar<
 
     // Rule #11 - term
     // term : factor ((MUL | INTEGER_DIV | FLOAT_DIV) factor)*
-    Rule<NonTermTermNonTermSequenceProduction,
-      SequenceExpr<
-        NonTermExpr<RuleId::kRule12>,
-        NMatchesOrMoreExpr<0,
-          SequenceExpr<
-            OrderedChoiceExpr<
-              TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::MULTIPLY>>, 
-              TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::INTEGER_DIV>>,
-              TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::FLOAT_DIV>>
+    parser::Rule<parser::NonTermTermNonTermSequenceProduction,
+      parser::SequenceExpr<
+        parser::NonTermExpr<parser::RuleId::kRule12>,
+        parser::NMatchesOrMoreExpr<0,
+          parser::SequenceExpr<
+            parser::OrderedChoiceExpr<
+              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::MULTIPLY>>, 
+              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::INTEGER_DIV>>,
+              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::FLOAT_DIV>>
             >, 
-            NonTermExpr<RuleId::kRule12>
+            parser::NonTermExpr<parser::RuleId::kRule12>
           >
         >
       >
@@ -376,35 +378,37 @@ using PascalGrammar = ParserGrammar<
     //        | REAL_CONST
     //        | LPAREN expr RPAREN
     //        | variable
-    OrderedChoiceRules< 
-        Rule<TermNonTermProduction, 
-          SequenceExpr<TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::PLUS>>, NonTermExpr<RuleId::kRule12>>
+    parser::OrderedChoiceRules< 
+        parser::Rule<parser::TermNonTermProduction, 
+          parser::SequenceExpr<parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::PLUS>>, parser::NonTermExpr<parser::RuleId::kRule12>>
         >,
-        Rule<TermNonTermProduction, 
-          SequenceExpr<TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::MINUS>>, NonTermExpr<RuleId::kRule12>>
+        parser::Rule<parser::TermNonTermProduction, 
+          parser::SequenceExpr<parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::MINUS>>, parser::NonTermExpr<parser::RuleId::kRule12>>
         >,
-        Rule<TermProduction, 
-          TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::INTEGER_CONST>>
+        parser::Rule<parser::TermProduction, 
+          parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::INTEGER_CONST>>
         >,
-        Rule<TermProduction, 
-          TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::REAL_CONST>>
+        parser::Rule<parser::TermProduction, 
+          parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::REAL_CONST>>
         >,
-        Rule<BypassLastTermProduction,
-          SequenceExpr<TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::LPARENS>>, NonTermExpr<RuleId::kRule10>, TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::RPARENS>>>
+        parser::Rule<parser::BypassLastTermProduction,
+          parser::SequenceExpr<parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::LPARENS>>, parser::NonTermExpr<parser::RuleId::kRule10>, parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::RPARENS>>>
         >,
-        Rule<BypassLastTermProduction, 
-          NonTermExpr<RuleId::kRule13>
+        parser::Rule<parser::BypassLastTermProduction, 
+          parser::NonTermExpr<parser::RuleId::kRule13>
         >
     >,
 
     // Rule #13 - variable
     // variable: ID
-    Rule<TermProduction, TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::ID>>> 
+    parser::Rule<parser::TermProduction, parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::ID>>> 
   >;
-}
+
 // clang-format on
 
-using PGrammar = parser::PascalGrammar<std::shared_ptr<base::Ast<base::MakeShared, languages::pascal::PascalToken>>, languages::pascal::PascalLexer::iterator_type>;
+using PGrammar = PascalGrammar<std::shared_ptr<base::Ast<base::MakeShared, PascalToken>>, PascalLexer::iterator_type>;
 using PascalParser = parser::Parser<PGrammar>;
 
+}
+}
 #endif
