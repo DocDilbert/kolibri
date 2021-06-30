@@ -11,7 +11,6 @@
 #include "parser/parser_productions.h"
 #include "parser/parser_rules.h"
 
-// TODO: Eigene Datei für Parser Factory
 class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::Ast<base::MakeShared, languages::calc::CalcToken>>, languages::calc::CalcToken> {
  public:
   using nonterm_type = std::shared_ptr<base::Ast<base::MakeShared, languages::calc::CalcToken>>;
@@ -179,5 +178,4 @@ using CalcGrammar = parser::CalculatorGrammar<std::shared_ptr<base::Ast<base::Ma
 using CalcParser = parser::Parser<CalcGrammar>;
 
 
-// TODO: Namespace languages/calc einführen
 #endif

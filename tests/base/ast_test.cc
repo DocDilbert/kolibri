@@ -1,5 +1,5 @@
 #include "base/ast.h"
-#include "base/ast_types.h" // TODO: Diese Abhängigkeit muss entfernt werden.
+#include "base/ast_types.h"
 #include <gmock/gmock.h>  // Brings in Google Mock.
 #include <gtest/gtest.h>
 

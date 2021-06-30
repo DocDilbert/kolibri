@@ -7,14 +7,13 @@
 #include <string>
 
 
-#include "token_out.h" // TODO: Diese Abhängigkeit muss entfernt werden.
+#include "token_out.h" 
 
 
 using namespace languages::calc;
 using namespace base;
 using namespace std;
 
-// TODO: Entfernen von Abhängigkeiten zu CalcToken in Tests. Stattdessen eigene Klassen definieren
 using MockToken = Token<languages::calc::CalcTokenId, languages::calc::CalcTokenIdConverter>;
 
 TEST(TokenTest, IntegerToken_CharArray_With_Size) {

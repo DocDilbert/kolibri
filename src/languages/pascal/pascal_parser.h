@@ -11,7 +11,7 @@
 #include "parser/parser_rules.h"
 
 // clang-format on
-// TODO: Eigene Datei für Parser Factory
+
 template <languages::pascal::PascalTokenId Id>
 class PascalTokenPredicate {
  public:
@@ -404,7 +404,6 @@ using PascalGrammar = ParserGrammar<
 }
 // clang-format on
 
-// TODO: Namespace languages/pascal einführen
 using PGrammar = parser::PascalGrammar<std::shared_ptr<base::Ast<base::MakeShared, languages::pascal::PascalToken>>, languages::pascal::PascalLexer::iterator_type>;
 using PascalParser = parser::Parser<PGrammar>;
 
