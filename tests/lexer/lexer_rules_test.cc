@@ -66,6 +66,14 @@ TEST_F(MatcherStringTest, stringMatch) {
   EXPECT_EQ(&test_str[5], result_ptr);
 }
 
+TEST_F(MatcherStringTest, stringMatchInputTooShort) {
+  MatcherString<MockStringProviderTestStr1> match_string;
+  const char* test_str = "Tes";
+  auto* result_ptr = match_string.Parse(test_str, &test_str[strlen(test_str)]);
+  EXPECT_EQ(&test_str[0], result_ptr);
+}
+
+
 TEST_F(MatcherStringTest, stringNoMatch) {
    MatcherString<MockStringProviderTestStr1> match_string;
   const char* test_str = "TEst1____";
