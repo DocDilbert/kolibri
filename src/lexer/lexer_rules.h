@@ -128,6 +128,9 @@ class SequenceRule {
     if (new_it == it) {
       return begin;
     }
+    if (new_it == end) {
+      return begin;
+    }
     return MatchRecursive<T2, Matchers...>(begin, new_it, end);
   }
 };

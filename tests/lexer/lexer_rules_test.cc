@@ -132,6 +132,16 @@ TEST_F(SequenceRuleTest, twoMatchersWithMatch) {
   EXPECT_EQ("MockTokenFactory: AB", result_create);
 }
 
+TEST_F(SequenceRuleTest, twoMatchersInputTooShort) {
+  SequenceRule<MockTokenFactory, MockMatcher<'A'>, MockMatcher<'B'>> seq_rule;
+  const char* test_str = "AB"; // intentional no null termination
+  auto* result_ptr = seq_rule.Match(test_str, &test_str[strlen(test_str)-1]); // string stops at A
+  auto  result_create = seq_rule.Create(test_str, result_ptr );
+  EXPECT_EQ(&test_str[0], result_ptr);
+  EXPECT_EQ("MockTokenFactory: ", result_create);
+}
+
+
 TEST_F(SequenceRuleTest, twoMatchersWithFirstNoMatch) {
   SequenceRule<MockTokenFactory, MockMatcher<'_'>, MockMatcher<'B'>> seq_rule;
   const char* test_str = "AB";
