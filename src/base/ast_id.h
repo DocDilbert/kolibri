@@ -4,22 +4,22 @@
 namespace base {
 
 enum class ConstType {
-  INTEGER,  //
-  REAL
+  kInteger,  //
+  kReal
 };
 
 enum class UnaryOpType {
-  POSITIVE_OP,  //
-  NEGATIVE_OP
+  kPositiveOp,  //
+  kNegativeOp
 };
 
 enum class BinaryOpType {
-  ADD,  //
-  SUB,
-  MUL,
-  INTEGER_DIV,
-  FLOAT_DIV,
-  ASSSIGN
+  kAdd,  //
+  kSub,
+  kMul,
+  kIntegerDiv,
+  kFloatDiv,
+  kAssign
 };
 
 }  // namespace base

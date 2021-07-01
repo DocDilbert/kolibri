@@ -35,10 +35,10 @@ class CalcInterpreter {
       operand->Visit(visitor);
 
       switch (type) {
-        case base::UnaryOpType::POSITIVE_OP:
+        case base::UnaryOpType::kPositiveOp:
           num_ = visitor.GetNum();
           break;
-        case base::UnaryOpType::NEGATIVE_OP:
+        case base::UnaryOpType::kNegativeOp:
           num_ = -visitor.GetNum();
           break;
 
@@ -54,16 +54,16 @@ class CalcInterpreter {
       operand_rhs->Visit(visitor_rhs);
 
       switch (op) {
-        case base::BinaryOpType::ADD:
+        case base::BinaryOpType::kAdd:
           num_ = visitor_lhs.GetNum() + visitor_rhs.GetNum();
           break;
-        case base::BinaryOpType::SUB:
+        case base::BinaryOpType::kSub:
           num_ = visitor_lhs.GetNum() - visitor_rhs.GetNum();
           break;
-        case base::BinaryOpType::MUL:
+        case base::BinaryOpType::kMul:
           num_ = visitor_lhs.GetNum() * visitor_rhs.GetNum();
           break;
-        case base::BinaryOpType::INTEGER_DIV:
+        case base::BinaryOpType::kIntegerDiv:
           num_ = visitor_lhs.GetNum() / visitor_rhs.GetNum();
           break;
         default:

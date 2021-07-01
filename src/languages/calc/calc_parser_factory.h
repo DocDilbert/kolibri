@@ -23,7 +23,7 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
   nonterm_type CreateTerm(parser::RuleId rule_id, term_type term) override {
     switch (rule_id) {
       case parser::RuleId::kRule2: {
-        return ast_factory_.CreateConst(base::ConstType::INTEGER, std::string(term.GetValue()));
+        return ast_factory_.CreateConst(base::ConstType::kInteger, std::string(term.GetValue()));
       }
       default: {
         return ast_factory_.CreateNull();
@@ -40,10 +40,10 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
       case parser::RuleId::kRule2: {
         switch (term.GetId()) {
           case CalcTokenId::kPlus: {
-            return ast_factory_.CreateUnaryOp(base::UnaryOpType::POSITIVE_OP, nonterm);
+            return ast_factory_.CreateUnaryOp(base::UnaryOpType::kPositiveOp, nonterm);
           }
           case CalcTokenId::kMinus: {
-            return ast_factory_.CreateUnaryOp(base::UnaryOpType::NEGATIVE_OP, nonterm);
+            return ast_factory_.CreateUnaryOp(base::UnaryOpType::kNegativeOp, nonterm);
           }
           default: {
             return ast_factory_.CreateNull();
@@ -65,10 +65,10 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
       case parser::RuleId::kRule0: {
         switch (term.GetId()) {
           case CalcTokenId::kPlus: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::ADD, lhs, rhs);
+            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kAdd, lhs, rhs);
           }
           case CalcTokenId::kMinus: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::SUB, lhs, rhs);
+            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kSub, lhs, rhs);
           }
           default: {
             return ast_factory_.CreateNull();
@@ -79,10 +79,10 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
       case parser::RuleId::kRule1: {
         switch (term.GetId()) {
           case CalcTokenId::kMultiply: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::MUL, lhs, rhs);
+            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kMul, lhs, rhs);
           }
           case CalcTokenId::kDivide: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::INTEGER_DIV, lhs, rhs);
+            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kIntegerDiv, lhs, rhs);
           }
           default: {
             return ast_factory_.CreateNull();

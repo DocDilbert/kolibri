@@ -27,7 +27,7 @@ class MockType {
 TEST(CalcInterpreterTest, Visit_Num) {
   auto mock_type = std::make_shared<MockType>();
   EXPECT_CALL(*mock_type, Visit(_)).WillOnce([](IAstVisitor<std::shared_ptr<MockType>, MockToken>& value) {
-    value.VisitIntegerConst(ConstType::INTEGER, "3");
+    value.VisitIntegerConst(ConstType::kInteger, "3");
   });
   CalcInterpreter<std::shared_ptr<MockType>, MockToken> CalcInterpreter;
   auto res = CalcInterpreter.Interpret(mock_type);
@@ -37,12 +37,12 @@ TEST(CalcInterpreterTest, Visit_Num) {
 TEST(CalcInterpreterTest, Visit_Unary_Num) {
   auto mock_type = std::make_shared<MockType>();
   EXPECT_CALL(*mock_type, Visit(_)).WillOnce([](IAstVisitor<std::shared_ptr<MockType>, MockToken>& value) {
-    value.VisitIntegerConst(ConstType::INTEGER, "3");
+    value.VisitIntegerConst(ConstType::kInteger, "3");
   });
 
   auto mock_type_op = std::make_shared<MockType>();
   EXPECT_CALL(*mock_type_op, Visit(_)).WillOnce([&](IAstVisitor<std::shared_ptr<MockType>, MockToken>& value) {
-    value.VisitUnaryOp(UnaryOpType::NEGATIVE_OP, mock_type);  //
+    value.VisitUnaryOp(UnaryOpType::kNegativeOp, mock_type);  //
   });
 
   CalcInterpreter<std::shared_ptr<MockType>, MockToken> CalcInterpreter;
@@ -53,15 +53,15 @@ TEST(CalcInterpreterTest, Visit_Unary_Num) {
 TEST(CalcInterpreterTest, Visit_BinOp_Add_2Factors) {
   auto mock_type_num1 = std::make_shared<MockType>();
   EXPECT_CALL(*mock_type_num1, Visit(_)).WillOnce([](IAstVisitor<std::shared_ptr<MockType>, MockToken>& value) {
-    value.VisitIntegerConst(ConstType::INTEGER, "3");  //
+    value.VisitIntegerConst(ConstType::kInteger, "3");  //
   });
   auto mock_type_num2 = std::make_shared<MockType>();
   EXPECT_CALL(*mock_type_num2, Visit(_)).WillOnce([](IAstVisitor<std::shared_ptr<MockType>, MockToken>& value) {
-    value.VisitIntegerConst(ConstType::INTEGER, "5");  //
+    value.VisitIntegerConst(ConstType::kInteger, "5");  //
   });
   auto mock_type_op = std::make_shared<MockType>();
   EXPECT_CALL(*mock_type_op, Visit(_)).WillOnce([&](IAstVisitor<std::shared_ptr<MockType>, MockToken>& value) {
-    value.VisitBinaryOp(BinaryOpType::ADD, mock_type_num1, mock_type_num2);  //
+    value.VisitBinaryOp(BinaryOpType::kAdd, mock_type_num1, mock_type_num2);  //
   });
 
   CalcInterpreter<std::shared_ptr<MockType>, MockToken> CalcInterpreter;
@@ -72,23 +72,23 @@ TEST(CalcInterpreterTest, Visit_BinOp_Add_2Factors) {
 TEST(CalcInterpreterTest, Visit_BinOp_Add_3Factors) {
   auto mock_type_num1 = std::make_shared<MockType>();
   EXPECT_CALL(*mock_type_num1, Visit(_)).WillOnce([](IAstVisitor<std::shared_ptr<MockType>, MockToken>& value) {
-    value.VisitIntegerConst(ConstType::INTEGER, "1");  //
+    value.VisitIntegerConst(ConstType::kInteger, "1");  //
   });
   auto mock_type_num2 = std::make_shared<MockType>();
   EXPECT_CALL(*mock_type_num2, Visit(_)).WillOnce([](IAstVisitor<std::shared_ptr<MockType>, MockToken>& value) {
-    value.VisitIntegerConst(ConstType::INTEGER, "2");  //
+    value.VisitIntegerConst(ConstType::kInteger, "2");  //
   });
   auto mock_type_num3 = std::make_shared<MockType>();
   EXPECT_CALL(*mock_type_num3, Visit(_)).WillOnce([](IAstVisitor<std::shared_ptr<MockType>, MockToken>& value) {
-    value.VisitIntegerConst(ConstType::INTEGER, "3");  //
+    value.VisitIntegerConst(ConstType::kInteger, "3");  //
   });
   auto mock_type_op1 = std::make_shared<MockType>();
   EXPECT_CALL(*mock_type_op1, Visit(_)).WillOnce([&](IAstVisitor<std::shared_ptr<MockType>, MockToken>& value) {
-    value.VisitBinaryOp(BinaryOpType::ADD, mock_type_num1, mock_type_num2);  //
+    value.VisitBinaryOp(BinaryOpType::kAdd, mock_type_num1, mock_type_num2);  //
   });
   auto mock_type_op2 = std::make_shared<MockType>();
   EXPECT_CALL(*mock_type_op2, Visit(_)).WillOnce([&](IAstVisitor<std::shared_ptr<MockType>, MockToken>& value) {
-    value.VisitBinaryOp(BinaryOpType::ADD, mock_type_op1, mock_type_num3);  //
+    value.VisitBinaryOp(BinaryOpType::kAdd, mock_type_op1, mock_type_num3);  //
   });
 
   CalcInterpreter<std::shared_ptr<MockType>, MockToken> CalcInterpreter;
@@ -99,15 +99,15 @@ TEST(CalcInterpreterTest, Visit_BinOp_Add_3Factors) {
 TEST(CalcInterpreterTest, Visit_BinOp_Mul_2Factors) {
   auto mock_type_num1 = std::make_shared<MockType>();
   EXPECT_CALL(*mock_type_num1, Visit(_)).WillOnce([](IAstVisitor<std::shared_ptr<MockType>, MockToken>& value) {
-    value.VisitIntegerConst(ConstType::INTEGER, "3");  //
+    value.VisitIntegerConst(ConstType::kInteger, "3");  //
   });
   auto mock_type_num2 = std::make_shared<MockType>();
   EXPECT_CALL(*mock_type_num2, Visit(_)).WillOnce([](IAstVisitor<std::shared_ptr<MockType>, MockToken>& value) {
-    value.VisitIntegerConst(ConstType::INTEGER, "5");  //
+    value.VisitIntegerConst(ConstType::kInteger, "5");  //
   });
   auto mock_type_op = std::make_shared<MockType>();
   EXPECT_CALL(*mock_type_op, Visit(_)).WillOnce([&](IAstVisitor<std::shared_ptr<MockType>, MockToken>& value) {
-    value.VisitBinaryOp(BinaryOpType::MUL, mock_type_num1, mock_type_num2);  //
+    value.VisitBinaryOp(BinaryOpType::kMul, mock_type_num1, mock_type_num2);  //
   });
 
   CalcInterpreter<std::shared_ptr<MockType>, MockToken> CalcInterpreter;

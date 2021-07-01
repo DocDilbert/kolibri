@@ -29,10 +29,10 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
       case parser::RuleId::kRule12: {  // factor
         switch (term.GetId()) {
           case PascalTokenId::kIntegerConst: {
-            return ast_factory_.CreateConst(base::ConstType::INTEGER, std::string(term.GetValue()));
+            return ast_factory_.CreateConst(base::ConstType::kInteger, std::string(term.GetValue()));
           }
           case PascalTokenId::kRealConst: {
-            return ast_factory_.CreateConst(base::ConstType::REAL, std::string(term.GetValue()));
+            return ast_factory_.CreateConst(base::ConstType::kReal, std::string(term.GetValue()));
           }
           default: {
             return ast_factory_.CreateNull();
@@ -72,10 +72,10 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
       case parser::RuleId::kRule12: {  // factor
         switch (term.GetId()) {
           case PascalTokenId::kPlus: {
-            return ast_factory_.CreateUnaryOp(base::UnaryOpType::POSITIVE_OP, nonterm);
+            return ast_factory_.CreateUnaryOp(base::UnaryOpType::kPositiveOp, nonterm);
           }
           case PascalTokenId::kMinus: {
-            return ast_factory_.CreateUnaryOp(base::UnaryOpType::NEGATIVE_OP, nonterm);
+            return ast_factory_.CreateUnaryOp(base::UnaryOpType::kNegativeOp, nonterm);
           }
           default: {
             return ast_factory_.CreateNull();
@@ -112,7 +112,7 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
       case parser::RuleId::kRule8: {  // assignment_statement
         switch (term.GetId()) {
           case PascalTokenId::kAssign: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::ASSSIGN, lhs, rhs);
+            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kAssign, lhs, rhs);
           }
           default: {
             return ast_factory_.CreateNull();
@@ -123,10 +123,10 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
       case parser::RuleId::kRule10: {  // expr
         switch (term.GetId()) {
           case PascalTokenId::kPlus: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::ADD, lhs, rhs);
+            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kAdd, lhs, rhs);
           }
           case PascalTokenId::kMinus: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::SUB, lhs, rhs);
+            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kSub, lhs, rhs);
           }
           default: {
             return ast_factory_.CreateNull();
@@ -137,13 +137,13 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
       case parser::RuleId::kRule11: {  // term
         switch (term.GetId()) {
           case PascalTokenId::kMultiply: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::MUL, lhs, rhs);
+            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kMul, lhs, rhs);
           }
           case PascalTokenId::kIntegerDiv: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::INTEGER_DIV, lhs, rhs);
+            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kIntegerDiv, lhs, rhs);
           }
           case PascalTokenId::kFloatDiv: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::FLOAT_DIV, lhs, rhs);
+            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kFloatDiv, lhs, rhs);
           }
           default: {
             return ast_factory_.CreateNull();

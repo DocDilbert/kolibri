@@ -64,10 +64,10 @@ class PrintAst {
     }
     void VisitIntegerConst(ConstType const_type, std::string value) override {
       switch (const_type) {
-        case ConstType::INTEGER:
+        case ConstType::kInteger:
           stream_ << "  node" << ncount_ << " [label=\"(int)\n" << value << "\"]" << std::endl;
           break;
-        case ConstType::REAL:
+        case ConstType::kReal:
           stream_ << "  node" << ncount_ << " [label=\"(float)\n" << value << "\"]" << std::endl;
           break;
         default:
@@ -83,10 +83,10 @@ class PrintAst {
     void VisitUnaryOp(base::UnaryOpType type, nonterm_type operand) override {
       std::string label;
       switch (type) {
-        case base::UnaryOpType::POSITIVE_OP:
+        case base::UnaryOpType::kPositiveOp:
           label = "unary +";
           break;
-        case base::UnaryOpType::NEGATIVE_OP:
+        case base::UnaryOpType::kNegativeOp:
           label = "unary -";
           break;
 
@@ -122,22 +122,22 @@ class PrintAst {
       unsigned root_cnt = ncount_;
       std::string label;
       switch (op) {
-        case base::BinaryOpType::ADD:
+        case base::BinaryOpType::kAdd:
           label = "+";
           break;
-        case base::BinaryOpType::SUB:
+        case base::BinaryOpType::kSub:
           label = "-";
           break;
-        case base::BinaryOpType::MUL:
+        case base::BinaryOpType::kMul:
           label = "*";
           break;
-        case base::BinaryOpType::INTEGER_DIV:
+        case base::BinaryOpType::kIntegerDiv:
           label = "div";
           break;
-        case base::BinaryOpType::FLOAT_DIV:
+        case base::BinaryOpType::kFloatDiv:
           label = "/";
           break;
-        case base::BinaryOpType::ASSSIGN:
+        case base::BinaryOpType::kAssign:
           label = ":=";
           break;
         default:

@@ -30,8 +30,8 @@ class MockAstVisitor : public IAstVisitor<std::shared_ptr<Ast<MakeShared, MockTo
 
 TEST(AstTest, Num) {
   MockAstVisitor mock_visitor;
-  shared_ptr<Ast<MakeShared, MockToken>> num1 = std::make_shared<AstConst<MakeShared, MockToken>>(ConstType::INTEGER, "2");
-  EXPECT_CALL(mock_visitor, VisitIntegerConst(ConstType::INTEGER, "2")).Times(1);
+  shared_ptr<Ast<MakeShared, MockToken>> num1 = std::make_shared<AstConst<MakeShared, MockToken>>(ConstType::kInteger, "2");
+  EXPECT_CALL(mock_visitor, VisitIntegerConst(ConstType::kInteger, "2")).Times(1);
   EXPECT_CALL(mock_visitor, VisitId).Times(0);
   EXPECT_CALL(mock_visitor, VisitNop).Times(0);
   EXPECT_CALL(mock_visitor, VisitUnaryOp).Times(0);
@@ -41,14 +41,14 @@ TEST(AstTest, Num) {
 
 TEST(AstTest, BinOp) {
   MockAstVisitor mock_visitor;
-  shared_ptr<Ast<MakeShared, MockToken>> num1 = std::make_shared<AstConst<MakeShared, MockToken>>(ConstType::INTEGER, "2");
-  shared_ptr<Ast<MakeShared, MockToken>> num2 = std::make_shared<AstConst<MakeShared, MockToken>>(ConstType::INTEGER, "3");
+  shared_ptr<Ast<MakeShared, MockToken>> num1 = std::make_shared<AstConst<MakeShared, MockToken>>(ConstType::kInteger, "2");
+  shared_ptr<Ast<MakeShared, MockToken>> num2 = std::make_shared<AstConst<MakeShared, MockToken>>(ConstType::kInteger, "3");
   auto& n = *num1;
-  shared_ptr<Ast<MakeShared, MockToken>> op = std::make_shared<AstBinaryOp<MakeShared, MockToken>>(BinaryOpType::INTEGER_DIV, num1, num2);
+  shared_ptr<Ast<MakeShared, MockToken>> op = std::make_shared<AstBinaryOp<MakeShared, MockToken>>(BinaryOpType::kIntegerDiv, num1, num2);
   EXPECT_CALL(mock_visitor, VisitIntegerConst).Times(0);
   EXPECT_CALL(mock_visitor, VisitId).Times(0);
   EXPECT_CALL(mock_visitor, VisitNop).Times(0);
   EXPECT_CALL(mock_visitor, VisitUnaryOp).Times(0);
-  EXPECT_CALL(mock_visitor, VisitBinaryOp(BinaryOpType::INTEGER_DIV, num1, num2)).Times(1);
+  EXPECT_CALL(mock_visitor, VisitBinaryOp(BinaryOpType::kIntegerDiv, num1, num2)).Times(1);
   op->Visit(mock_visitor);
 }
