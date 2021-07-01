@@ -160,7 +160,7 @@ struct CalculatorGrammar : public parser::GrammarBase {
     >,
 
     // Rule #2
-    parser::OrderedChoiceRules< 
+    OrderedChoiceRules< 
         Rule<parser::TermNonTermProduction, 
           SequenceExpr<
             TermExpr<CalcTokenPredicate<CalcTokenId::kPlus>>, 

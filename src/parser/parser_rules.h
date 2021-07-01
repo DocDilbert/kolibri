@@ -396,20 +396,25 @@ struct GrammarBase {
   template <template <class, class> class Production, typename Expression>
   using Rule = parser::Rule<Production, Expression>;
 
+  using EmptyExpr = parser::EmptyExpr;
+
   template <typename TermPredicate>
   using TermExpr = parser::TermExpr<TermPredicate>;
-  
-  template <typename... Expressions>
-  using SequenceExpr = parser::SequenceExpr<Expressions...>;
 
   template <RuleId RId>
   using NonTermExpr = parser::NonTermExpr<RId>;
+
+  template <typename... Expressions>
+  using SequenceExpr = parser::SequenceExpr<Expressions...>;
 
   template <unsigned N, typename Expression>
   using NMatchesOrMoreExpr = parser::NMatchesOrMoreExpr<N, Expression>;
 
   template <typename... Expressions>
   using OrderedChoiceExpr = parser::OrderedChoiceExpr<Expressions...>;
+
+  template <typename... Args>
+  using OrderedChoiceRules = parser::OrderedChoiceRules<Args...>;
 };
 
 }  // namespace parser

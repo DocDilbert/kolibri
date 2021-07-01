@@ -294,7 +294,11 @@ struct PascalGrammar : public parser::GrammarBase {
     // Rule #5 - compound_statement
     // compound_statement : BEGIN statement_list END
     Rule<parser::NonTermProduction, 
-      SequenceExpr<TermExpr<PascalTokenPredicate<PascalTokenId::kBegin>>, NonTermExpr<parser::RuleId::kRule6>, TermExpr<PascalTokenPredicate<PascalTokenId::kEnd>>>
+      SequenceExpr<
+        TermExpr<PascalTokenPredicate<PascalTokenId::kBegin>>, 
+        NonTermExpr<parser::RuleId::kRule6>, 
+        TermExpr<PascalTokenPredicate<PascalTokenId::kEnd>>
+      >
     >,
 
     // Rule #6 - statement_list
@@ -319,7 +323,7 @@ struct PascalGrammar : public parser::GrammarBase {
     // statement : compound_statement
     //          | assignment_statement
     //          | empty
-    parser::OrderedChoiceRules< 
+    OrderedChoiceRules< 
       Rule<parser::BypassLastTermProduction, NonTermExpr<parser::RuleId::kRule5>>,
       Rule<parser::BypassLastTermProduction, NonTermExpr<parser::RuleId::kRule8>>,
       Rule<parser::BypassLastTermProduction, NonTermExpr<parser::RuleId::kRule9>>
@@ -333,7 +337,7 @@ struct PascalGrammar : public parser::GrammarBase {
 
     // Rule #9 - empty
     // empty :
-    Rule<parser::EmptyProduction, parser::EmptyExpr>,
+    Rule<parser::EmptyProduction, EmptyExpr>,
 
     // Rule #10 - expr
     // expr : term ((kPlus | kMinus) term)*
@@ -377,7 +381,7 @@ struct PascalGrammar : public parser::GrammarBase {
     //        | REAL_CONST
     //        | LPAREN expr RPAREN
     //        | variable
-    parser::OrderedChoiceRules< 
+    OrderedChoiceRules< 
         Rule<parser::TermNonTermProduction, 
           SequenceExpr<TermExpr<PascalTokenPredicate<PascalTokenId::kPlus>>, NonTermExpr<parser::RuleId::kRule12>>
         >,
