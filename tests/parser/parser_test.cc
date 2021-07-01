@@ -20,7 +20,7 @@ using ::testing::Return;
 using NonTermType = std::string;
 using MockToken = Token<CalcTokenId, CalcTokenIdConverter>;
 using MockIterator = vector<MockToken>::iterator;
-using MockGrammar = CalculatorGrammar<NonTermType, MockIterator>;
+using MockGrammar = CalculatorGrammar<NonTermType, MockIterator>::type;
 
 
 class MockParserFactory : public IParserFactory<NonTermType, CalcToken> {

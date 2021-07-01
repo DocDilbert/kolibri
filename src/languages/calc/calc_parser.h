@@ -120,9 +120,10 @@ class CalcTokenPredicate {
   bool operator()(languages::calc::CalcToken token) { return token.GetId() == Id; };
 };
 
-// clang-format off
 template <typename TNonTerm, typename Iterator>
-using CalculatorGrammar= parser::ParserGrammar<
+struct CalculatorGrammar {
+  // clang-format off
+  using type = parser::ParserGrammar<
     TNonTerm, Iterator,
 
     // Rule #0
@@ -184,9 +185,11 @@ using CalculatorGrammar= parser::ParserGrammar<
         >
     >
   >;
-// clang-format on
+  // clang-format on
+};
 
-using CalcGrammar = CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, languages::calc::CalcToken>>, languages::calc::CalcLexer::iterator_type>;
+using CalcGrammar =
+    CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, languages::calc::CalcToken>>, languages::calc::CalcLexer::iterator_type>::type;
 using CalcParser = parser::Parser<CalcGrammar>;
 
 }  // namespace calc

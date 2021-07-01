@@ -222,10 +222,11 @@ class PascalParserFactory
   base::IAstFactory<nonterm_type, term_type>& ast_factory_;
 };
 
-// clang-format off
-  
 template <typename TNonTerm, typename Iterator>
-using PascalGrammar = parser::ParserGrammar<
+struct PascalGrammar {
+  // clang-format off
+
+  using type = parser::ParserGrammar<
     TNonTerm, Iterator,
  
     // Rule #0 - program
@@ -404,9 +405,9 @@ using PascalGrammar = parser::ParserGrammar<
     parser::Rule<parser::TermProduction, parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kId>>> 
   >;
 
-// clang-format on
-
-using PGrammar = PascalGrammar<std::shared_ptr<base::Ast<base::MakeShared, PascalToken>>, PascalLexer::iterator_type>;
+  // clang-format on
+};
+using PGrammar = PascalGrammar<std::shared_ptr<base::Ast<base::MakeShared, PascalToken>>, PascalLexer::iterator_type>::type;
 using PascalParser = parser::Parser<PGrammar>;
 
 }  // namespace pascal
