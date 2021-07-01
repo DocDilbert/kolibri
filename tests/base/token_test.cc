@@ -6,101 +6,96 @@
 #include <sstream>
 #include <string>
 
-
-#include "token_out.h" 
-
-
-using namespace languages::calc;
 using namespace base;
 using namespace std;
 
-using MockToken = Token<languages::calc::CalcTokenId, languages::calc::CalcTokenIdConverter>;
+enum MockTokenId {
+  kOneTok,
+  kTwoTok,
+};
 
-TEST(TokenTest, IntegerToken_CharArray_With_Size) {
+struct MockTokenIdConverter {
+  std::string ToString(MockTokenId id) {
+    switch (id) {
+      case kOneTok:
+        return "kOneTok";
+      case kTwoTok:
+        return "kTwoTok";
+      default:
+        return "default";
+    }
+  }
+};
+
+using MockToken = Token<MockTokenId, MockTokenIdConverter>;
+
+TEST(TokenTest, CompareTokensConstructCharArrayWithSizeShouldBeEqual) {
   stringstream ss;
   const char* number = "321";
-  MockToken token(CalcTokenId::INTEGER, number, strlen(number));
-  ss << token;
-
-  EXPECT_EQ(ss.str(), "Token(INTEGER, 321)");
-
-  EXPECT_EQ(token.GetId(), CalcTokenId::INTEGER);
-  EXPECT_EQ(token.GetValue(), "321");
-  EXPECT_EQ(token.GetStringId(), "INTEGER");
-}
-
-TEST(TokenTest, Compare_IntegerToken_CharArray_With_Size) {
-  stringstream ss;
-  const char* number = "321";
-  MockToken token1(CalcTokenId::INTEGER, number, strlen(number));
-  MockToken token2(CalcTokenId::INTEGER, number, strlen(number));
+  MockToken token1(kOneTok, number, strlen(number));
+  MockToken token2(kOneTok, number, strlen(number));
 
   EXPECT_EQ(token1, token2);
 }
 
-TEST(TokenTest, Compare_PlusToken) {
-  stringstream ss;
-  MockToken token1(CalcTokenId::PLUS);
-  MockToken token2(CalcTokenId::PLUS);
+TEST(TokenTest, CompareTokensConstructWithoutCharArrayShouldBeEqual) {
+  MockToken token1(kTwoTok);
+  MockToken token2(kTwoTok);
 
   EXPECT_EQ(token1, token2);
 }
 
-TEST(TokenTest, Compare_PlusToken_NotEqual) {
-  stringstream ss;
-  MockToken token1(CalcTokenId::PLUS);
-  MockToken token2(CalcTokenId::MINUS);
+TEST(TokenTest, CompareTokensShouldBeNotEqual) {
+  MockToken token1(kOneTok);
+  MockToken token2(kTwoTok);
 
   EXPECT_NE(token1, token2);
 }
 
-TEST(TokenTest, IntegerToken_CharArray_With_EndPtr) {
-  stringstream ss;
+TEST(TokenTest, ConstructTokenArrayWithSizeShouldBeConstructedCorretly) {
   const char* number = "321";
-  MockToken token(CalcTokenId::INTEGER, number, &number[3]);
-  ss << token;
+  MockToken token(kOneTok, number, strlen(number));
 
-  EXPECT_EQ(ss.str(), "Token(INTEGER, 321)");
-  EXPECT_EQ(token.GetId(), CalcTokenId::INTEGER);
+  EXPECT_EQ(token.GetId(), kOneTok);
   EXPECT_EQ(token.GetValue(), "321");
-  EXPECT_EQ(token.GetStringId(), "INTEGER");
+  EXPECT_EQ(token.GetStringId(), "kOneTok");
 }
 
-TEST(TokenTest, PlusToken_Without_Value) {
+TEST(TokenTest, ConstructTokenArrayWithEndPtrShouldBeConstructedCorretly) {
+  const char* number = "321";
+  MockToken token(kOneTok, number, &number[3]);
+
+  EXPECT_EQ(token.GetId(), kOneTok);
+  EXPECT_EQ(token.GetValue(), "321");
+  EXPECT_EQ(token.GetStringId(), "kOneTok");
+}
+
+TEST(TokenTest, ConstructTokenWithoutValueShouldBeConstructedCorrectly) {
   stringstream ss;
-  MockToken token(CalcTokenId::PLUS);
-  ss << token;
-  EXPECT_EQ(ss.str(), "Token(PLUS)");
-  EXPECT_EQ(token.GetId(), CalcTokenId::PLUS);
+  MockToken token(kTwoTok);
+
+  EXPECT_EQ(token.GetId(), kTwoTok);
   EXPECT_EQ(token.GetValue(), "");
-  EXPECT_EQ(token.GetStringId(), "PLUS");
+  EXPECT_EQ(token.GetStringId(), "kTwoTok");
 }
 
-TEST(TokenTest, IntegerToken_CopyConstructor_CharArray_With_Size) {
-  stringstream ss;
+TEST(TokenTest, CopyConstructorCharArrayWithSizeShouldBeCopiedCorrectly) {
   const char* number = "321";
-  MockToken token_orig(CalcTokenId::INTEGER, number, strlen(number));
+  MockToken token_orig(kOneTok, number, strlen(number));
   MockToken token(token_orig);
-  ss << token;
 
-  EXPECT_EQ(ss.str(), "Token(INTEGER, 321)");
-
-  EXPECT_EQ(token.GetId(), CalcTokenId::INTEGER);
+  EXPECT_EQ(token.GetId(), kOneTok);
   EXPECT_EQ(token.GetValue(), "321");
-  EXPECT_EQ(token.GetStringId(), "INTEGER");
+  EXPECT_EQ(token.GetStringId(), "kOneTok");
 }
 
-TEST(TokenTest, IntegerToken_CopyAssignment_CharArray_With_Size) {
-  stringstream ss;
+TEST(TokenTest, CopyAssignmentCharArrayWithSizeShouldBeAssignedCorrectly) {
   const char* number = "321";
-  MockToken token_orig(CalcTokenId::INTEGER, number, strlen(number));
-  MockToken token(CalcTokenId::PLUS);
+  MockToken token_orig(kOneTok, number, strlen(number));
+  MockToken token(kTwoTok);
   token = token_orig;
-  ss << token;
 
-  EXPECT_EQ(ss.str(), "Token(INTEGER, 321)");
-
-  EXPECT_EQ(token.GetId(), CalcTokenId::INTEGER);
+  EXPECT_EQ(token.GetId(), kOneTok);
   EXPECT_EQ(token.GetValue(), "321");
-  EXPECT_EQ(token.GetStringId(), "INTEGER");
+  EXPECT_EQ(token.GetStringId(), "kOneTok");
 }
