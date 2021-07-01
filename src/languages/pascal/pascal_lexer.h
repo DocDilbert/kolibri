@@ -70,9 +70,10 @@ struct PascalLexerRules {
   >;
 };
 
+// clang-format on
 using PascalLexer = lexer::Lexer<PascalLexerRules::type>;
 
-}
-}
+}  // namespace pascal
+}  // namespace languages
 
 #endif
