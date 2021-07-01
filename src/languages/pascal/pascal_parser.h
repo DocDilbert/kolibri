@@ -21,8 +21,7 @@ class PascalTokenPredicate {
   bool operator()(PascalToken token) { return token.GetId() == Id; };
 };
 
-class PascalParserFactory
-    : public parser::IParserFactory<std::shared_ptr<base::Ast<base::MakeShared, PascalToken>>, PascalToken> {
+class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::Ast<base::MakeShared, PascalToken>>, PascalToken> {
  public:
   using nonterm_type = std::shared_ptr<base::Ast<base::MakeShared, PascalToken>>;
   using term_type = PascalToken;
@@ -223,7 +222,7 @@ class PascalParserFactory
 };
 
 template <typename TNonTerm, typename Iterator>
-struct PascalGrammar : public parser::GrammarBase{
+struct PascalGrammar : public parser::GrammarBase {
   // clang-format off
   using type = parser::ParserGrammar<
     TNonTerm, Iterator,

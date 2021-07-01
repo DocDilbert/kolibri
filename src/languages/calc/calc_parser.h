@@ -188,8 +188,7 @@ struct CalculatorGrammar : public parser::GrammarBase {
   // clang-format on
 };
 
-using CalcGrammar =
-    CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcLexer::iterator_type>::type;
+using CalcGrammar = CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcLexer::iterator_type>::type;
 using CalcParser = parser::Parser<CalcGrammar>;
 
 }  // namespace calc
