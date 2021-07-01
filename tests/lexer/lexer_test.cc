@@ -54,9 +54,9 @@ TEST(LexerTest, Lexer_Integer_Delimited_By_Null) {
   CalcLexer lexer(line, 5);
   auto it = lexer.begin();
   NEXT_TOKEN_STRING_EQ(it, "Token(INTEGER, 1)");
-  NEXT_TOKEN_ID_EQ(it, CalcTokenId::NULLTERM);
+  NEXT_TOKEN_ID_EQ(it, CalcTokenId::kNullterm);
   NEXT_TOKEN_STRING_EQ(it, "Token(INTEGER, 2)");
-  NEXT_TOKEN_ID_EQ(it, CalcTokenId::NULLTERM);
+  NEXT_TOKEN_ID_EQ(it, CalcTokenId::kNullterm);
   NEXT_TOKEN_STRING_EQ(it, "Token(INTEGER, 3)");
   EXPECT_EQ(it, lexer.end());
   NEXT_TOKEN_STRING_EQ(it, "Token(ENDOFFILE)");
@@ -215,7 +215,7 @@ TEST(LexerTest, Lexer_Equation_Iterator_Compare_With_End) {
   NEXT_TOKEN_STRING_EQ(it, "Token(INTEGER, 237)");
   EXPECT_NE(it, end);
 
-  NEXT_TOKEN_ID_EQ(it, CalcTokenId::NULLTERM);
+  NEXT_TOKEN_ID_EQ(it, CalcTokenId::kNullterm);
   EXPECT_EQ(it, end);
 }
 

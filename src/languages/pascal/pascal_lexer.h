@@ -22,7 +22,7 @@ struct PascalLexerRules {
   using SequenceRule = lexer::SequenceRule<Factory, Args...>;
 
   using type = lexer::LexerRules< 
-      PFactory<PascalTokenId::UNKNOWN>,                                                         
+      PFactory<PascalTokenId::kUnknown>,                                                         
       PFactory<PascalTokenId::ENDOFFILE>, 
 
       // Skip rules

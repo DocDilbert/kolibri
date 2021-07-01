@@ -23,21 +23,21 @@ struct CalcLexerRules {
   using SequenceRule = lexer::SequenceRule<Factory, Args...>;
 
   using type = lexer::LexerRules<       
-      CFactory<CalcTokenId::UNKNOWN>,                 
-      CFactory<CalcTokenId::ENDOFFILE>,        
+      CFactory<CalcTokenId::kUnknown>,                 
+      CFactory<CalcTokenId::kEndOfFile>,        
       // Skip rules
       SequenceRule<lexer::SkipFactory, lexer::MatcherRangeByPredicate<lexer::IsChar<' '>>>,         
       
       // Production rules
-      SequenceRule<CFactory<CalcTokenId::COMMENT>, lexer::MatcherRangeByStartStopDelimiter<StringProviderOpenComment, StringProviderCloseComment>>,                                                
-      SequenceRule<CFactory<CalcTokenId::NULLTERM>, lexer::MatcherPredicate<lexer::IsChar<'\000'>>>, 
-      SequenceRule<CFactory<CalcTokenId::LPARENS>, lexer::MatcherPredicate<lexer::IsChar<'('>>>,
-      SequenceRule<CFactory<CalcTokenId::RPARENS>, lexer::MatcherPredicate<lexer::IsChar<')'>>>, 
-      SequenceRule<CFactory<CalcTokenId::PLUS>, lexer::MatcherPredicate<lexer::IsChar<'+'>>>,
-      SequenceRule<CFactory<CalcTokenId::MINUS>, lexer::MatcherPredicate<lexer::IsChar<'-'>>>, 
-      SequenceRule<CFactory<CalcTokenId::MULTIPLY>, lexer::MatcherPredicate<lexer::IsChar<'*'>>>,
-      SequenceRule<CFactory<CalcTokenId::DIVIDE>, lexer::MatcherPredicate<lexer::IsChar<'/'>>>,
-      SequenceRule<CFactory<CalcTokenId::INTEGER>, lexer::MatcherRangeByPredicate<lexer::IsDigit>>
+      SequenceRule<CFactory<CalcTokenId::kComment>, lexer::MatcherRangeByStartStopDelimiter<StringProviderOpenComment, StringProviderCloseComment>>,                                                
+      SequenceRule<CFactory<CalcTokenId::kNullterm>, lexer::MatcherPredicate<lexer::IsChar<'\000'>>>, 
+      SequenceRule<CFactory<CalcTokenId::kLParens>, lexer::MatcherPredicate<lexer::IsChar<'('>>>,
+      SequenceRule<CFactory<CalcTokenId::kRParens>, lexer::MatcherPredicate<lexer::IsChar<')'>>>, 
+      SequenceRule<CFactory<CalcTokenId::kPlus>, lexer::MatcherPredicate<lexer::IsChar<'+'>>>,
+      SequenceRule<CFactory<CalcTokenId::kMinus>, lexer::MatcherPredicate<lexer::IsChar<'-'>>>, 
+      SequenceRule<CFactory<CalcTokenId::kMultiply>, lexer::MatcherPredicate<lexer::IsChar<'*'>>>,
+      SequenceRule<CFactory<CalcTokenId::kDivide>, lexer::MatcherPredicate<lexer::IsChar<'/'>>>,
+      SequenceRule<CFactory<CalcTokenId::kInteger>, lexer::MatcherRangeByPredicate<lexer::IsDigit>>
   >;
 };
 

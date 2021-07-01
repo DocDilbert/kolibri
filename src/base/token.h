@@ -13,7 +13,7 @@ class Token {
   using id_type = TId;
 
   // construct token with Unknown id and no value
-  explicit Token() : id_(id_type::UNKNOWN), value_() {}
+  explicit Token() : id_(id_type::kUnknown), value_() {}
 
   // construct token with id and no value
   explicit Token(id_type id) : id_(id), value_() {}

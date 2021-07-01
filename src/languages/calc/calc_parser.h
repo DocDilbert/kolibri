@@ -44,10 +44,10 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
     switch (rule_id) {
       case parser::RuleId::kRule2: {
         switch (term.GetId()) {
-          case languages::calc::CalcTokenId::PLUS: {
+          case languages::calc::CalcTokenId::kPlus: {
             return ast_factory_.CreateUnaryOp(base::UnaryOpType::POSITIVE_OP, nonterm);
           }
-          case languages::calc::CalcTokenId::MINUS: {
+          case languages::calc::CalcTokenId::kMinus: {
             return ast_factory_.CreateUnaryOp(base::UnaryOpType::NEGATIVE_OP, nonterm);
           }
           default: {
@@ -69,10 +69,10 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
     switch (rule_id) {
       case parser::RuleId::kRule0: {
         switch (term.GetId()) {
-          case languages::calc::CalcTokenId::PLUS: {
+          case languages::calc::CalcTokenId::kPlus: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::ADD, lhs, rhs);
           }
-          case languages::calc::CalcTokenId::MINUS: {
+          case languages::calc::CalcTokenId::kMinus: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::SUB, lhs, rhs);
           }
           default: {
@@ -83,10 +83,10 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
 
       case parser::RuleId::kRule1: {
         switch (term.GetId()) {
-          case languages::calc::CalcTokenId::MULTIPLY: {
+          case languages::calc::CalcTokenId::kMultiply: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::MUL, lhs, rhs);
           }
-          case languages::calc::CalcTokenId::DIVIDE: {
+          case languages::calc::CalcTokenId::kDivide: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::INTEGER_DIV, lhs, rhs);
           }
           default: {
@@ -132,8 +132,8 @@ using CalculatorGrammar= parser::ParserGrammar<
         parser::NMatchesOrMoreExpr<0,
           parser::SequenceExpr<
             parser::OrderedChoiceExpr<
-              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::PLUS>>, 
-              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::MINUS>>
+              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kPlus>>, 
+              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kMinus>>
             >, 
             parser::NonTermExpr<parser::RuleId::kRule1>
           >
@@ -149,8 +149,8 @@ using CalculatorGrammar= parser::ParserGrammar<
         parser::NMatchesOrMoreExpr<0,
           parser::SequenceExpr<
             parser::OrderedChoiceExpr<
-              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::MULTIPLY>>,
-              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::DIVIDE>>
+              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kMultiply>>,
+              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kDivide>>
             >, 
             parser::NonTermExpr<parser::RuleId::kRule2>
           >
@@ -162,25 +162,25 @@ using CalculatorGrammar= parser::ParserGrammar<
     parser::OrderedChoiceRules< 
         parser::Rule<parser::TermNonTermProduction, 
           parser::SequenceExpr<
-            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::PLUS>>, 
+            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kPlus>>, 
             parser::NonTermExpr<parser::RuleId::kRule2>
           >
         >,
         parser::Rule<parser::TermNonTermProduction, 
           parser::SequenceExpr<
-            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::MINUS>>, 
+            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kMinus>>, 
             parser::NonTermExpr<parser::RuleId::kRule2>
           >
         >,
         parser::Rule<parser::BypassLastTermProduction, 
           parser::SequenceExpr<
-            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::LPARENS>>, 
+            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kLParens>>, 
             parser::NonTermExpr<parser::RuleId::kRule0>, 
-            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::RPARENS>>
+            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kRParens>>
           >
         >,
         parser::Rule<parser::TermProduction, 
-          parser::SequenceExpr<parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::INTEGER>>>
+          parser::SequenceExpr<parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kInteger>>>
         >
     >
   >;

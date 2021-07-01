@@ -7,7 +7,7 @@ namespace languages {
 namespace pascal {
 
 enum class PascalTokenId {
-  UNKNOWN,  //
+  kUnknown,  //
   PLUS,
   MINUS,
   MULTIPLY,

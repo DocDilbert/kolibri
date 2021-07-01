@@ -7,45 +7,45 @@ namespace languages {
 namespace calc {
 
 enum class CalcTokenId {
-  UNKNOWN,  //
-  PLUS,
-  MINUS,
-  MULTIPLY,
-  DIVIDE,
-  INTEGER,
-  NULLTERM,
-  LPARENS,
-  RPARENS,
-  KEYWORD,
-  COMMENT,
-  ENDOFFILE
+  kUnknown,  //
+  kPlus,
+  kMinus,
+  kMultiply,
+  kDivide,
+  kInteger,
+  kNullterm,
+  kLParens,
+  kRParens,
+  kKeyword,
+  kComment,
+  kEndOfFile
 };
 
 class CalcTokenIdConverter {
  public:
   static constexpr const char* ToString(CalcTokenId id_) {
     switch (id_) {
-      case CalcTokenId::PLUS:
+      case CalcTokenId::kPlus:
         return "PLUS";
-      case CalcTokenId::MINUS:
+      case CalcTokenId::kMinus:
         return "MINUS";
-      case CalcTokenId::MULTIPLY:
+      case CalcTokenId::kMultiply:
         return "MULTIPLY";
-      case CalcTokenId::DIVIDE:
+      case CalcTokenId::kDivide:
         return "DIVIDE";
-      case CalcTokenId::INTEGER:
+      case CalcTokenId::kInteger:
         return "INTEGER";
-      case CalcTokenId::NULLTERM:
+      case CalcTokenId::kNullterm:
         return "NULLTERM";
-      case CalcTokenId::LPARENS:
+      case CalcTokenId::kLParens:
         return "LPARENS";
-      case CalcTokenId::RPARENS:
+      case CalcTokenId::kRParens:
         return "RPARENS";
-      case CalcTokenId::KEYWORD:
+      case CalcTokenId::kKeyword:
         return "KEYWORD";
-      case CalcTokenId::COMMENT:
+      case CalcTokenId::kComment:
         return "COMMENT";
-      case CalcTokenId::ENDOFFILE:
+      case CalcTokenId::kEndOfFile:
         return "ENDOFFILE";
       default:
         break;
