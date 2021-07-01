@@ -34,7 +34,7 @@ enum class PascalTokenId {
 
 class PascalTokenIdConverter {
  public:
-  constexpr const char* ToString(PascalTokenId id_) {
+  static constexpr const char* ToString(PascalTokenId id_) {
     switch (id_) {
       case PascalTokenId::PLUS:
         return "PLUS";

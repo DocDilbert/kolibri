@@ -37,8 +37,7 @@ class Token {
   id_type GetId() const { return id_; }
 
   const char* GetStringId() const {
-    TIdConverter conv_;
-    return conv_.ToString(id_);
+    return TIdConverter::ToString(id_);
   }
 
   std::string_view GetValue() const { return value_; }
