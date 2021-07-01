@@ -1,7 +1,6 @@
 #ifndef INTERTEST_SRC_TOKEN_H_
 #define INTERTEST_SRC_TOKEN_H_
 
-#include <iostream>
 #include <string>
 #include <string_view>
 
