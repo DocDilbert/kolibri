@@ -24,6 +24,8 @@ struct PascalLexerRules {
   using type = lexer::LexerRules< 
       PFactory<PascalTokenId::UNKNOWN>,                                                         
       PFactory<PascalTokenId::ENDOFFILE>, 
+
+      // Skip rules
       SequenceRule<lexer::SkipFactory, lexer::MatcherRangeByPredicate<lexer::IsChar<' '>>>,
       SequenceRule<lexer::SkipFactory, lexer::MatcherRangeByPredicate<lexer::IsChar<'\n'>>>,
       SequenceRule<lexer::SkipFactory, 
@@ -32,6 +34,8 @@ struct PascalLexerRules {
           StringProviderCurlyBraceClose
         >
       >,
+
+      // Production rules
       SequenceRule<PFactory<PascalTokenId::LPARENS>, lexer::MatcherPredicate<lexer::IsChar<'('>>>, 
       SequenceRule<PFactory<PascalTokenId::RPARENS>, lexer::MatcherPredicate<lexer::IsChar<')'>>>,
       SequenceRule<PFactory<PascalTokenId::PLUS>, lexer::MatcherPredicate<lexer::IsChar<'+'>>>,                     
@@ -40,7 +44,10 @@ struct PascalLexerRules {
       SequenceRule<PFactory<PascalTokenId::SEMI>, lexer::MatcherPredicate<lexer::IsChar<';'>>>, 
       SequenceRule<PFactory<PascalTokenId::DOT>, lexer::MatcherPredicate<lexer::IsChar<'.'>>>,               
       SequenceRule<PFactory<PascalTokenId::FLOAT_DIV>, lexer::MatcherPredicate<lexer::IsChar<'/'>>>,
-      SequenceRule<PFactory<PascalTokenId::ASSIGN>, lexer::MatcherPredicate<lexer::IsChar<':'>>, lexer::MatcherPredicate<lexer::IsChar<'='>>>,
+      SequenceRule<PFactory<PascalTokenId::ASSIGN>, 
+        lexer::MatcherPredicate<lexer::IsChar<':'>>, 
+        lexer::MatcherPredicate<lexer::IsChar<'='>>
+      >,
       SequenceRule<PFactory<PascalTokenId::COLON>, lexer::MatcherPredicate<lexer::IsChar<':'>>>,
       SequenceRule<PFactory<PascalTokenId::COMMA>, lexer::MatcherPredicate<lexer::IsChar<','>>>,
       SequenceRule<PFactory<PascalTokenId::INTEGER_DIV>, lexer::MatcherString<StringProviderDiv, true>>,  
