@@ -2,7 +2,7 @@
 
 #include <fstream>
 #include <iostream>
-
+#include <type_traits>
 #include "base/ast_factory.h"
 #include "base/ast_types.h"
 #include "base/print_ast.h"
@@ -13,6 +13,7 @@
 #include "languages/pascal/pascal_parser.h"
 #include "lexer/lexer.h"
 #include "token_out.h"
+#include <typeinfo>
 
 using namespace base;
 using namespace std;
@@ -21,24 +22,13 @@ using namespace languages::pascal;
 using namespace languages::calc;
 using namespace parser;
 
-template <class T>
-struct Tag1 {};
-
-template <class T>
-struct Tag2 {};
-
-template <template <class> class Tag>
-struct IntTag {
-  typedef Tag<int> type;
-};
-
 void doPascal(string content) {
-  IntTag<Tag1>::type d;
   PascalLexer lexer(content.c_str(), strlen(content.c_str()));
   AstFactory<std::shared_ptr<Ast<MakeShared, PascalToken>>, PascalToken> ast_factory;
   PascalParserFactory parser_factory(ast_factory);
   PascalParser pparser(parser_factory);
 
+  cout << is_skip_factory<SkipFactory>::value<<endl<<flush;
   // CalcLexer lexer(content.c_str(), strlen(content.c_str()));
   // AstFactory<CalcAstTraits> ast_factory;
   // Parser<CGrammar> pparser(ast_factory);

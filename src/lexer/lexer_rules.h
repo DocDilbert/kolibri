@@ -1,6 +1,9 @@
 #ifndef INTERTEST_SRC_LEXER_RULES_H_
 #define INTERTEST_SRC_LEXER_RULES_H_
 
+#include <type_traits>
+
+#include "lexer/lexer_traits.h"
 #include "lexer/lexer_transforms.h"
 
 namespace lexer {
@@ -47,7 +50,7 @@ class MatcherString<StringProvider, true> {
       cmp++;
     }
 
-        // special case ... given input string is not long enough
+    // special case ... given input string is not long enough
     if (*cmp != '\0') {
       return begin;
     }
@@ -111,10 +114,12 @@ template <typename Factory, typename... Args>
 class SequenceRule {
  public:
   using value_type = typename Factory::value_type;
+  using factory_type = Factory;
+
   const char* Match(const char* begin, const char* end) { return MatchRecursive<Args...>(begin, begin, end); }
 
   value_type Create(const char* begin, const char* end) {
-    Factory factory;
+    factory_type factory;
     return factory.Create(begin, end);
   }
 
@@ -155,7 +160,7 @@ class LexerRules {
       return FactoryEOF().Create(begin, end);
     }
 
-    return MatchRecursive<Args...>(begin, end); 
+    return MatchRecursive<Args...>(begin, end);
   };
 
   const char* GetPosition() { return it_; }
@@ -163,18 +168,27 @@ class LexerRules {
  private:
   const char* it_;
 
+  template <bool Cond, typename T>
+  struct SelectCreateOrRedirect {
+    static constexpr value_type impl(T& obj, const char* begin, const char* end) noexcept { return obj.Create(begin, end); }
+  };
+
+  template <typename T>
+  struct SelectCreateOrRedirect<true, T> {
+    static constexpr value_type impl(T& obj, const char* begin, const char* end) noexcept { return FactoryUNK().Create(begin, end); }
+  };
+
   template <typename T1>
   value_type MatchRecursive(const char* begin, const char* end) {
     T1 t1;
     auto it = t1.Match(begin, end);
     if (it != begin) {
       it_ = it;
-      return t1.Create(begin, it_);
+      return SelectCreateOrRedirect<is_skip_factory<typename T1::factory_type>::value, T1>::impl(t1, begin, it_);
     }
     it_ = begin + 1;
     return FactoryUNK().Create(begin, it_);
   }
-
 
   template <typename T1, typename T2, typename... Rules>
   value_type MatchRecursive(const char* begin, const char* end) {
@@ -183,12 +197,11 @@ class LexerRules {
 
     if (it != begin) {
       it_ = it;
-      return t1.Create(begin, it_);
+      return SelectCreateOrRedirect<is_skip_factory<typename T1::factory_type>::value, T1>::impl(t1, begin, it_);
     }
 
     return MatchRecursive<T2, Rules...>(begin, end);
   }
-
 };
 
 }  // namespace lexer

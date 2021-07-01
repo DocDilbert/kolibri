@@ -168,11 +168,20 @@ class LexerRulesTest : public ::testing::Test {
 
 using MockToken = string;
 
-template <unsigned Tid, bool TMatch>
+template <unsigned Tid>
+class MockLexerRulesFactory {
+ public:
+  using value_type = MockToken;
+
+  value_type Create(const char* begin, const char* end) { return "MockFactory" + to_string(Tid); }
+};
+
+template <unsigned Tid, char TMatchChar, typename TFactory = MockLexerRulesFactory<Tid>>
 class MockLexerRulesMatcher {
  public:
+  using factory_type = TFactory;
   const char* Match(const char* begin, const char* end) {
-    if (TMatch == true) {
+    if (*begin == TMatchChar) {
       return begin + 1;
     }
     return begin;
@@ -184,19 +193,11 @@ class MockLexerRulesMatcher {
   }
 };
 
-template <unsigned Tid>
-class MockLexerRulesFactory {
- public:
-  using value_type = MockToken;
-
-  value_type Create(const char* begin, const char* end) { return "MockFactory" + to_string(Tid); }
-};
-
 TEST_F(LexerRulesTest, NoMatch) {
   LexerRules<                    //
       MockLexerRulesFactory<0>,  // unknown factory
       MockLexerRulesFactory<1>,  // end of file factory
-      MockLexerRulesMatcher<0, false>>
+      MockLexerRulesMatcher<0, '_'>>
       rules;
   const char* test_str = "Test1____";
   auto match_result = rules.Match(test_str, &test_str[strlen(test_str)]);
@@ -208,7 +209,7 @@ TEST_F(LexerRulesTest, EndOfFileButMatch) {
   LexerRules<                    //
       MockLexerRulesFactory<0>,  // unknown factory
       MockLexerRulesFactory<1>,  // end of file factory
-      MockLexerRulesMatcher<0, true>>
+      MockLexerRulesMatcher<0, '_'>>
       rules;
   const char* test_str = "";
   auto match_result = rules.Match(test_str, &test_str[strlen(test_str)]);
@@ -220,7 +221,7 @@ TEST_F(LexerRulesTest, FirstRuleMatch) {
   LexerRules<                    //
       MockLexerRulesFactory<0>,  // unknown factory
       MockLexerRulesFactory<1>,  // end of file factory
-      MockLexerRulesMatcher<0, true>>
+      MockLexerRulesMatcher<0, 'T'>>
       rules;
   const char* test_str = "Test1____";
   auto match_result = rules.Match(test_str, &test_str[strlen(test_str)]);
@@ -232,11 +233,24 @@ TEST_F(LexerRulesTest, SecondRuleMatch) {
   LexerRules<                           //
       MockLexerRulesFactory<0>,         // unknown factory
       MockLexerRulesFactory<1>,         // end of file factory
-      MockLexerRulesMatcher<0, false>,  //
-      MockLexerRulesMatcher<1, true>>
+      MockLexerRulesMatcher<0, '_'>,  //
+      MockLexerRulesMatcher<1, 'T'>>
       rules;
   const char* test_str = "Test1____";
   auto match_result = rules.Match(test_str, &test_str[strlen(test_str)]);
   EXPECT_EQ(match_result, "Create1");
   EXPECT_EQ(rules.GetPosition(), &test_str[1]);
+}
+
+TEST_F(LexerRulesTest, BothRulesMatchFirstIsSkipped) {
+  LexerRules<                                       //
+      MockLexerRulesFactory<0>,                     // unknown factory
+      MockLexerRulesFactory<1>,                     // end of file factory
+      MockLexerRulesMatcher<0, 'T', SkipFactory>,  //
+      MockLexerRulesMatcher<1, 'e'>>
+      rules;
+  const char* test_str = "Test1____";
+  auto match_result = rules.Match(test_str, &test_str[strlen(test_str)]);
+  EXPECT_EQ(match_result, "Create1");
+  EXPECT_EQ(rules.GetPosition(), &test_str[2]);
 }
