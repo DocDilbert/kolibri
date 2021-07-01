@@ -23,6 +23,26 @@ using namespace languages::pascal;
 using namespace languages::calc;
 using namespace parser;
 
+#undef __NEW_HOOKS__
+#ifdef __NEW_HOOKS__
+void * operator new(size_t size){
+    int *p=(int*)malloc(size);
+    cout<<*p<<" "<<p<<endl;
+    return p;
+}
+void operator delete(void *p) noexcept
+{   free(p);
+} 
+void * operator new[](size_t size){
+    void *p=malloc(size);
+    return p;
+}
+
+void operator delete[](void *p) noexcept{
+     free(p);
+}
+#endif
+
 void doPascal(string content) {
   PascalLexer lexer(content.c_str(), strlen(content.c_str()));
   AstFactory<std::shared_ptr<Ast<MakeShared, PascalToken>>, PascalToken> ast_factory;
