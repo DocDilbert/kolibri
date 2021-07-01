@@ -36,4 +36,12 @@ struct StringProviderInteger {
 struct StringProviderReal {
   constexpr const char* GetString() { return "REAL"; }
 };
+
+struct StringProviderCurlyBraceOpen {
+  constexpr const char* GetString() { return "{"; }
+};
+
+struct StringProviderCurlyBraceClose {
+  constexpr const char* GetString() { return "}"; }
+};
 #endif

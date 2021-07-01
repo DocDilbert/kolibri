@@ -15,4 +15,10 @@ BEGIN
   y := 20 / 7 + 3.14;
   nj10 := 30;
   x := 11;
-END.
+  { writeln('a = ', a); }
+  { writeln('b = ', b); }
+  { writeln('c = ', c); }
+  { writeln('number = ', number); }
+  { writeln('x = ', x); }
+  { writeln('y = ', y); }
+END.   {Part10}

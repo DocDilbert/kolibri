@@ -26,6 +26,12 @@ struct PascalLexerRules {
       PFactory<PascalTokenId::ENDOFFILE>, 
       SequenceRule<lexer::SkipFactory, lexer::MatcherRangeByPredicate<lexer::IsChar<' '>>>,
       SequenceRule<lexer::SkipFactory, lexer::MatcherRangeByPredicate<lexer::IsChar<'\n'>>>,
+      SequenceRule<lexer::SkipFactory, 
+        lexer::MatcherRangeByStartStopDelimiter<
+          StringProviderCurlyBraceOpen,
+          StringProviderCurlyBraceClose
+        >
+      >,
       SequenceRule<PFactory<PascalTokenId::LPARENS>, lexer::MatcherPredicate<lexer::IsChar<'('>>>, 
       SequenceRule<PFactory<PascalTokenId::RPARENS>, lexer::MatcherPredicate<lexer::IsChar<')'>>>,
       SequenceRule<PFactory<PascalTokenId::PLUS>, lexer::MatcherPredicate<lexer::IsChar<'+'>>>,                     

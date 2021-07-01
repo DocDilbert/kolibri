@@ -13,6 +13,7 @@ std::ostream& operator<<(std::ostream& os, const base::Token<languages::calc::Ca
   }
   return os;
 }
+
 std::ostream& operator<<(std::ostream& os, const base::Token<languages::pascal::PascalTokenId, languages::pascal::PascalTokenIdConverter>& token) {
   auto value = token.GetValue();
   if (value.length() == 0) {
