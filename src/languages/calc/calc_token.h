@@ -17,7 +17,6 @@ enum class CalcTokenId {
   kLParens,
   kRParens,
   kKeyword,
-  kComment,
   kEndOfFile
 };
 
@@ -43,8 +42,6 @@ class CalcTokenIdConverter {
         return "RPARENS";
       case CalcTokenId::kKeyword:
         return "KEYWORD";
-      case CalcTokenId::kComment:
-        return "COMMENT";
       case CalcTokenId::kEndOfFile:
         return "ENDOFFILE";
       default:

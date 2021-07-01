@@ -29,7 +29,6 @@ struct CalcLexerRules {
       SequenceRule<lexer::SkipFactory, lexer::MatcherRangeByPredicate<lexer::IsChar<' '>>>,         
       
       // Production rules
-      SequenceRule<CFactory<CalcTokenId::kComment>, lexer::MatcherRangeByStartStopDelimiter<StringProviderOpenComment, StringProviderCloseComment>>,                                                
       SequenceRule<CFactory<CalcTokenId::kNullterm>, lexer::MatcherPredicate<lexer::IsChar<'\000'>>>, 
       SequenceRule<CFactory<CalcTokenId::kLParens>, lexer::MatcherPredicate<lexer::IsChar<'('>>>,
       SequenceRule<CFactory<CalcTokenId::kRParens>, lexer::MatcherPredicate<lexer::IsChar<')'>>>, 

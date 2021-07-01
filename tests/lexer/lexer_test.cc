@@ -219,23 +219,4 @@ TEST(LexerTest, Lexer_Equation_Iterator_Compare_With_End) {
   EXPECT_EQ(it, end);
 }
 
-TEST(LexerTest, Lexer_Equation_Iterator_Comment_Middle) {
-  stringstream ss;
-  const char* line = "33+ /* HALLO WELT */ 44";
 
-  CalcLexer lexer(line, strlen(line));
-  auto it = lexer.begin();
-  auto end = lexer.end();
-
-  NEXT_TOKEN_STRING_EQ(it, "Token(INTEGER, 33)");
-  EXPECT_NE(it, end);
-
-  NEXT_TOKEN_STRING_EQ(it, "Token(PLUS, +)");
-  EXPECT_NE(it, end);
-
-  NEXT_TOKEN_STRING_EQ(it, "Token(COMMENT, /* HALLO WELT */)");
-  EXPECT_NE(it, end);
-
-  NEXT_TOKEN_STRING_EQ(it, "Token(INTEGER, 44)");
-  EXPECT_EQ(it, end);
-}
