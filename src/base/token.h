@@ -7,10 +7,10 @@
 namespace base {
 // The Token class stores an id and the position of an token
 // in a const char* buffer.
-template <typename Id, typename IdConverter>
+template <typename TId, typename TIdConverter>
 class Token {
  public:
-  using id_type = Id;
+  using id_type = TId;
 
   // construct token with Unknown id and no value
   explicit Token() : id_(id_type::UNKNOWN), value_() {}
@@ -37,7 +37,7 @@ class Token {
   id_type GetId() const { return id_; }
 
   std::string GetStringId() const {
-    IdConverter conv_;
+    TIdConverter conv_;
     return conv_.ToString(id_);
   }
 
