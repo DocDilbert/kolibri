@@ -15,10 +15,10 @@
 namespace languages {
 namespace calc {
 
-class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::Ast<base::MakeShared, languages::calc::CalcToken>>, languages::calc::CalcToken> {
+class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> {
  public:
-  using nonterm_type = std::shared_ptr<base::Ast<base::MakeShared, languages::calc::CalcToken>>;
-  using term_type = languages::calc::CalcToken;
+  using nonterm_type = std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>;
+  using term_type = CalcToken;
 
   CalcParserFactory(base::IAstFactory<nonterm_type, term_type>& ast_factory) : ast_factory_(ast_factory) {}
 
@@ -44,10 +44,10 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
     switch (rule_id) {
       case parser::RuleId::kRule2: {
         switch (term.GetId()) {
-          case languages::calc::CalcTokenId::kPlus: {
+          case CalcTokenId::kPlus: {
             return ast_factory_.CreateUnaryOp(base::UnaryOpType::POSITIVE_OP, nonterm);
           }
-          case languages::calc::CalcTokenId::kMinus: {
+          case CalcTokenId::kMinus: {
             return ast_factory_.CreateUnaryOp(base::UnaryOpType::NEGATIVE_OP, nonterm);
           }
           default: {
@@ -69,10 +69,10 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
     switch (rule_id) {
       case parser::RuleId::kRule0: {
         switch (term.GetId()) {
-          case languages::calc::CalcTokenId::kPlus: {
+          case CalcTokenId::kPlus: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::ADD, lhs, rhs);
           }
-          case languages::calc::CalcTokenId::kMinus: {
+          case CalcTokenId::kMinus: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::SUB, lhs, rhs);
           }
           default: {
@@ -83,10 +83,10 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
 
       case parser::RuleId::kRule1: {
         switch (term.GetId()) {
-          case languages::calc::CalcTokenId::kMultiply: {
+          case CalcTokenId::kMultiply: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::MUL, lhs, rhs);
           }
-          case languages::calc::CalcTokenId::kDivide: {
+          case CalcTokenId::kDivide: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::INTEGER_DIV, lhs, rhs);
           }
           default: {
@@ -114,10 +114,10 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
   base::IAstFactory<nonterm_type, term_type>& ast_factory_;
 };
 
-template <languages::calc::CalcTokenId Id>
+template <CalcTokenId Id>
 class CalcTokenPredicate {
  public:
-  bool operator()(languages::calc::CalcToken token) { return token.GetId() == Id; };
+  bool operator()(CalcToken token) { return token.GetId() == Id; };
 };
 
 template <typename TNonTerm, typename Iterator>
@@ -133,8 +133,8 @@ struct CalculatorGrammar : public parser::GrammarBase {
         NMatchesOrMoreExpr<0,
           SequenceExpr<
             OrderedChoiceExpr<
-              TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kPlus>>, 
-              TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kMinus>>
+              TermExpr<CalcTokenPredicate<CalcTokenId::kPlus>>, 
+              TermExpr<CalcTokenPredicate<CalcTokenId::kMinus>>
             >, 
             NonTermExpr<parser::RuleId::kRule1>
           >
@@ -150,8 +150,8 @@ struct CalculatorGrammar : public parser::GrammarBase {
         NMatchesOrMoreExpr<0,
           SequenceExpr<
             OrderedChoiceExpr<
-              TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kMultiply>>,
-              TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kDivide>>
+              TermExpr<CalcTokenPredicate<CalcTokenId::kMultiply>>,
+              TermExpr<CalcTokenPredicate<CalcTokenId::kDivide>>
             >, 
             NonTermExpr<parser::RuleId::kRule2>
           >
@@ -163,25 +163,25 @@ struct CalculatorGrammar : public parser::GrammarBase {
     parser::OrderedChoiceRules< 
         Rule<parser::TermNonTermProduction, 
           SequenceExpr<
-            TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kPlus>>, 
+            TermExpr<CalcTokenPredicate<CalcTokenId::kPlus>>, 
             NonTermExpr<parser::RuleId::kRule2>
           >
         >,
         Rule<parser::TermNonTermProduction, 
           SequenceExpr<
-            TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kMinus>>, 
+            TermExpr<CalcTokenPredicate<CalcTokenId::kMinus>>, 
             NonTermExpr<parser::RuleId::kRule2>
           >
         >,
         Rule<parser::BypassLastTermProduction, 
           SequenceExpr<
-            TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kLParens>>, 
+            TermExpr<CalcTokenPredicate<CalcTokenId::kLParens>>, 
             NonTermExpr<parser::RuleId::kRule0>, 
-            TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kRParens>>
+            TermExpr<CalcTokenPredicate<CalcTokenId::kRParens>>
           >
         >,
         Rule<parser::TermProduction, 
-          SequenceExpr<TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kInteger>>>
+          SequenceExpr<TermExpr<CalcTokenPredicate<CalcTokenId::kInteger>>>
         >
     >
   >;
@@ -189,7 +189,7 @@ struct CalculatorGrammar : public parser::GrammarBase {
 };
 
 using CalcGrammar =
-    CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, languages::calc::CalcToken>>, languages::calc::CalcLexer::iterator_type>::type;
+    CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcLexer::iterator_type>::type;
 using CalcParser = parser::Parser<CalcGrammar>;
 
 }  // namespace calc

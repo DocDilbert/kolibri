@@ -15,17 +15,17 @@
 namespace languages {
 namespace pascal {
 
-template <languages::pascal::PascalTokenId Id>
+template <PascalTokenId Id>
 class PascalTokenPredicate {
  public:
-  bool operator()(languages::pascal::PascalToken token) { return token.GetId() == Id; };
+  bool operator()(PascalToken token) { return token.GetId() == Id; };
 };
 
 class PascalParserFactory
-    : public parser::IParserFactory<std::shared_ptr<base::Ast<base::MakeShared, languages::pascal::PascalToken>>, languages::pascal::PascalToken> {
+    : public parser::IParserFactory<std::shared_ptr<base::Ast<base::MakeShared, PascalToken>>, PascalToken> {
  public:
-  using nonterm_type = std::shared_ptr<base::Ast<base::MakeShared, languages::pascal::PascalToken>>;
-  using term_type = languages::pascal::PascalToken;
+  using nonterm_type = std::shared_ptr<base::Ast<base::MakeShared, PascalToken>>;
+  using term_type = PascalToken;
 
   PascalParserFactory(base::IAstFactory<nonterm_type, term_type>& ast_factory) : ast_factory_(ast_factory) {}
 
@@ -40,10 +40,10 @@ class PascalParserFactory
       }
       case parser::RuleId::kRule12: {  // factor
         switch (term.GetId()) {
-          case languages::pascal::PascalTokenId::kIntegerConst: {
+          case PascalTokenId::kIntegerConst: {
             return ast_factory_.CreateConst(base::ConstType::INTEGER, std::string(term.GetValue()));
           }
-          case languages::pascal::PascalTokenId::kRealConst: {
+          case PascalTokenId::kRealConst: {
             return ast_factory_.CreateConst(base::ConstType::REAL, std::string(term.GetValue()));
           }
           default: {
@@ -83,10 +83,10 @@ class PascalParserFactory
     switch (rule_id) {
       case parser::RuleId::kRule12: {  // factor
         switch (term.GetId()) {
-          case languages::pascal::PascalTokenId::kPlus: {
+          case PascalTokenId::kPlus: {
             return ast_factory_.CreateUnaryOp(base::UnaryOpType::POSITIVE_OP, nonterm);
           }
-          case languages::pascal::PascalTokenId::kMinus: {
+          case PascalTokenId::kMinus: {
             return ast_factory_.CreateUnaryOp(base::UnaryOpType::NEGATIVE_OP, nonterm);
           }
           default: {
@@ -123,7 +123,7 @@ class PascalParserFactory
     switch (rule_id) {
       case parser::RuleId::kRule8: {  // assignment_statement
         switch (term.GetId()) {
-          case languages::pascal::PascalTokenId::kAssign: {
+          case PascalTokenId::kAssign: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::ASSSIGN, lhs, rhs);
           }
           default: {
@@ -134,10 +134,10 @@ class PascalParserFactory
 
       case parser::RuleId::kRule10: {  // expr
         switch (term.GetId()) {
-          case languages::pascal::PascalTokenId::kPlus: {
+          case PascalTokenId::kPlus: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::ADD, lhs, rhs);
           }
-          case languages::pascal::PascalTokenId::kMinus: {
+          case PascalTokenId::kMinus: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::SUB, lhs, rhs);
           }
           default: {
@@ -148,13 +148,13 @@ class PascalParserFactory
 
       case parser::RuleId::kRule11: {  // term
         switch (term.GetId()) {
-          case languages::pascal::PascalTokenId::kMultiply: {
+          case PascalTokenId::kMultiply: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::MUL, lhs, rhs);
           }
-          case languages::pascal::PascalTokenId::kIntegerDiv: {
+          case PascalTokenId::kIntegerDiv: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::INTEGER_DIV, lhs, rhs);
           }
-          case languages::pascal::PascalTokenId::kFloatDiv: {
+          case PascalTokenId::kFloatDiv: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::FLOAT_DIV, lhs, rhs);
           }
           default: {
@@ -199,7 +199,7 @@ class PascalParserFactory
 
     for (int i = 0; i < terms.size(); ++i) {
       auto term = terms[i];
-      if (term.GetId() == languages::pascal::PascalTokenId::kId) {
+      if (term.GetId() == PascalTokenId::kId) {
         id_terms.push_back(term);
       }
     }
@@ -232,11 +232,11 @@ struct PascalGrammar : public parser::GrammarBase{
     // program : PROGRAM variable SEMI block DOT
     Rule<parser::NonTermNonTermProduction, 
       SequenceExpr<
-        TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kProgram>>,
+        TermExpr<PascalTokenPredicate<PascalTokenId::kProgram>>,
         NonTermExpr<parser::RuleId::kRule13>, 
-        TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kSemi>>,
+        TermExpr<PascalTokenPredicate<PascalTokenId::kSemi>>,
         NonTermExpr<parser::RuleId::kRule1>, 
-        TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kDot>>
+        TermExpr<PascalTokenPredicate<PascalTokenId::kDot>>
       >
     >,
 
@@ -255,11 +255,11 @@ struct PascalGrammar : public parser::GrammarBase{
     Rule<parser::NonTermListProduction, 
       OrderedChoiceExpr<
         SequenceExpr<
-          TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kVar>>,
+          TermExpr<PascalTokenPredicate<PascalTokenId::kVar>>,
           NMatchesOrMoreExpr<1,
               SequenceExpr<
                 NonTermExpr<parser::RuleId::kRule3>,
-                TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kSemi>>
+                TermExpr<PascalTokenPredicate<PascalTokenId::kSemi>>
               >
           >
         >,
@@ -271,14 +271,14 @@ struct PascalGrammar : public parser::GrammarBase{
     // variable_declaration : ID (COMMA ID)* COLON type_spec
     Rule<parser::TermNonTermListProduction, 
       SequenceExpr<
-        TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kId>>,
+        TermExpr<PascalTokenPredicate<PascalTokenId::kId>>,
         NMatchesOrMoreExpr<0,
           SequenceExpr<
-            TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kComma>>,
-            TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kId>>
+            TermExpr<PascalTokenPredicate<PascalTokenId::kComma>>,
+            TermExpr<PascalTokenPredicate<PascalTokenId::kId>>
           >
         >,
-        TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kColon>>,
+        TermExpr<PascalTokenPredicate<PascalTokenId::kColon>>,
         NonTermExpr<parser::RuleId::kRule4>
       >
     >,
@@ -287,15 +287,15 @@ struct PascalGrammar : public parser::GrammarBase{
     // type_spec : INTEGER | REAL
     Rule<parser::TermProduction, 
       OrderedChoiceExpr<
-        TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kInteger>>,
-        TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kReal>>
+        TermExpr<PascalTokenPredicate<PascalTokenId::kInteger>>,
+        TermExpr<PascalTokenPredicate<PascalTokenId::kReal>>
       >
     >,
 
     // Rule #5 - compound_statement
     // compound_statement : BEGIN statement_list END
     Rule<parser::NonTermProduction, 
-      SequenceExpr<TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kBegin>>, NonTermExpr<parser::RuleId::kRule6>, TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kEnd>>>
+      SequenceExpr<TermExpr<PascalTokenPredicate<PascalTokenId::kBegin>>, NonTermExpr<parser::RuleId::kRule6>, TermExpr<PascalTokenPredicate<PascalTokenId::kEnd>>>
     >,
 
     // Rule #6 - statement_list
@@ -309,7 +309,7 @@ struct PascalGrammar : public parser::GrammarBase{
         NonTermExpr<parser::RuleId::kRule7>,
         NMatchesOrMoreExpr<0,
           SequenceExpr<
-            TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kSemi>>, 
+            TermExpr<PascalTokenPredicate<PascalTokenId::kSemi>>, 
             NonTermExpr<parser::RuleId::kRule7>
           >
         >
@@ -329,7 +329,7 @@ struct PascalGrammar : public parser::GrammarBase{
     // Rule #8 - assignment_statement
     // assignment_statement : variable ASSIGN expr
     Rule<parser::NonTermTermNonTermProduction,
-      SequenceExpr< NonTermExpr<parser::RuleId::kRule13>, TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kAssign>>, NonTermExpr<parser::RuleId::kRule10>>
+      SequenceExpr< NonTermExpr<parser::RuleId::kRule13>, TermExpr<PascalTokenPredicate<PascalTokenId::kAssign>>, NonTermExpr<parser::RuleId::kRule10>>
     >,
 
     // Rule #9 - empty
@@ -344,8 +344,8 @@ struct PascalGrammar : public parser::GrammarBase{
         NMatchesOrMoreExpr<0,
           SequenceExpr<
             OrderedChoiceExpr<
-              TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kPlus>>, 
-              TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kMinus>>
+              TermExpr<PascalTokenPredicate<PascalTokenId::kPlus>>, 
+              TermExpr<PascalTokenPredicate<PascalTokenId::kMinus>>
             >, 
             NonTermExpr<parser::RuleId::kRule11>
           >
@@ -361,9 +361,9 @@ struct PascalGrammar : public parser::GrammarBase{
         NMatchesOrMoreExpr<0,
           SequenceExpr<
             OrderedChoiceExpr<
-              TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kMultiply>>, 
-              TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kIntegerDiv>>,
-              TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kFloatDiv>>
+              TermExpr<PascalTokenPredicate<PascalTokenId::kMultiply>>, 
+              TermExpr<PascalTokenPredicate<PascalTokenId::kIntegerDiv>>,
+              TermExpr<PascalTokenPredicate<PascalTokenId::kFloatDiv>>
             >, 
             NonTermExpr<parser::RuleId::kRule12>
           >
@@ -380,19 +380,19 @@ struct PascalGrammar : public parser::GrammarBase{
     //        | variable
     parser::OrderedChoiceRules< 
         Rule<parser::TermNonTermProduction, 
-          SequenceExpr<TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kPlus>>, NonTermExpr<parser::RuleId::kRule12>>
+          SequenceExpr<TermExpr<PascalTokenPredicate<PascalTokenId::kPlus>>, NonTermExpr<parser::RuleId::kRule12>>
         >,
         Rule<parser::TermNonTermProduction, 
-          SequenceExpr<TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kMinus>>, NonTermExpr<parser::RuleId::kRule12>>
+          SequenceExpr<TermExpr<PascalTokenPredicate<PascalTokenId::kMinus>>, NonTermExpr<parser::RuleId::kRule12>>
         >,
         Rule<parser::TermProduction, 
-          TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kIntegerConst>>
+          TermExpr<PascalTokenPredicate<PascalTokenId::kIntegerConst>>
         >,
         Rule<parser::TermProduction, 
-          TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kRealConst>>
+          TermExpr<PascalTokenPredicate<PascalTokenId::kRealConst>>
         >,
         Rule<parser::BypassLastTermProduction,
-          SequenceExpr<TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kLParens>>, NonTermExpr<parser::RuleId::kRule10>, TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kRParens>>>
+          SequenceExpr<TermExpr<PascalTokenPredicate<PascalTokenId::kLParens>>, NonTermExpr<parser::RuleId::kRule10>, TermExpr<PascalTokenPredicate<PascalTokenId::kRParens>>>
         >,
         Rule<parser::BypassLastTermProduction, 
           NonTermExpr<parser::RuleId::kRule13>
@@ -401,7 +401,7 @@ struct PascalGrammar : public parser::GrammarBase{
 
     // Rule #13 - variable
     // variable: ID
-    Rule<parser::TermProduction, TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kId>>> 
+    Rule<parser::TermProduction, TermExpr<PascalTokenPredicate<PascalTokenId::kId>>> 
   >;
 
   // clang-format on
