@@ -1,5 +1,5 @@
-#ifndef INTERTEST_SRC_PARSER_H_
-#define INTERTEST_SRC_PARSER_H_
+#ifndef KOLIBRI_SRC_PARSER_H_
+#define KOLIBRI_SRC_PARSER_H_
 
 #include "parser/i_parser_factory.h"
 #include "parser/rule_id.h"

@@ -1,5 +1,5 @@
-#ifndef INTERTEST_SRC_I_AST_FACTORY_H_
-#define INTERTEST_SRC_I_AST_FACTORY_H_
+#ifndef KOLIBRI_SRC_I_AST_FACTORY_H_
+#define KOLIBRI_SRC_I_AST_FACTORY_H_
 
 #include <string>
 #include <vector>

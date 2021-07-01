@@ -1,5 +1,5 @@
-#ifndef INTERTEST_SRC_CALC_TOKEN_H_
-#define INTERTEST_SRC_CALC_TOKEN_H_
+#ifndef KOLIBRI_SRC_CALC_TOKEN_H_
+#define KOLIBRI_SRC_CALC_TOKEN_H_
 
 #include "base/token.h"
 

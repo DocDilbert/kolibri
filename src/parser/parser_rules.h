@@ -1,5 +1,5 @@
-#ifndef INTERTEST_SRC_PARSER_RULES_H_
-#define INTERTEST_SRC_PARSER_RULES_H_
+#ifndef KOLIBRI_SRC_PARSER_RULES_H_
+#define KOLIBRI_SRC_PARSER_RULES_H_
 #include <assert.h>
 
 #include <memory>

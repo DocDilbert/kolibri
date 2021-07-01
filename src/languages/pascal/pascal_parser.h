@@ -1,5 +1,5 @@
-#ifndef INTERTEST_SRC_PASCAL_PARSER_H_
-#define INTERTEST_SRC_PASCAL_PARSER_H_
+#ifndef KOLIBRI_SRC_PASCAL_PARSER_H_
+#define KOLIBRI_SRC_PASCAL_PARSER_H_
 
 #include "base/ast_factory.h"
 #include "base/ast_types.h"

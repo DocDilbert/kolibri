@@ -1,5 +1,5 @@
-#ifndef INTERTEST_SRC_AST_H_
-#define INTERTEST_SRC_AST_H_
+#ifndef KOLIBRI_SRC_AST_H_
+#define KOLIBRI_SRC_AST_H_
 
 #include <memory>
 #include <string>

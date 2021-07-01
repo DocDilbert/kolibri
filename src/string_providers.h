@@ -1,5 +1,5 @@
-#ifndef INTERTEST_SRC_STRING_PROVIDER_H_
-#define INTERTEST_SRC_STRING_PROVIDER_H_
+#ifndef KOLIBRI_SRC_STRING_PROVIDER_H_
+#define KOLIBRI_SRC_STRING_PROVIDER_H_
 
 struct StringProviderOpenComment {
   constexpr const char* GetString() { return "/*"; }

@@ -1,5 +1,5 @@
-#ifndef INTERTEST_SRC_PASCAL_LEXER_H_
-#define INTERTEST_SRC_PASCAL_LEXER_H_
+#ifndef KOLIBRI_SRC_PASCAL_LEXER_H_
+#define KOLIBRI_SRC_PASCAL_LEXER_H_
 
 #include "languages/pascal/pascal_token.h"
 #include "lexer/lexer.h"

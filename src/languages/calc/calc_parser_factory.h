@@ -1,5 +1,5 @@
-#ifndef INTERTEST_SRC_CALC_PARSER_FACTORY_H_
-#define INTERTEST_SRC_CALC_PARSER_FACTORY_H_
+#ifndef KOLIBRI_SRC_CALC_PARSER_FACTORY_H_
+#define KOLIBRI_SRC_CALC_PARSER_FACTORY_H_
 
 #include "base/ast.h"
 #include "base/ast_types.h"

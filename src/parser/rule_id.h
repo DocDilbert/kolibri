@@ -1,5 +1,5 @@
-#ifndef INTERTEST_SRC_RULE_ID_H_
-#define INTERTEST_SRC_RULE_ID_H_
+#ifndef KOLIBRI_SRC_RULE_ID_H_
+#define KOLIBRI_SRC_RULE_ID_H_
 
 namespace parser {
 enum class RuleId {

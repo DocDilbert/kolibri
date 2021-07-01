@@ -1,5 +1,5 @@
-#ifndef INTERTEST_SRC_I_AST_VISITOR_H_
-#define INTERTEST_SRC_I_AST_VISITOR_H_
+#ifndef KOLIBRI_SRC_I_AST_VISITOR_H_
+#define KOLIBRI_SRC_I_AST_VISITOR_H_
 
 #include "base/ast_id.h"
 

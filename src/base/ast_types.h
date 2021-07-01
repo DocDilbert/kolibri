@@ -1,5 +1,5 @@
-#ifndef INTERTEST_SRC_AST_TYPES_H_
-#define INTERTEST_SRC_AST_TYPES_H_
+#ifndef KOLIBRI_SRC_AST_TYPES_H_
+#define KOLIBRI_SRC_AST_TYPES_H_
 
 namespace base {
 template <typename T>

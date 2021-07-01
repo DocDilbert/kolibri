@@ -1,5 +1,5 @@
-#ifndef INTERTEST_SRC_AST_FACTORY_H_
-#define INTERTEST_SRC_AST_FACTORY_H_
+#ifndef KOLIBRI_SRC_AST_FACTORY_H_
+#define KOLIBRI_SRC_AST_FACTORY_H_
 
 #include <iostream>
 #include <memory>
