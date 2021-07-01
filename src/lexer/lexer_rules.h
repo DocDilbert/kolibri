@@ -168,14 +168,20 @@ class LexerRules {
  private:
   const char* it_;
 
-  template <bool Cond, typename T>
+  template <bool Cond>
   struct SelectCreateOrRedirect {
-    static constexpr value_type impl(T& obj, const char* begin, const char* end) noexcept { return obj.Create(begin, end); }
+    template <typename TLexer, typename TRule>
+    static constexpr value_type impl(TLexer& lexer, TRule& rule, const char* token_begin, const char* token_end, const char* end) noexcept {
+      return rule.Create(token_begin, token_end);
+    }
   };
 
-  template <typename T>
-  struct SelectCreateOrRedirect<true, T> {
-    static constexpr value_type impl(T& obj, const char* begin, const char* end) noexcept { return FactoryUNK().Create(begin, end); }
+  template<>
+  struct SelectCreateOrRedirect<true> {
+    template <typename TLexer, typename TRule>
+    static constexpr value_type impl(TLexer& lexer, TRule& rule, const char* token_begin, const char* token_end, const char* end) noexcept {
+      return lexer.Match(token_end, end);
+    }
   };
 
   template <typename T1>
@@ -184,7 +190,7 @@ class LexerRules {
     auto it = t1.Match(begin, end);
     if (it != begin) {
       it_ = it;
-      return SelectCreateOrRedirect<is_skip_factory<typename T1::factory_type>::value, T1>::impl(t1, begin, it_);
+      return SelectCreateOrRedirect<is_skip_factory<typename T1::factory_type>::value>::impl(*this, t1, begin, it_, end);
     }
     it_ = begin + 1;
     return FactoryUNK().Create(begin, it_);
@@ -197,7 +203,7 @@ class LexerRules {
 
     if (it != begin) {
       it_ = it;
-      return SelectCreateOrRedirect<is_skip_factory<typename T1::factory_type>::value, T1>::impl(t1, begin, it_);
+      return SelectCreateOrRedirect<is_skip_factory<typename T1::factory_type>::value>::impl(*this, t1, begin, it_, end);
     }
 
     return MatchRecursive<T2, Rules...>(begin, end);
