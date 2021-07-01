@@ -121,22 +121,22 @@ class CalcTokenPredicate {
 };
 
 template <typename TNonTerm, typename Iterator>
-struct CalculatorGrammar {
+struct CalculatorGrammar : public parser::GrammarBase {
   // clang-format off
   using type = parser::ParserGrammar<
     TNonTerm, Iterator,
 
     // Rule #0
-    parser::Rule<parser::NonTermTermNonTermSequenceProduction,
-      parser::SequenceExpr<
-        parser::NonTermExpr<parser::RuleId::kRule1>,
-        parser::NMatchesOrMoreExpr<0,
-          parser::SequenceExpr<
-            parser::OrderedChoiceExpr<
-              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kPlus>>, 
-              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kMinus>>
+    Rule<parser::NonTermTermNonTermSequenceProduction,
+      SequenceExpr<
+        NonTermExpr<parser::RuleId::kRule1>,
+        NMatchesOrMoreExpr<0,
+          SequenceExpr<
+            OrderedChoiceExpr<
+              TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kPlus>>, 
+              TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kMinus>>
             >, 
-            parser::NonTermExpr<parser::RuleId::kRule1>
+            NonTermExpr<parser::RuleId::kRule1>
           >
         >
       >
@@ -144,16 +144,16 @@ struct CalculatorGrammar {
     
 
     // Rule #1
-    parser::Rule<parser::NonTermTermNonTermSequenceProduction, 
-      parser::SequenceExpr<
-        parser::NonTermExpr<parser::RuleId::kRule2>,
-        parser::NMatchesOrMoreExpr<0,
-          parser::SequenceExpr<
-            parser::OrderedChoiceExpr<
-              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kMultiply>>,
-              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kDivide>>
+    Rule<parser::NonTermTermNonTermSequenceProduction, 
+      SequenceExpr<
+        NonTermExpr<parser::RuleId::kRule2>,
+        NMatchesOrMoreExpr<0,
+          SequenceExpr<
+            OrderedChoiceExpr<
+              TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kMultiply>>,
+              TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kDivide>>
             >, 
-            parser::NonTermExpr<parser::RuleId::kRule2>
+            NonTermExpr<parser::RuleId::kRule2>
           >
         >
       >
@@ -161,27 +161,27 @@ struct CalculatorGrammar {
 
     // Rule #2
     parser::OrderedChoiceRules< 
-        parser::Rule<parser::TermNonTermProduction, 
-          parser::SequenceExpr<
-            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kPlus>>, 
-            parser::NonTermExpr<parser::RuleId::kRule2>
+        Rule<parser::TermNonTermProduction, 
+          SequenceExpr<
+            TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kPlus>>, 
+            NonTermExpr<parser::RuleId::kRule2>
           >
         >,
-        parser::Rule<parser::TermNonTermProduction, 
-          parser::SequenceExpr<
-            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kMinus>>, 
-            parser::NonTermExpr<parser::RuleId::kRule2>
+        Rule<parser::TermNonTermProduction, 
+          SequenceExpr<
+            TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kMinus>>, 
+            NonTermExpr<parser::RuleId::kRule2>
           >
         >,
-        parser::Rule<parser::BypassLastTermProduction, 
-          parser::SequenceExpr<
-            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kLParens>>, 
-            parser::NonTermExpr<parser::RuleId::kRule0>, 
-            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kRParens>>
+        Rule<parser::BypassLastTermProduction, 
+          SequenceExpr<
+            TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kLParens>>, 
+            NonTermExpr<parser::RuleId::kRule0>, 
+            TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kRParens>>
           >
         >,
-        parser::Rule<parser::TermProduction, 
-          parser::SequenceExpr<parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kInteger>>>
+        Rule<parser::TermProduction, 
+          SequenceExpr<TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::kInteger>>>
         >
     >
   >;

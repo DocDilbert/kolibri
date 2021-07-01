@@ -392,6 +392,26 @@ class ParserGrammar : public IParserGrammar<TNonTerm, Iterator> {
   }
 };
 
+struct GrammarBase {
+  template <template <class, class> class Production, typename Expression>
+  using Rule = parser::Rule<Production, Expression>;
+
+  template <typename TermPredicate>
+  using TermExpr = parser::TermExpr<TermPredicate>;
+  
+  template <typename... Expressions>
+  using SequenceExpr = parser::SequenceExpr<Expressions...>;
+
+  template <RuleId RId>
+  using NonTermExpr = parser::NonTermExpr<RId>;
+
+  template <unsigned N, typename Expression>
+  using NMatchesOrMoreExpr = parser::NMatchesOrMoreExpr<N, Expression>;
+
+  template <typename... Expressions>
+  using OrderedChoiceExpr = parser::OrderedChoiceExpr<Expressions...>;
+};
+
 }  // namespace parser
 
 #endif
