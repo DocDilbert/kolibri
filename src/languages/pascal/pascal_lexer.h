@@ -2,6 +2,7 @@
 #define INTERTEST_SRC_PASCAL_LEXER_H_
 
 #include "languages/pascal/pascal_token.h"
+#include "lexer/lexer.h"
 #include "lexer/lexer_predicates.h"
 #include "lexer/lexer_rules.h"
 #include "string_providers.h"

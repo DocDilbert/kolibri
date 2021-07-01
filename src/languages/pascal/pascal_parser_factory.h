@@ -1,14 +1,11 @@
 #ifndef INTERTEST_SRC_PASCAL_PARSER_FACTORY_H_
 #define INTERTEST_SRC_PASCAL_PARSER_FACTORY_H_
 
-#include "base/ast_factory.h"
+#include "base/ast.h"
 #include "base/ast_types.h"
-#include "languages/pascal/pascal_lexer.h"
+#include "base/i_ast_factory.h"
 #include "languages/pascal/pascal_token.h"
 #include "parser/i_parser_factory.h"
-#include "parser/parser.h"
-#include "parser/parser_productions.h"
-#include "parser/parser_rules.h"
 
 namespace languages {
 namespace pascal {

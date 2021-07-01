@@ -11,6 +11,7 @@
 #include "languages/pascal/pascal_interpreter.h"
 #include "languages/pascal/pascal_lexer.h"
 #include "languages/pascal/pascal_parser.h"
+#include "languages/pascal/pascal_parser_factory.h"
 #include "lexer/lexer.h"
 #include "token_out.h"
 #include <typeinfo>
