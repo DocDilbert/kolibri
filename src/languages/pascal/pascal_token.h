@@ -8,11 +8,11 @@ namespace pascal {
 
 enum class PascalTokenId {
   kUnknown,  //
-  PLUS,
-  MINUS,
-  MULTIPLY,
-  INTEGER_DIV,
-  FLOAT_DIV,
+  kPlus,
+  kMinus,
+  kMultiply,
+  kIntegerDiv,
+  kFloatDiv,
   BEGIN,
   END,
   REAL,
@@ -36,15 +36,15 @@ class PascalTokenIdConverter {
  public:
   static constexpr const char* ToString(PascalTokenId id_) {
     switch (id_) {
-      case PascalTokenId::PLUS:
+      case PascalTokenId::kPlus:
         return "PLUS";
-      case PascalTokenId::MINUS:
+      case PascalTokenId::kMinus:
         return "MINUS";
-      case PascalTokenId::MULTIPLY:
+      case PascalTokenId::kMultiply:
         return "MULTIPLY";
-      case PascalTokenId::INTEGER_DIV:
+      case PascalTokenId::kIntegerDiv:
         return "INTEGER_DIV";
-      case PascalTokenId::FLOAT_DIV:
+      case PascalTokenId::kFloatDiv:
         return "FLOAT_DIV";
       case PascalTokenId::BEGIN:
         return "BEGIN";

@@ -83,10 +83,10 @@ class PascalParserFactory
     switch (rule_id) {
       case parser::RuleId::kRule12: {  // factor
         switch (term.GetId()) {
-          case languages::pascal::PascalTokenId::PLUS: {
+          case languages::pascal::PascalTokenId::kPlus: {
             return ast_factory_.CreateUnaryOp(base::UnaryOpType::POSITIVE_OP, nonterm);
           }
-          case languages::pascal::PascalTokenId::MINUS: {
+          case languages::pascal::PascalTokenId::kMinus: {
             return ast_factory_.CreateUnaryOp(base::UnaryOpType::NEGATIVE_OP, nonterm);
           }
           default: {
@@ -134,10 +134,10 @@ class PascalParserFactory
 
       case parser::RuleId::kRule10: {  // expr
         switch (term.GetId()) {
-          case languages::pascal::PascalTokenId::PLUS: {
+          case languages::pascal::PascalTokenId::kPlus: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::ADD, lhs, rhs);
           }
-          case languages::pascal::PascalTokenId::MINUS: {
+          case languages::pascal::PascalTokenId::kMinus: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::SUB, lhs, rhs);
           }
           default: {
@@ -148,13 +148,13 @@ class PascalParserFactory
 
       case parser::RuleId::kRule11: {  // term
         switch (term.GetId()) {
-          case languages::pascal::PascalTokenId::MULTIPLY: {
+          case languages::pascal::PascalTokenId::kMultiply: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::MUL, lhs, rhs);
           }
-          case languages::pascal::PascalTokenId::INTEGER_DIV: {
+          case languages::pascal::PascalTokenId::kIntegerDiv: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::INTEGER_DIV, lhs, rhs);
           }
-          case languages::pascal::PascalTokenId::FLOAT_DIV: {
+          case languages::pascal::PascalTokenId::kFloatDiv: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::FLOAT_DIV, lhs, rhs);
           }
           default: {
@@ -337,15 +337,15 @@ using PascalGrammar = parser::ParserGrammar<
     parser::Rule<parser::EmptyProduction, parser::EmptyExpr>,
 
     // Rule #10 - expr
-    // expr : term ((PLUS | MINUS) term)*
+    // expr : term ((kPlus | kMinus) term)*
     parser::Rule<parser::NonTermTermNonTermSequenceProduction,
       parser::SequenceExpr<
         parser::NonTermExpr<parser::RuleId::kRule11>,
         parser::NMatchesOrMoreExpr<0,
           parser::SequenceExpr<
             parser::OrderedChoiceExpr<
-              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::PLUS>>, 
-              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::MINUS>>
+              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kPlus>>, 
+              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kMinus>>
             >, 
             parser::NonTermExpr<parser::RuleId::kRule11>
           >
@@ -361,9 +361,9 @@ using PascalGrammar = parser::ParserGrammar<
         parser::NMatchesOrMoreExpr<0,
           parser::SequenceExpr<
             parser::OrderedChoiceExpr<
-              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::MULTIPLY>>, 
-              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::INTEGER_DIV>>,
-              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::FLOAT_DIV>>
+              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kMultiply>>, 
+              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kIntegerDiv>>,
+              parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kFloatDiv>>
             >, 
             parser::NonTermExpr<parser::RuleId::kRule12>
           >
@@ -372,18 +372,18 @@ using PascalGrammar = parser::ParserGrammar<
     >,
 
     // Rule #12 - factor
-    // factor : PLUS factor
-    //        | MINUS factor
+    // factor : kPlus factor
+    //        | kMinus factor
     //        | INTEGER_CONST
     //        | REAL_CONST
     //        | LPAREN expr RPAREN
     //        | variable
     parser::OrderedChoiceRules< 
         parser::Rule<parser::TermNonTermProduction, 
-          parser::SequenceExpr<parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::PLUS>>, parser::NonTermExpr<parser::RuleId::kRule12>>
+          parser::SequenceExpr<parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kPlus>>, parser::NonTermExpr<parser::RuleId::kRule12>>
         >,
         parser::Rule<parser::TermNonTermProduction, 
-          parser::SequenceExpr<parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::MINUS>>, parser::NonTermExpr<parser::RuleId::kRule12>>
+          parser::SequenceExpr<parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kMinus>>, parser::NonTermExpr<parser::RuleId::kRule12>>
         >,
         parser::Rule<parser::TermProduction, 
           parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::INTEGER_CONST>>
