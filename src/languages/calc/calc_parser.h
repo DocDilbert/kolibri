@@ -5,11 +5,15 @@
 #include "base/ast_types.h"
 #include "base/i_ast_factory.h"
 #include "base/token.h"
-#include "languages/calc/calc_token.h"
 #include "languages/calc/calc_lexer.h"
+#include "languages/calc/calc_token.h"
+#include "parser/i_parser_factory.h"
 #include "parser/parser.h"
 #include "parser/parser_productions.h"
 #include "parser/parser_rules.h"
+
+namespace languages {
+namespace calc {
 
 class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::Ast<base::MakeShared, languages::calc::CalcToken>>, languages::calc::CalcToken> {
  public:
@@ -116,23 +120,22 @@ class CalcTokenPredicate {
   bool operator()(languages::calc::CalcToken token) { return token.GetId() == Id; };
 };
 
-namespace parser {
 // clang-format off
 template <typename TNonTerm, typename Iterator>
-using CalculatorGrammar= ParserGrammar<
+using CalculatorGrammar= parser::ParserGrammar<
     TNonTerm, Iterator,
 
     // Rule #0
-    Rule<NonTermTermNonTermSequenceProduction,
-      SequenceExpr<
-        NonTermExpr<RuleId::kRule1>,
-        NMatchesOrMoreExpr<0,
-          SequenceExpr<
-            OrderedChoiceExpr<
-              TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::PLUS>>, 
-              TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::MINUS>>
+    parser::Rule<parser::NonTermTermNonTermSequenceProduction,
+      parser::SequenceExpr<
+        parser::NonTermExpr<parser::RuleId::kRule1>,
+        parser::NMatchesOrMoreExpr<0,
+          parser::SequenceExpr<
+            parser::OrderedChoiceExpr<
+              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::PLUS>>, 
+              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::MINUS>>
             >, 
-            NonTermExpr<RuleId::kRule1>
+            parser::NonTermExpr<parser::RuleId::kRule1>
           >
         >
       >
@@ -140,42 +143,52 @@ using CalculatorGrammar= ParserGrammar<
     
 
     // Rule #1
-    Rule<NonTermTermNonTermSequenceProduction, 
-      SequenceExpr<
-        NonTermExpr<RuleId::kRule2>,
-        NMatchesOrMoreExpr<0,
-          SequenceExpr<
-            OrderedChoiceExpr<
-              TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::MULTIPLY>>,
-              TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::DIVIDE>>
+    parser::Rule<parser::NonTermTermNonTermSequenceProduction, 
+      parser::SequenceExpr<
+        parser::NonTermExpr<parser::RuleId::kRule2>,
+        parser::NMatchesOrMoreExpr<0,
+          parser::SequenceExpr<
+            parser::OrderedChoiceExpr<
+              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::MULTIPLY>>,
+              parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::DIVIDE>>
             >, 
-            NonTermExpr<RuleId::kRule2>
+            parser::NonTermExpr<parser::RuleId::kRule2>
           >
         >
       >
     >,
 
     // Rule #2
-    OrderedChoiceRules< 
-        Rule<TermNonTermProduction, 
-          SequenceExpr<TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::PLUS>>, NonTermExpr<RuleId::kRule2>>
+    parser::OrderedChoiceRules< 
+        parser::Rule<parser::TermNonTermProduction, 
+          parser::SequenceExpr<
+            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::PLUS>>, 
+            parser::NonTermExpr<parser::RuleId::kRule2>
+          >
         >,
-        Rule<TermNonTermProduction, 
-          SequenceExpr<TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::MINUS>>, NonTermExpr<RuleId::kRule2>>
+        parser::Rule<parser::TermNonTermProduction, 
+          parser::SequenceExpr<
+            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::MINUS>>, 
+            parser::NonTermExpr<parser::RuleId::kRule2>
+          >
         >,
-        Rule<BypassLastTermProduction, 
-          SequenceExpr<TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::LPARENS>>, NonTermExpr<RuleId::kRule0>, TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::RPARENS>>>
+        parser::Rule<parser::BypassLastTermProduction, 
+          parser::SequenceExpr<
+            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::LPARENS>>, 
+            parser::NonTermExpr<parser::RuleId::kRule0>, 
+            parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::RPARENS>>
+          >
         >,
-        Rule<TermProduction, 
-          SequenceExpr<TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::INTEGER>>>
+        parser::Rule<parser::TermProduction, 
+          parser::SequenceExpr<parser::TermExpr<CalcTokenPredicate<languages::calc::CalcTokenId::INTEGER>>>
         >
     >
   >;
-}
 // clang-format on
 
-using CalcGrammar = parser::CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, languages::calc::CalcToken>>, languages::calc::CalcLexer::iterator_type>;
+using CalcGrammar = CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, languages::calc::CalcToken>>, languages::calc::CalcLexer::iterator_type>;
 using CalcParser = parser::Parser<CalcGrammar>;
 
-
+}  // namespace calc
+}  // namespace languages
 #endif

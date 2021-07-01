@@ -3,8 +3,8 @@
 
 #include "base/ast_factory.h"
 #include "base/ast_types.h"
-#include "languages/pascal/pascal_token.h"
 #include "languages/pascal/pascal_lexer.h"
+#include "languages/pascal/pascal_token.h"
 #include "parser/i_parser_factory.h"
 #include "parser/parser.h"
 #include "parser/parser_productions.h"
@@ -409,6 +409,6 @@ using PascalGrammar = parser::ParserGrammar<
 using PGrammar = PascalGrammar<std::shared_ptr<base::Ast<base::MakeShared, PascalToken>>, PascalLexer::iterator_type>;
 using PascalParser = parser::Parser<PGrammar>;
 
-}
-}
+}  // namespace pascal
+}  // namespace languages
 #endif
