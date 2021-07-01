@@ -13,23 +13,23 @@ enum class PascalTokenId {
   kMultiply,
   kIntegerDiv,
   kFloatDiv,
-  BEGIN,
-  END,
-  REAL,
-  INTEGER,
-  REAL_CONST,
-  INTEGER_CONST,
-  ID,
-  ASSIGN,
-  SEMI,
-  DOT,
-  LPARENS,
-  RPARENS,
-  PROGRAM,
-  VAR,
-  COLON,
-  COMMA,
-  ENDOFFILE
+  kBegin,
+  kEnd,
+  kReal,
+  kInteger,
+  kRealConst,
+  kIntegerConst,
+  kId,
+  kAssign,
+  kSemi,
+  kDot,
+  kLParens,
+  kRParens,
+  kProgram,
+  kVar,
+  kColon,
+  kComma,
+  kEndOfFile
 };
 
 class PascalTokenIdConverter {
@@ -46,39 +46,39 @@ class PascalTokenIdConverter {
         return "INTEGER_DIV";
       case PascalTokenId::kFloatDiv:
         return "FLOAT_DIV";
-      case PascalTokenId::BEGIN:
+      case PascalTokenId::kBegin:
         return "BEGIN";
-      case PascalTokenId::END:
+      case PascalTokenId::kEnd:
         return "END";
-      case PascalTokenId::REAL:
+      case PascalTokenId::kReal:
         return "REAL";
-      case PascalTokenId::INTEGER:
+      case PascalTokenId::kInteger:
         return "INTEGER";
-      case PascalTokenId::REAL_CONST:
+      case PascalTokenId::kRealConst:
         return "REAL_CONST";
-      case PascalTokenId::INTEGER_CONST:
+      case PascalTokenId::kIntegerConst:
         return "INTEGER_CONST";
-      case PascalTokenId::ID:
+      case PascalTokenId::kId:
         return "ID";
-      case PascalTokenId::ASSIGN:
+      case PascalTokenId::kAssign:
         return "ASSIGN";
-      case PascalTokenId::SEMI:
+      case PascalTokenId::kSemi:
         return "SEMI";
-      case PascalTokenId::DOT:
+      case PascalTokenId::kDot:
         return "DOT";
-      case PascalTokenId::LPARENS:
+      case PascalTokenId::kLParens:
         return "LPARENS";
-      case PascalTokenId::RPARENS:
+      case PascalTokenId::kRParens:
         return "RPARENS";
-      case PascalTokenId::PROGRAM:
+      case PascalTokenId::kProgram:
         return "PROGRAM";
-      case PascalTokenId::VAR:
+      case PascalTokenId::kVar:
         return "VAR";
-      case PascalTokenId::COMMA:
+      case PascalTokenId::kComma:
         return "COMMA";
-      case PascalTokenId::COLON:
+      case PascalTokenId::kColon:
         return "COLON";
-      case PascalTokenId::ENDOFFILE:
+      case PascalTokenId::kEndOfFile:
         return "ENDOFFILE";
       default:
         break;

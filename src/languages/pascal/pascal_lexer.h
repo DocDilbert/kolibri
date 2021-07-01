@@ -23,7 +23,7 @@ struct PascalLexerRules {
 
   using type = lexer::LexerRules< 
       PFactory<PascalTokenId::kUnknown>,                                                         
-      PFactory<PascalTokenId::ENDOFFILE>, 
+      PFactory<PascalTokenId::kEndOfFile>, 
 
       // Skip rules
       SequenceRule<lexer::SkipFactory, lexer::MatcherRangeByPredicate<lexer::IsChar<' '>>>,
@@ -36,34 +36,34 @@ struct PascalLexerRules {
       >,
 
       // Production rules
-      SequenceRule<PFactory<PascalTokenId::LPARENS>, lexer::MatcherPredicate<lexer::IsChar<'('>>>, 
-      SequenceRule<PFactory<PascalTokenId::RPARENS>, lexer::MatcherPredicate<lexer::IsChar<')'>>>,
+      SequenceRule<PFactory<PascalTokenId::kLParens>, lexer::MatcherPredicate<lexer::IsChar<'('>>>, 
+      SequenceRule<PFactory<PascalTokenId::kRParens>, lexer::MatcherPredicate<lexer::IsChar<')'>>>,
       SequenceRule<PFactory<PascalTokenId::kPlus>, lexer::MatcherPredicate<lexer::IsChar<'+'>>>,                     
       SequenceRule<PFactory<PascalTokenId::kMinus>, lexer::MatcherPredicate<lexer::IsChar<'-'>>>,                    
       SequenceRule<PFactory<PascalTokenId::kMultiply>, lexer::MatcherPredicate<lexer::IsChar<'*'>>>,  
-      SequenceRule<PFactory<PascalTokenId::SEMI>, lexer::MatcherPredicate<lexer::IsChar<';'>>>, 
-      SequenceRule<PFactory<PascalTokenId::DOT>, lexer::MatcherPredicate<lexer::IsChar<'.'>>>,               
+      SequenceRule<PFactory<PascalTokenId::kSemi>, lexer::MatcherPredicate<lexer::IsChar<';'>>>, 
+      SequenceRule<PFactory<PascalTokenId::kDot>, lexer::MatcherPredicate<lexer::IsChar<'.'>>>,               
       SequenceRule<PFactory<PascalTokenId::kFloatDiv>, lexer::MatcherPredicate<lexer::IsChar<'/'>>>,
-      SequenceRule<PFactory<PascalTokenId::ASSIGN>, 
+      SequenceRule<PFactory<PascalTokenId::kAssign>, 
         lexer::MatcherPredicate<lexer::IsChar<':'>>, 
         lexer::MatcherPredicate<lexer::IsChar<'='>>
       >,
-      SequenceRule<PFactory<PascalTokenId::COLON>, lexer::MatcherPredicate<lexer::IsChar<':'>>>,
-      SequenceRule<PFactory<PascalTokenId::COMMA>, lexer::MatcherPredicate<lexer::IsChar<','>>>,
+      SequenceRule<PFactory<PascalTokenId::kColon>, lexer::MatcherPredicate<lexer::IsChar<':'>>>,
+      SequenceRule<PFactory<PascalTokenId::kComma>, lexer::MatcherPredicate<lexer::IsChar<','>>>,
       SequenceRule<PFactory<PascalTokenId::kIntegerDiv>, lexer::MatcherString<StringProviderDiv, true>>,  
-      SequenceRule<PFactory<PascalTokenId::PROGRAM>, lexer::MatcherString<StringProviderProgram, true>>,
-      SequenceRule<PFactory<PascalTokenId::INTEGER>, lexer::MatcherString<StringProviderInteger, true>>,
-      SequenceRule<PFactory<PascalTokenId::REAL>, lexer::MatcherString<StringProviderReal, true>>,
-      SequenceRule<PFactory<PascalTokenId::VAR>, lexer::MatcherString<StringProviderVar, true>>, 
-      SequenceRule<PFactory<PascalTokenId::BEGIN>, lexer::MatcherString<StringProviderBegin, true>>,    
-      SequenceRule<PFactory<PascalTokenId::END>, lexer::MatcherString<StringProviderEnd, true>>,
-      SequenceRule<PFactory<PascalTokenId::REAL_CONST>, 
+      SequenceRule<PFactory<PascalTokenId::kProgram>, lexer::MatcherString<StringProviderProgram, true>>,
+      SequenceRule<PFactory<PascalTokenId::kInteger>, lexer::MatcherString<StringProviderInteger, true>>,
+      SequenceRule<PFactory<PascalTokenId::kReal>, lexer::MatcherString<StringProviderReal, true>>,
+      SequenceRule<PFactory<PascalTokenId::kVar>, lexer::MatcherString<StringProviderVar, true>>, 
+      SequenceRule<PFactory<PascalTokenId::kBegin>, lexer::MatcherString<StringProviderBegin, true>>,    
+      SequenceRule<PFactory<PascalTokenId::kEnd>, lexer::MatcherString<StringProviderEnd, true>>,
+      SequenceRule<PFactory<PascalTokenId::kRealConst>, 
         lexer::MatcherRangeByPredicate<lexer::IsDigit>, 
         lexer::MatcherPredicate<lexer::IsChar<'.'>>, 
         lexer::MatcherRangeByPredicate<lexer::IsDigit>
       >,                 
-      SequenceRule<PFactory<PascalTokenId::INTEGER_CONST>, lexer::MatcherRangeByPredicate<lexer::IsDigit>>, 
-      SequenceRule<PFactory<PascalTokenId::ID>, 
+      SequenceRule<PFactory<PascalTokenId::kIntegerConst>, lexer::MatcherRangeByPredicate<lexer::IsDigit>>, 
+      SequenceRule<PFactory<PascalTokenId::kId>, 
         lexer::MatcherPredicate<
           lexer::PredicateOr<
             lexer::IsLetter, 
@@ -72,7 +72,7 @@ struct PascalLexerRules {
         >, 
         lexer::MatcherRangeByPredicate<lexer::IsLetterOrDigit>
       >,
-      SequenceRule<PFactory<PascalTokenId::ID>, 
+      SequenceRule<PFactory<PascalTokenId::kId>, 
         lexer::MatcherPredicate<
           lexer::PredicateOr<
             lexer::IsLetter, 

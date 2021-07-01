@@ -40,10 +40,10 @@ class PascalParserFactory
       }
       case parser::RuleId::kRule12: {  // factor
         switch (term.GetId()) {
-          case languages::pascal::PascalTokenId::INTEGER_CONST: {
+          case languages::pascal::PascalTokenId::kIntegerConst: {
             return ast_factory_.CreateConst(base::ConstType::INTEGER, std::string(term.GetValue()));
           }
-          case languages::pascal::PascalTokenId::REAL_CONST: {
+          case languages::pascal::PascalTokenId::kRealConst: {
             return ast_factory_.CreateConst(base::ConstType::REAL, std::string(term.GetValue()));
           }
           default: {
@@ -123,7 +123,7 @@ class PascalParserFactory
     switch (rule_id) {
       case parser::RuleId::kRule8: {  // assignment_statement
         switch (term.GetId()) {
-          case languages::pascal::PascalTokenId::ASSIGN: {
+          case languages::pascal::PascalTokenId::kAssign: {
             return ast_factory_.CreateBinaryOp(base::BinaryOpType::ASSSIGN, lhs, rhs);
           }
           default: {
@@ -199,7 +199,7 @@ class PascalParserFactory
 
     for (int i = 0; i < terms.size(); ++i) {
       auto term = terms[i];
-      if (term.GetId() == languages::pascal::PascalTokenId::ID) {
+      if (term.GetId() == languages::pascal::PascalTokenId::kId) {
         id_terms.push_back(term);
       }
     }
@@ -232,11 +232,11 @@ using PascalGrammar = parser::ParserGrammar<
     // program : PROGRAM variable SEMI block DOT
     parser::Rule<parser::NonTermNonTermProduction, 
       parser::SequenceExpr<
-        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::PROGRAM>>,
+        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kProgram>>,
         parser::NonTermExpr<parser::RuleId::kRule13>, 
-        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::SEMI>>,
+        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kSemi>>,
         parser::NonTermExpr<parser::RuleId::kRule1>, 
-        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::DOT>>
+        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kDot>>
       >
     >,
 
@@ -255,11 +255,11 @@ using PascalGrammar = parser::ParserGrammar<
     parser::Rule<parser::NonTermListProduction, 
       parser::OrderedChoiceExpr<
         parser::SequenceExpr<
-          parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::VAR>>,
+          parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kVar>>,
           parser::NMatchesOrMoreExpr<1,
               parser::SequenceExpr<
                 parser::NonTermExpr<parser::RuleId::kRule3>,
-                parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::SEMI>>
+                parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kSemi>>
               >
           >
         >,
@@ -271,14 +271,14 @@ using PascalGrammar = parser::ParserGrammar<
     // variable_declaration : ID (COMMA ID)* COLON type_spec
     parser::Rule<parser::TermNonTermListProduction, 
       parser::SequenceExpr<
-        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::ID>>,
+        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kId>>,
         parser::NMatchesOrMoreExpr<0,
           parser::SequenceExpr<
-            parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::COMMA>>,
-            parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::ID>>
+            parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kComma>>,
+            parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kId>>
           >
         >,
-        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::COLON>>,
+        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kColon>>,
         parser::NonTermExpr<parser::RuleId::kRule4>
       >
     >,
@@ -287,15 +287,15 @@ using PascalGrammar = parser::ParserGrammar<
     // type_spec : INTEGER | REAL
     parser::Rule<parser::TermProduction, 
       parser::OrderedChoiceExpr<
-        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::INTEGER>>,
-        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::REAL>>
+        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kInteger>>,
+        parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kReal>>
       >
     >,
 
     // Rule #5 - compound_statement
     // compound_statement : BEGIN statement_list END
     parser::Rule<parser::NonTermProduction, 
-      parser::SequenceExpr<parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::BEGIN>>, parser::NonTermExpr<parser::RuleId::kRule6>, parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::END>>>
+      parser::SequenceExpr<parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kBegin>>, parser::NonTermExpr<parser::RuleId::kRule6>, parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kEnd>>>
     >,
 
     // Rule #6 - statement_list
@@ -309,7 +309,7 @@ using PascalGrammar = parser::ParserGrammar<
         parser::NonTermExpr<parser::RuleId::kRule7>,
         parser::NMatchesOrMoreExpr<0,
           parser::SequenceExpr<
-            parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::SEMI>>, 
+            parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kSemi>>, 
             parser::NonTermExpr<parser::RuleId::kRule7>
           >
         >
@@ -329,7 +329,7 @@ using PascalGrammar = parser::ParserGrammar<
     // Rule #8 - assignment_statement
     // assignment_statement : variable ASSIGN expr
     parser::Rule<parser::NonTermTermNonTermProduction,
-      parser::SequenceExpr< parser::NonTermExpr<parser::RuleId::kRule13>, parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::ASSIGN>>, parser::NonTermExpr<parser::RuleId::kRule10>>
+      parser::SequenceExpr< parser::NonTermExpr<parser::RuleId::kRule13>, parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kAssign>>, parser::NonTermExpr<parser::RuleId::kRule10>>
     >,
 
     // Rule #9 - empty
@@ -386,13 +386,13 @@ using PascalGrammar = parser::ParserGrammar<
           parser::SequenceExpr<parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kMinus>>, parser::NonTermExpr<parser::RuleId::kRule12>>
         >,
         parser::Rule<parser::TermProduction, 
-          parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::INTEGER_CONST>>
+          parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kIntegerConst>>
         >,
         parser::Rule<parser::TermProduction, 
-          parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::REAL_CONST>>
+          parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kRealConst>>
         >,
         parser::Rule<parser::BypassLastTermProduction,
-          parser::SequenceExpr<parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::LPARENS>>, parser::NonTermExpr<parser::RuleId::kRule10>, parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::RPARENS>>>
+          parser::SequenceExpr<parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kLParens>>, parser::NonTermExpr<parser::RuleId::kRule10>, parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kRParens>>>
         >,
         parser::Rule<parser::BypassLastTermProduction, 
           parser::NonTermExpr<parser::RuleId::kRule13>
@@ -401,7 +401,7 @@ using PascalGrammar = parser::ParserGrammar<
 
     // Rule #13 - variable
     // variable: ID
-    parser::Rule<parser::TermProduction, parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::ID>>> 
+    parser::Rule<parser::TermProduction, parser::TermExpr<PascalTokenPredicate<languages::pascal::PascalTokenId::kId>>> 
   >;
 
 // clang-format on
