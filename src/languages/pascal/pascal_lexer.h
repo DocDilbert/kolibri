@@ -24,6 +24,8 @@ struct PascalLexerRules {
   using type = lexer::LexerRules< 
       PFactory<PascalTokenId::UNKNOWN>,                                                         
       PFactory<PascalTokenId::ENDOFFILE>, 
+      SequenceRule<lexer::SkipFactory, lexer::MatcherRangeByPredicate<lexer::IsChar<' '>>>,
+      SequenceRule<lexer::SkipFactory, lexer::MatcherRangeByPredicate<lexer::IsChar<'\n'>>>,
       SequenceRule<PFactory<PascalTokenId::LPARENS>, lexer::MatcherPredicate<lexer::IsChar<'('>>>, 
       SequenceRule<PFactory<PascalTokenId::RPARENS>, lexer::MatcherPredicate<lexer::IsChar<')'>>>,
       SequenceRule<PFactory<PascalTokenId::PLUS>, lexer::MatcherPredicate<lexer::IsChar<'+'>>>,                     

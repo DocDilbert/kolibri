@@ -21,7 +21,8 @@ class CFactory {
 
 using CalcLexerRules = lexer::LexerRules<       
     CFactory<CalcTokenId::UNKNOWN>,                 
-    CFactory<CalcTokenId::ENDOFFILE>,                 
+    CFactory<CalcTokenId::ENDOFFILE>,        
+    lexer::SequenceRule<lexer::SkipFactory, lexer::MatcherRangeByPredicate<lexer::IsChar<' '>>>,         
     lexer::SequenceRule<CFactory<CalcTokenId::COMMENT>, lexer::MatcherRangeByStartStopDelimiter<StringProviderOpenComment, StringProviderCloseComment>>,                                                
     lexer::SequenceRule<CFactory<CalcTokenId::NULLTERM>, lexer::MatcherPredicate<lexer::IsChar<'\000'>>>, 
     lexer::SequenceRule<CFactory<CalcTokenId::LPARENS>, lexer::MatcherPredicate<lexer::IsChar<'('>>>,

@@ -39,13 +39,6 @@ class Lexer {
 
    private:
     value_type GetNextToken() {
-      // consume whitespaces and linefeeds ... start search at first valid char
-      for (; it_ < end_; it_++) {
-        if ((*it_ != ' ') && (*it_ != '\n')) {
-          break;
-        }
-      }
-
       auto token = rules_.Match(it_, end_);
       it_ = rules_.GetPosition();
       return token;

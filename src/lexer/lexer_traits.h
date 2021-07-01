@@ -5,7 +5,10 @@
 
 namespace lexer {
 
-class SkipFactory {};
+class SkipFactory {
+ public:
+  using value_type = void;
+};
 
 template <class T>
 
