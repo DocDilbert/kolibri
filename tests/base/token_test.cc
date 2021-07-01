@@ -15,7 +15,7 @@ enum MockTokenId {
 };
 
 struct MockTokenIdConverter {
-  std::string ToString(MockTokenId id) {
+  constexpr const char* ToString(MockTokenId id) {
     switch (id) {
       case kOneTok:
         return "kOneTok";

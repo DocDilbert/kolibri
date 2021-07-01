@@ -23,7 +23,7 @@ enum class CalcTokenId {
 
 class CalcTokenIdConverter {
  public:
-  std::string ToString(CalcTokenId id_) const {
+  constexpr const char* ToString(CalcTokenId id_) {
     switch (id_) {
       case CalcTokenId::PLUS:
         return "PLUS";

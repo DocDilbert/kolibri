@@ -36,7 +36,7 @@ class Token {
 
   id_type GetId() const { return id_; }
 
-  std::string GetStringId() const {
+  const char* GetStringId() const {
     TIdConverter conv_;
     return conv_.ToString(id_);
   }
