@@ -18,23 +18,30 @@ class CFactory {
 };
 
 // clang-format off
+struct CalcLexerRules {
+  template <typename Factory, typename... Args>
+  using SequenceRule = lexer::SequenceRule<Factory, Args...>;
 
-using CalcLexerRules = lexer::LexerRules<       
-    CFactory<CalcTokenId::UNKNOWN>,                 
-    CFactory<CalcTokenId::ENDOFFILE>,        
-    lexer::SequenceRule<lexer::SkipFactory, lexer::MatcherRangeByPredicate<lexer::IsChar<' '>>>,         
-    lexer::SequenceRule<CFactory<CalcTokenId::COMMENT>, lexer::MatcherRangeByStartStopDelimiter<StringProviderOpenComment, StringProviderCloseComment>>,                                                
-    lexer::SequenceRule<CFactory<CalcTokenId::NULLTERM>, lexer::MatcherPredicate<lexer::IsChar<'\000'>>>, 
-    lexer::SequenceRule<CFactory<CalcTokenId::LPARENS>, lexer::MatcherPredicate<lexer::IsChar<'('>>>,
-    lexer::SequenceRule<CFactory<CalcTokenId::RPARENS>, lexer::MatcherPredicate<lexer::IsChar<')'>>>, 
-    lexer::SequenceRule<CFactory<CalcTokenId::PLUS>, lexer::MatcherPredicate<lexer::IsChar<'+'>>>,
-    lexer::SequenceRule<CFactory<CalcTokenId::MINUS>, lexer::MatcherPredicate<lexer::IsChar<'-'>>>, 
-    lexer::SequenceRule<CFactory<CalcTokenId::MULTIPLY>, lexer::MatcherPredicate<lexer::IsChar<'*'>>>,
-    lexer::SequenceRule<CFactory<CalcTokenId::DIVIDE>, lexer::MatcherPredicate<lexer::IsChar<'/'>>>,
-    lexer::SequenceRule<CFactory<CalcTokenId::INTEGER>, lexer::MatcherRangeByPredicate<lexer::IsDigit>>
->;
+  using type = lexer::LexerRules<       
+      CFactory<CalcTokenId::UNKNOWN>,                 
+      CFactory<CalcTokenId::ENDOFFILE>,        
+      // Skip rules
+      SequenceRule<lexer::SkipFactory, lexer::MatcherRangeByPredicate<lexer::IsChar<' '>>>,         
+      
+      // Production rules
+      SequenceRule<CFactory<CalcTokenId::COMMENT>, lexer::MatcherRangeByStartStopDelimiter<StringProviderOpenComment, StringProviderCloseComment>>,                                                
+      SequenceRule<CFactory<CalcTokenId::NULLTERM>, lexer::MatcherPredicate<lexer::IsChar<'\000'>>>, 
+      SequenceRule<CFactory<CalcTokenId::LPARENS>, lexer::MatcherPredicate<lexer::IsChar<'('>>>,
+      SequenceRule<CFactory<CalcTokenId::RPARENS>, lexer::MatcherPredicate<lexer::IsChar<')'>>>, 
+      SequenceRule<CFactory<CalcTokenId::PLUS>, lexer::MatcherPredicate<lexer::IsChar<'+'>>>,
+      SequenceRule<CFactory<CalcTokenId::MINUS>, lexer::MatcherPredicate<lexer::IsChar<'-'>>>, 
+      SequenceRule<CFactory<CalcTokenId::MULTIPLY>, lexer::MatcherPredicate<lexer::IsChar<'*'>>>,
+      SequenceRule<CFactory<CalcTokenId::DIVIDE>, lexer::MatcherPredicate<lexer::IsChar<'/'>>>,
+      SequenceRule<CFactory<CalcTokenId::INTEGER>, lexer::MatcherRangeByPredicate<lexer::IsDigit>>
+  >;
+};
 
-using CalcLexer = lexer::Lexer<CalcLexerRules>;
+using CalcLexer = lexer::Lexer<CalcLexerRules::type>;
 
 // clang-format on  
 
