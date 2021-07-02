@@ -22,6 +22,7 @@ class PascalTokenPredicate {
 template <typename TNonTerm, typename Iterator>
 struct PascalGrammar : public parser::GrammarBase {
   // clang-format off
+ 
   using type = parser::ParserGrammar<
     TNonTerm, Iterator,
  
