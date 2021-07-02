@@ -32,7 +32,7 @@ class CalcInterpreter {
     void VisitUnaryOp(base::UnaryOpType type, nonterm_type operand) override {
       Visitor visitor;
 
-      operand->Visit(visitor);
+      operand->Accept(visitor);
 
       switch (type) {
         case base::UnaryOpType::kPositiveOp:
@@ -50,8 +50,8 @@ class CalcInterpreter {
       Visitor visitor_lhs;
       Visitor visitor_rhs;
 
-      operand_lhs->Visit(visitor_lhs);
-      operand_rhs->Visit(visitor_rhs);
+      operand_lhs->Accept(visitor_lhs);
+      operand_rhs->Accept(visitor_rhs);
 
       switch (op) {
         case base::BinaryOpType::kAdd:
@@ -80,7 +80,7 @@ class CalcInterpreter {
   RuleResult Interpret(nonterm_type node) {
     Visitor visitor;
 
-    node->Visit(visitor);
+    node->Accept(visitor);
     std::string expr = std::to_string(visitor.GetNum());
 
     return {expr, false, ""};

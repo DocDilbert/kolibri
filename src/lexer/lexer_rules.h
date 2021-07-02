@@ -8,11 +8,11 @@
 
 namespace lexer {
 
-template <typename StringProvider, bool CaseInsensitive = false>
+template <typename TStringProvider, bool CaseInsensitive = false>
 class MatcherString {
  public:
   const char* Parse(const char* begin, const char* end) {
-    const char* cmp = StringProvider().GetString();
+    const char* cmp = TStringProvider::GetString();
     const char* pos = begin;
     for (; pos < end; pos++) {
       if (*cmp == '\0') {
@@ -33,11 +33,11 @@ class MatcherString {
   }
 };
 
-template <typename StringProvider>
-class MatcherString<StringProvider, true> {
+template <typename TStringProvider>
+class MatcherString<TStringProvider, true> {
  public:
   const char* Parse(const char* begin, const char* end) {
-    const char* cmp = StringProvider().GetString();
+    const char* cmp = TStringProvider::GetString();
     const char* pos = begin;
     for (; pos < end; pos++) {
       if (*cmp == '\0') {
@@ -58,11 +58,11 @@ class MatcherString<StringProvider, true> {
   }
 };
 
-template <typename Predicate>
+template <typename TPredicate>
 class MatcherPredicate {
  public:
   const char* Parse(const char* begin, const char* end) {
-    Predicate pred;
+    TPredicate pred;
     if (begin == end) {
       return begin;
     }
@@ -73,11 +73,11 @@ class MatcherPredicate {
   }
 };
 
-template <typename Predicate>
+template <typename TPredicate>
 class MatcherRangeByPredicate {
  public:
   const char* Parse(const char* begin, const char* end) {
-    Predicate pred;
+    TPredicate pred;
     const char* pos = begin;
     for (; pos < end; pos++) {
       if (!pred(*pos)) {
@@ -88,18 +88,18 @@ class MatcherRangeByPredicate {
   }
 };
 
-template <typename StartStringProvider, typename StopStringProvider>
+template <typename TStartMatcher, typename TStopMatcher>
 class MatcherRangeByStartStopDelimiter {
  public:
   const char* Parse(const char* begin, const char* end) {
-    MatcherString<StartStringProvider> start_matcher;
+    TStartMatcher start_matcher;
     auto it_ = start_matcher.Parse(begin, end);
     if (it_ == begin) {
       return begin;
     }
 
     const char* pos = it_;
-    MatcherString<StopStringProvider> stop_matcher;
+    TStopMatcher stop_matcher;
     for (; pos < end; pos++) {
       it_ = stop_matcher.Parse(pos, end);
       if (it_ != pos) {
@@ -110,22 +110,14 @@ class MatcherRangeByStartStopDelimiter {
   }
 };
 
-template <typename Factory, typename... Args>
-class SequenceRule {
+template <typename... TMatchers>
+class MatcherSequence {
  public:
-  using value_type = typename Factory::value_type;
-  using factory_type = Factory;
-
-  const char* Match(const char* begin, const char* end) { return MatchRecursive<Args...>(begin, begin, end); }
-
-  value_type Create(const char* begin, const char* end) {
-    factory_type factory;
-    return factory.Create(begin, end);
-  }
+  const char* Parse(const char* begin, const char* end) { return ParseRecursive<TMatchers...>(begin, begin, end); }
 
  private:
   template <typename T1>
-  const char* MatchRecursive(const char* begin, const char* it, const char* end) {
+  const char* ParseRecursive(const char* begin, const char* it, const char* end) {
     T1 matcher;
     auto* new_it = matcher.Parse(it, end);
     if (new_it == it) {
@@ -134,8 +126,8 @@ class SequenceRule {
     return new_it;
   }
 
-  template <typename T1, typename T2, typename... Matchers>
-  const char* MatchRecursive(const char* begin, const char* it, const char* end) {
+  template <typename T1, typename T2, typename... UMatchers>
+  const char* ParseRecursive(const char* begin, const char* it, const char* end) {
     T1 matcher;
     auto* new_it = matcher.Parse(it, end);
     if (new_it == it) {
@@ -144,23 +136,41 @@ class SequenceRule {
     if (new_it == end) {
       return begin;
     }
-    return MatchRecursive<T2, Matchers...>(begin, new_it, end);
+    return ParseRecursive<T2, UMatchers...>(begin, new_it, end);
   }
 };
 
-template <typename FactoryUNK, typename FactoryEOF, typename... Args>
+template <typename TProduction, typename TMatcher>
+class Rule {
+ public:
+  using value_type = typename TProduction::value_type;
+  using production_type = TProduction;
+
+  const char* Match(const char* begin, const char* end) {
+    TMatcher matcher;
+    auto* it = matcher.Parse(begin, end);
+    return it;
+  }
+
+  value_type Create(const char* begin, const char* end) {
+    production_type factory;
+    return factory.Create(begin, end);
+  }
+};
+
+template <typename TProductionUNK, typename TProductionEOF, typename... TRules>
 class LexerRules {
  public:
-  using value_type = typename FactoryUNK::value_type;  // Use value type of first factory
+  using value_type = typename TProductionUNK::value_type;  // Use value type of first factory
 
   value_type Match(const char* begin, const char* end) {
     // reached end
     if (begin == end) {
       it_ = end;
-      return FactoryEOF().Create(begin, end);
+      return TProductionEOF().Create(begin, end);
     }
 
-    return MatchRecursive<Args...>(begin, end);
+    return MatchRecursive<TRules...>(begin, end);
   };
 
   const char* GetPosition() { return it_; }
@@ -176,7 +186,7 @@ class LexerRules {
     }
   };
 
-  template<>
+  template <>
   struct SelectCreateOrRedirect<true> {
     template <typename TLexer, typename TRule>
     static constexpr value_type impl(TLexer& lexer, TRule& rule, const char* token_begin, const char* token_end, const char* end) noexcept {
@@ -190,24 +200,44 @@ class LexerRules {
     auto it = t1.Match(begin, end);
     if (it != begin) {
       it_ = it;
-      return SelectCreateOrRedirect<is_skip_factory<typename T1::factory_type>::value>::impl(*this, t1, begin, it_, end);
+      return SelectCreateOrRedirect<is_skip_factory<typename T1::production_type>::value>::impl(*this, t1, begin, it_, end);
     }
     it_ = begin + 1;
-    return FactoryUNK().Create(begin, it_);
+    return TProductionUNK().Create(begin, it_);
   }
 
-  template <typename T1, typename T2, typename... Rules>
+  template <typename T1, typename T2, typename... URules>
   value_type MatchRecursive(const char* begin, const char* end) {
     T1 t1;
     auto it = t1.Match(begin, end);
 
     if (it != begin) {
       it_ = it;
-      return SelectCreateOrRedirect<is_skip_factory<typename T1::factory_type>::value>::impl(*this, t1, begin, it_, end);
+      return SelectCreateOrRedirect<is_skip_factory<typename T1::production_type>::value>::impl(*this, t1, begin, it_, end);
     }
 
-    return MatchRecursive<T2, Rules...>(begin, end);
+    return MatchRecursive<T2, URules...>(begin, end);
   }
+};
+
+class LexerRulesBase {
+ public:
+  template <typename Factory, typename... Args>
+  using Rule = lexer::Rule<Factory, Args...>;
+
+  using SkipProduction = lexer::SkipProduction;
+
+  template <typename TPredicate>
+  using MatcherPredicate = lexer::MatcherPredicate<TPredicate>;
+
+  template <typename TStringProvider, bool CaseInsensitive = false>
+  using MatcherString = lexer::MatcherString<TStringProvider, CaseInsensitive>;
+
+  template <typename TPredicate>
+  using MatcherRangeByPredicate = lexer::MatcherRangeByPredicate<TPredicate>;
+
+  template <typename... TMatchers>
+  using MatcherSequence = lexer::MatcherSequence<TMatchers...>;
 };
 
 }  // namespace lexer

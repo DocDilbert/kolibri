@@ -2,46 +2,46 @@
 #define KOLIBRI_SRC_STRING_PROVIDER_H_
 
 struct StringProviderOpenComment {
-  constexpr const char* GetString() { return "/*"; }
+  static constexpr const char* GetString() { return "/*"; }
 };
 
 struct StringProviderCloseComment {
-  constexpr const char* GetString() { return "*/"; }
+  static constexpr const char* GetString() { return "*/"; }
 };
  
 struct StringProviderBegin {
-  constexpr const char* GetString() { return "BEGIN"; }
+  static constexpr const char* GetString() { return "BEGIN"; }
 };
 
 struct StringProviderEnd {
-  constexpr const char* GetString() { return "END"; }
+  static constexpr const char* GetString() { return "END"; }
 };
 
 struct StringProviderDiv {
-  constexpr const char* GetString() { return "DIV"; }
+  static constexpr const char* GetString() { return "DIV"; }
 };
 
 struct StringProviderProgram {
-  constexpr const char* GetString() { return "PROGRAM"; }
+  static constexpr const char* GetString() { return "PROGRAM"; }
 };
 
 struct StringProviderVar {
-  constexpr const char* GetString() { return "VAR"; }
+  static constexpr const char* GetString() { return "VAR"; }
 };
 
 struct StringProviderInteger {
-  constexpr const char* GetString() { return "INTEGER"; }
+  static constexpr const char* GetString() { return "INTEGER"; }
 };
 
 struct StringProviderReal {
-  constexpr const char* GetString() { return "REAL"; }
+  static constexpr const char* GetString() { return "REAL"; }
 };
 
 struct StringProviderCurlyBraceOpen {
-  constexpr const char* GetString() { return "{"; }
+  static constexpr const char* GetString() { return "{"; }
 };
 
 struct StringProviderCurlyBraceClose {
-  constexpr const char* GetString() { return "}"; }
+  static constexpr const char* GetString() { return "}"; }
 };
 #endif

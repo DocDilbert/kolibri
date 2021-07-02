@@ -11,32 +11,30 @@ namespace languages {
 namespace calc {
 
 template <CalcTokenId Id>
-class CFactory {
+class CalcLexerProduction {
  public:
   using value_type = CalcToken;
   value_type Create(const char* begin, const char* end) { return CalcToken(Id, begin, end); }
 };
 
 // clang-format off
-struct CalcLexerRules {
-  template <typename Factory, typename... Args>
-  using SequenceRule = lexer::SequenceRule<Factory, Args...>;
-
+struct CalcLexerRules : public lexer::LexerRulesBase {
   using type = lexer::LexerRules<       
-      CFactory<CalcTokenId::kUnknown>,                 
-      CFactory<CalcTokenId::kEndOfFile>,        
+      CalcLexerProduction<CalcTokenId::kUnknown>,                 
+      CalcLexerProduction<CalcTokenId::kEndOfFile>, 
+             
       // Skip rules
-      SequenceRule<lexer::SkipFactory, lexer::MatcherRangeByPredicate<lexer::IsChar<' '>>>,         
+      Rule<SkipProduction, MatcherRangeByPredicate<lexer::IsChar<' '>>>,         
       
       // Production rules
-      SequenceRule<CFactory<CalcTokenId::kNullterm>, lexer::MatcherPredicate<lexer::IsChar<'\000'>>>, 
-      SequenceRule<CFactory<CalcTokenId::kLParens>, lexer::MatcherPredicate<lexer::IsChar<'('>>>,
-      SequenceRule<CFactory<CalcTokenId::kRParens>, lexer::MatcherPredicate<lexer::IsChar<')'>>>, 
-      SequenceRule<CFactory<CalcTokenId::kPlus>, lexer::MatcherPredicate<lexer::IsChar<'+'>>>,
-      SequenceRule<CFactory<CalcTokenId::kMinus>, lexer::MatcherPredicate<lexer::IsChar<'-'>>>, 
-      SequenceRule<CFactory<CalcTokenId::kMultiply>, lexer::MatcherPredicate<lexer::IsChar<'*'>>>,
-      SequenceRule<CFactory<CalcTokenId::kDivide>, lexer::MatcherPredicate<lexer::IsChar<'/'>>>,
-      SequenceRule<CFactory<CalcTokenId::kInteger>, lexer::MatcherRangeByPredicate<lexer::IsDigit>>
+      Rule<CalcLexerProduction<CalcTokenId::kNullterm>, MatcherPredicate<lexer::IsChar<'\000'>>>, 
+      Rule<CalcLexerProduction<CalcTokenId::kLParens>, MatcherPredicate<lexer::IsChar<'('>>>,
+      Rule<CalcLexerProduction<CalcTokenId::kRParens>, MatcherPredicate<lexer::IsChar<')'>>>, 
+      Rule<CalcLexerProduction<CalcTokenId::kPlus>, MatcherPredicate<lexer::IsChar<'+'>>>,
+      Rule<CalcLexerProduction<CalcTokenId::kMinus>, MatcherPredicate<lexer::IsChar<'-'>>>, 
+      Rule<CalcLexerProduction<CalcTokenId::kMultiply>, MatcherPredicate<lexer::IsChar<'*'>>>,
+      Rule<CalcLexerProduction<CalcTokenId::kDivide>, MatcherPredicate<lexer::IsChar<'/'>>>,
+      Rule<CalcLexerProduction<CalcTokenId::kInteger>, MatcherRangeByPredicate<lexer::IsDigit>>
   >;
 };
 

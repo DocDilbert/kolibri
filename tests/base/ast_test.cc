@@ -40,7 +40,7 @@ TEST(AstTest, Num) {
   EXPECT_CALL(mock_visitor, VisitNop).Times(0);
   EXPECT_CALL(mock_visitor, VisitUnaryOp).Times(0);
   EXPECT_CALL(mock_visitor, VisitBinaryOp).Times(0);
-  num1.Visit(mock_visitor);
+  num1.Accept(mock_visitor);
 }
 
 TEST(AstTest, BinOp) {
@@ -54,5 +54,5 @@ TEST(AstTest, BinOp) {
   EXPECT_CALL(mock_visitor, VisitNop).Times(0);
   EXPECT_CALL(mock_visitor, VisitUnaryOp).Times(0);
   EXPECT_CALL(mock_visitor, VisitBinaryOp(BinaryOpType::kIntegerDiv, &num1, &num2)).Times(1);
-  op.Visit(mock_visitor);
+  op.Accept(mock_visitor);
 }

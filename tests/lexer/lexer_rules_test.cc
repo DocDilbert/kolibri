@@ -10,15 +10,6 @@
 using namespace lexer;
 using namespace std;
 
-class MockTokenFactory {
- public:
-  using value_type = string;
-  std::string Create(const char* begin, const char* end) {
-    stringstream ss;
-    ss << "MockTokenFactory: " << string_view(begin, std::distance(begin, end));
-    return ss.str();
-  }
-};
 
 //----------------------------------------------------------------------------
 // MatcherPredicate Tests
@@ -51,7 +42,7 @@ TEST_F(MatcherPredicateTest, PredicateFalse) {
 // MatcherString Tests
 //----------------------------------------------------------------------------
 struct MockStringProviderTestStr1 {
-  constexpr const char* GetString() { return "Test1"; }
+  static constexpr const char* GetString() { return "Test1"; }
 };
 
 class MatcherStringTest : public ::testing::Test {
@@ -60,44 +51,102 @@ class MatcherStringTest : public ::testing::Test {
 };
 
 TEST_F(MatcherStringTest, stringMatch) {
-  MatcherString<MockStringProviderTestStr1> match_string;
+  MatcherString<MockStringProviderTestStr1> matcher_str;
   const char* test_str = "Test1____";
-  auto* result_ptr = match_string.Parse(test_str, &test_str[strlen(test_str)]);
+  auto* result_ptr = matcher_str.Parse(test_str, &test_str[strlen(test_str)]);
   EXPECT_EQ(&test_str[5], result_ptr);
 }
 
 TEST_F(MatcherStringTest, stringMatchInputTooShort) {
-  MatcherString<MockStringProviderTestStr1> match_string;
+  MatcherString<MockStringProviderTestStr1> matcher_str;
   const char* test_str = "Tes";
-  auto* result_ptr = match_string.Parse(test_str, &test_str[strlen(test_str)]);
+  auto* result_ptr = matcher_str.Parse(test_str, &test_str[strlen(test_str)]);
   EXPECT_EQ(&test_str[0], result_ptr);
 }
 
 TEST_F(MatcherStringTest, stringNoMatch) {
-  MatcherString<MockStringProviderTestStr1> match_string;
+  MatcherString<MockStringProviderTestStr1> matcher_str;
   const char* test_str = "TEst1____";
-  auto* result_ptr = match_string.Parse(test_str, &test_str[strlen(test_str)]);
+  auto* result_ptr = matcher_str.Parse(test_str, &test_str[strlen(test_str)]);
   EXPECT_EQ(&test_str[0], result_ptr);
 }
 
 TEST_F(MatcherStringTest, stringMatchCaseSensitiveNoMatch) {
-  MatcherString<MockStringProviderTestStr1> match_string;
+  MatcherString<MockStringProviderTestStr1> matcher_str;
   const char* test_str = "teSt1___";
-  auto* result_ptr = match_string.Parse(test_str, &test_str[strlen(test_str)]);
+  auto* result_ptr = matcher_str.Parse(test_str, &test_str[strlen(test_str)]);
   EXPECT_EQ(&test_str[0], result_ptr);
 }
 
 TEST_F(MatcherStringTest, stringMatchCaseInsensitiveMatch) {
-  MatcherString<MockStringProviderTestStr1, true> match_string;
+  MatcherString<MockStringProviderTestStr1, true> matcher_str;
   const char* test_str = "teSt1____";
-  auto* result_ptr = match_string.Parse(test_str, &test_str[strlen(test_str)]);
+  auto* result_ptr = matcher_str.Parse(test_str, &test_str[strlen(test_str)]);
+  EXPECT_EQ(&test_str[5], result_ptr);
+}
+//----------------------------------------------------------------------------
+// MatcherRangeByStartStopDelimiter Tests
+//----------------------------------------------------------------------------
+class MatcherRangeByStartStopDelimiterTest : public ::testing::Test {
+ protected:
+  void SetUp() override {}
+};
+
+template <char ch>
+class MockMatcherCh {
+ public:
+  const char* Parse(const char* begin, const char* end) {
+    if (*begin == ch) {
+      return begin + 1;
+    }
+    return begin;
+  }
+};
+
+TEST_F(MatcherRangeByStartStopDelimiterTest, matchStartStopWithSpan0ExpectedEmptyToken) {
+  MatcherRangeByStartStopDelimiter< MockMatcherCh<'A'>, MockMatcherCh<'B'>> matcher_sequence;
+  const char* test_str = "ABC";
+  auto* result_ptr = matcher_sequence.Parse(test_str, &test_str[strlen(test_str)]);
+ 
+  EXPECT_EQ(&test_str[2], result_ptr);
+}
+
+TEST_F(MatcherRangeByStartStopDelimiterTest, matchStartStopWithSpan1ExpectedEmptyToken) {
+  MatcherRangeByStartStopDelimiter< MockMatcherCh<'A'>, MockMatcherCh<'B'>> matcher_sequence;
+  const char* test_str = "A_BC";
+  auto* result_ptr = matcher_sequence.Parse(test_str, &test_str[strlen(test_str)]);
+ 
+  EXPECT_EQ(&test_str[3], result_ptr);
+}
+
+TEST_F(MatcherRangeByStartStopDelimiterTest, matchStartStopWithSpan3ExpectedEmptyToken) {
+  MatcherRangeByStartStopDelimiter< MockMatcherCh<'A'>, MockMatcherCh<'B'>> matcher_sequence;
+  const char* test_str = "A___BC";
+  auto* result_ptr = matcher_sequence.Parse(test_str, &test_str[strlen(test_str)]);
+ 
   EXPECT_EQ(&test_str[5], result_ptr);
 }
 
+TEST_F(MatcherRangeByStartStopDelimiterTest, matchStartStopWithSpan0NoStartMatch) {
+  MatcherRangeByStartStopDelimiter< MockMatcherCh<'A'>, MockMatcherCh<'B'>> matcher_sequence;
+  const char* test_str = "BC";
+  auto* result_ptr = matcher_sequence.Parse(test_str, &test_str[strlen(test_str)]);
+ 
+  EXPECT_EQ(&test_str[0], result_ptr);
+}
+
+TEST_F(MatcherRangeByStartStopDelimiterTest, matchStartStopWithSpan0NoStopMatch) {
+  MatcherRangeByStartStopDelimiter< MockMatcherCh<'A'>, MockMatcherCh<'B'>> matcher_sequence;
+  const char* test_str = "A_C";
+  auto* result_ptr = matcher_sequence.Parse(test_str, &test_str[strlen(test_str)]);
+ 
+  EXPECT_EQ(&test_str[0], result_ptr);
+}
+
 //----------------------------------------------------------------------------
-// SequenceRule Tests
+// MatcherSequence Test
 //----------------------------------------------------------------------------
-class SequenceRuleTest : public ::testing::Test {
+class MatcherSequenceTest : public ::testing::Test {
  protected:
   void SetUp() override {}
 };
@@ -113,49 +162,39 @@ class MockMatcher {
   }
 };
 
-TEST_F(SequenceRuleTest, oneMatcherWithMatch) {
-  SequenceRule<MockTokenFactory, MockMatcher<'A'>> seq_rule;
+TEST_F(MatcherSequenceTest, oneMatcherWithMatch) {
+  MatcherSequence<MockMatcher<'A'>> matcher_sequence;
   const char* test_str = "AB";
-  auto* result_ptr = seq_rule.Match(test_str, &test_str[strlen(test_str)]);
-  auto result_create = seq_rule.Create(test_str, result_ptr);
+  auto* result_ptr = matcher_sequence.Parse(test_str, &test_str[strlen(test_str)]);
   EXPECT_EQ(&test_str[1], result_ptr);
-  EXPECT_EQ("MockTokenFactory: A", result_create);
 }
 
-TEST_F(SequenceRuleTest, twoMatchersWithMatch) {
-  SequenceRule<MockTokenFactory, MockMatcher<'A'>, MockMatcher<'B'>> seq_rule;
+TEST_F(MatcherSequenceTest, twoMatchersWithMatch) {
+  MatcherSequence<MockMatcher<'A'>, MockMatcher<'B'>> matcher_sequence;
   const char* test_str = "AB";
-  auto* result_ptr = seq_rule.Match(test_str, &test_str[strlen(test_str)]);
-  auto result_create = seq_rule.Create(test_str, result_ptr);
+  auto* result_ptr = matcher_sequence.Parse(test_str, &test_str[strlen(test_str)]);
   EXPECT_EQ(&test_str[2], result_ptr);
-  EXPECT_EQ("MockTokenFactory: AB", result_create);
 }
 
-TEST_F(SequenceRuleTest, twoMatchersInputTooShort) {
-  SequenceRule<MockTokenFactory, MockMatcher<'A'>, MockMatcher<'B'>> seq_rule;
+TEST_F(MatcherSequenceTest, twoMatchersInputTooShort) {
+  MatcherSequence<MockMatcher<'A'>, MockMatcher<'B'>> matcher_sequence;
   const char* test_str = "AB";                                                   // intentional no null termination
-  auto* result_ptr = seq_rule.Match(test_str, &test_str[strlen(test_str) - 1]);  // string stops at A
-  auto result_create = seq_rule.Create(test_str, result_ptr);
+  auto* result_ptr = matcher_sequence.Parse(test_str, &test_str[strlen(test_str) - 1]);  // string stops at A
   EXPECT_EQ(&test_str[0], result_ptr);
-  EXPECT_EQ("MockTokenFactory: ", result_create);
 }
 
-TEST_F(SequenceRuleTest, twoMatchersWithFirstNoMatch) {
-  SequenceRule<MockTokenFactory, MockMatcher<'_'>, MockMatcher<'B'>> seq_rule;
+TEST_F(MatcherSequenceTest, twoMatchersWithFirstNoMatch) {
+  MatcherSequence<MockMatcher<'_'>, MockMatcher<'B'>> matcher_sequence;
   const char* test_str = "AB";
-  auto* result_ptr = seq_rule.Match(test_str, &test_str[strlen(test_str)]);
-  auto result_create = seq_rule.Create(test_str, result_ptr);
+  auto* result_ptr = matcher_sequence.Parse(test_str, &test_str[strlen(test_str)]);
   EXPECT_EQ(&test_str[0], result_ptr);
-  EXPECT_EQ("MockTokenFactory: ", result_create);
 }
 
-TEST_F(SequenceRuleTest, twoMatchersWithSecondNoMatch) {
-  SequenceRule<MockTokenFactory, MockMatcher<'A'>, MockMatcher<'_'>> seq_rule;
+TEST_F(MatcherSequenceTest, twoMatchersWithSecondNoMatch) {
+  MatcherSequence<MockMatcher<'A'>, MockMatcher<'_'>> matcher_sequence;
   const char* test_str = "AB";
-  auto* result_ptr = seq_rule.Match(test_str, &test_str[strlen(test_str)]);
-  auto result_create = seq_rule.Create(test_str, result_ptr);
+  auto* result_ptr = matcher_sequence.Parse(test_str, &test_str[strlen(test_str)]);
   EXPECT_EQ(&test_str[0], result_ptr);
-  EXPECT_EQ("MockTokenFactory: ", result_create);
 }
 
 //----------------------------------------------------------------------------
@@ -176,10 +215,11 @@ class MockLexerRulesFactory {
   value_type Create(const char* begin, const char* end) { return "MockFactory" + to_string(Tid); }
 };
 
-template <unsigned Tid, char TMatchChar, typename TFactory = MockLexerRulesFactory<Tid>>
+template <unsigned Tid, char TMatchChar, typename TProduction = MockLexerRulesFactory<Tid>>
 class MockLexerRulesMatcher {
  public:
-  using factory_type = TFactory;
+  using production_type = TProduction;
+
   const char* Match(const char* begin, const char* end) {
     if (*begin == TMatchChar) {
       return begin + 1;
@@ -246,7 +286,7 @@ TEST_F(LexerRulesTest, BothRulesMatchFirstIsSkipped) {
   LexerRules<                                       //
       MockLexerRulesFactory<0>,                     // unknown factory
       MockLexerRulesFactory<1>,                     // end of file factory
-      MockLexerRulesMatcher<0, 'T', SkipFactory>,  //
+      MockLexerRulesMatcher<0, 'T', SkipProduction>,  //
       MockLexerRulesMatcher<1, 'e'>>
       rules;
   const char* test_str = "Test1____";

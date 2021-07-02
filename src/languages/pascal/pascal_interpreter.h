@@ -51,12 +51,12 @@ class PascalInterpreter {
 
     void VisitProgram(nonterm_type program_id, nonterm_type program) override {
       Visitor visitor(*this);
-      program->Visit(visitor);
+      program->Accept(visitor);
     }
 
     void VisitBlock(std::vector<nonterm_type> const& var_decls, nonterm_type compound_statement) override {
       Visitor visitor(*this);
-      compound_statement->Visit(visitor);
+      compound_statement->Accept(visitor);
     }
 
     void VisitVariableDeclaration(term_type id, term_type type) override {}
@@ -87,14 +87,14 @@ class PascalInterpreter {
         auto& statement = statements[i];
         Visitor visitor(*this);
 
-        statement->Visit(visitor);
+        statement->Accept(visitor);
       }
     }
 
     void VisitUnaryOp(base::UnaryOpType type, nonterm_type operand) override {
       Visitor visitor(*this);
 
-      operand->Visit(visitor);
+      operand->Accept(visitor);
 
       switch (type) {
         case base::UnaryOpType::kPositiveOp:
@@ -114,8 +114,8 @@ class PascalInterpreter {
           Visitor visitor_lhs(*this);
           Visitor visitor_rhs(*this);
 
-          operand_lhs->Visit(visitor_lhs);
-          operand_rhs->Visit(visitor_rhs);
+          operand_lhs->Accept(visitor_lhs);
+          operand_rhs->Accept(visitor_rhs);
           last_num_ = visitor_lhs.GetLastNum() + visitor_rhs.GetLastNum();
           break;
         }
@@ -123,8 +123,8 @@ class PascalInterpreter {
           Visitor visitor_lhs(*this);
           Visitor visitor_rhs(*this);
 
-          operand_lhs->Visit(visitor_lhs);
-          operand_rhs->Visit(visitor_rhs);
+          operand_lhs->Accept(visitor_lhs);
+          operand_rhs->Accept(visitor_rhs);
           last_num_ = visitor_lhs.GetLastNum() - visitor_rhs.GetLastNum();
           break;
         }
@@ -132,8 +132,8 @@ class PascalInterpreter {
           Visitor visitor_lhs(*this);
           Visitor visitor_rhs(*this);
 
-          operand_lhs->Visit(visitor_lhs);
-          operand_rhs->Visit(visitor_rhs);
+          operand_lhs->Accept(visitor_lhs);
+          operand_rhs->Accept(visitor_rhs);
           last_num_ = visitor_lhs.GetLastNum() * visitor_rhs.GetLastNum();
           break;
         }
@@ -141,8 +141,8 @@ class PascalInterpreter {
           Visitor visitor_lhs(*this);
           Visitor visitor_rhs(*this);
 
-          operand_lhs->Visit(visitor_lhs);
-          operand_rhs->Visit(visitor_rhs);
+          operand_lhs->Accept(visitor_lhs);
+          operand_rhs->Accept(visitor_rhs);
           last_num_ = visitor_lhs.GetLastNum() / visitor_rhs.GetLastNum();
           break;
         }
@@ -150,8 +150,8 @@ class PascalInterpreter {
           Visitor visitor_lhs(*this);
           Visitor visitor_rhs(*this);
 
-          operand_lhs->Visit(visitor_lhs);
-          operand_rhs->Visit(visitor_rhs);
+          operand_lhs->Accept(visitor_lhs);
+          operand_rhs->Accept(visitor_rhs);
           last_num_ = visitor_lhs.GetLastNum() / visitor_rhs.GetLastNum();
           break;
         }
@@ -160,7 +160,7 @@ class PascalInterpreter {
 
           assert(operand_lhs->GetTypeId() == base::AstTypeId::kAstId);
           auto& id = dynamic_cast<base::AstId<base::MakeShared, term_type>&>(*operand_lhs);
-          operand_rhs->Visit(visitor_rhs);
+          operand_rhs->Accept(visitor_rhs);
 
           state_.Assign(id.GetName(), visitor_rhs.GetLastNum());
           break;
@@ -182,7 +182,7 @@ class PascalInterpreter {
     PascalState state;
     Visitor visitor(state);
 
-    node->Visit(visitor);
+    node->Accept(visitor);
     std::string expr = std::to_string(visitor.GetLastNum());
 
     return state;

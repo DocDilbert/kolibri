@@ -26,7 +26,7 @@ class PrintAst {
       stream_ << "  node" << ncount_ << " [label=\"Program\n" << pname.GetName() << "\"]" << std::endl;
       stream_ << "  node" << ncount_ << " -> node" << ncount_ + 1 << std::endl;
       Visitor visitor(stream_, ncount_ + 1);
-      program->Visit(visitor);
+      program->Accept(visitor);
       ncount_ = visitor.ncount_;
     }
 
@@ -37,7 +37,7 @@ class PrintAst {
       for (int i = 0; i < var_decls.size(); i++) {
         ncount_++;
         Visitor visitor(stream_, ncount_);
-        var_decls[i]->Visit(visitor);
+        var_decls[i]->Accept(visitor);
         stream_ << "  node" << root_cnt << " -> node" << ncount_ << std::endl;
         ncount_ = visitor.ncount_;
       }
@@ -46,7 +46,7 @@ class PrintAst {
       stream_ << "  node" << root_cnt << " -> node" << ncount_ << std::endl;
 
       Visitor visitor(stream_, ncount_);
-      compound_statement->Visit(visitor);
+      compound_statement->Accept(visitor);
       ncount_ = visitor.ncount_;
     }
 
@@ -97,7 +97,7 @@ class PrintAst {
 
       stream_ << "  node" << ncount_ << " [label=\"" << label << "\"]" << std::endl;
       Visitor visitor(stream_, ncount_ + 1);
-      operand->Visit(visitor);
+      operand->Accept(visitor);
 
       stream_ << "  node" << ncount_ << " -> node" << ncount_ + 1 << std::endl;
       ncount_ = visitor.ncount_;
@@ -112,7 +112,7 @@ class PrintAst {
         auto& statement = statements[i];
         Visitor visitor(stream_, ncount_ + 1);
 
-        statement->Visit(visitor);
+        statement->Accept(visitor);
         stream_ << "  node" << root_cnt_ << " -> node" << ncount_ + 1 << std::endl;
         ncount_ = visitor.ncount_;
       }
@@ -147,12 +147,12 @@ class PrintAst {
       stream_ << "  node" << root_cnt << " [label=\"" << label << "\"]" << std::endl;
 
       Visitor visitor_lhs(stream_, ncount_ + 1);
-      operand_lhs->Visit(visitor_lhs);
+      operand_lhs->Accept(visitor_lhs);
       stream_ << "  node" << root_cnt << " -> node" << ncount_ + 1 << std::endl;
       ncount_ = visitor_lhs.ncount_;
 
       Visitor visitor_rhs(stream_, ncount_ + 1);
-      operand_rhs->Visit(visitor_rhs);
+      operand_rhs->Accept(visitor_rhs);
       stream_ << "  node" << root_cnt << " -> node" << ncount_ + 1 << std::endl;
       ncount_ = visitor_rhs.ncount_;
     }
@@ -170,7 +170,7 @@ class PrintAst {
     stream << "edge [arrowsize=.5]" << std::endl;
     stream << std::endl;
     Visitor visitor(stream, 0);
-    node->Visit(visitor);
+    node->Accept(visitor);
     stream << "}" << std::endl;
   }
 };

@@ -3,9 +3,9 @@
 
 namespace lexer {
 
-template <char Char>
+template <char Ch>
 struct IsChar {
-  bool operator()(char ch) { return (ch == Char); }
+  bool operator()(char ch) { return (ch == Ch); }
 };
 
 struct IsDigit {
@@ -42,19 +42,19 @@ struct IsLetterOrDigit {
   }
 };
 
-template <typename... Predicates>
+template <typename... TPredicates>
 struct PredicateOr {
-  bool operator()(char ch) { return Recurse<Predicates...>(ch);}
+  bool operator()(char ch) { return Recurse<TPredicates...>(ch); }
 
   template <typename T1>
   bool Recurse(char ch) {
     T1 t1;
     return t1(ch);
   }
-  template <typename T1, typename T2, typename... Args>
+  template <typename T1, typename T2, typename... UPredicates>
   bool Recurse(char ch) {
     T1 t1;
-    return t1(ch) || Recurse<T2, Args...>(ch);
+    return t1(ch) || Recurse<T2, UPredicates...>(ch);
   }
 };
 

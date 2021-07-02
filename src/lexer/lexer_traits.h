@@ -5,14 +5,14 @@
 
 namespace lexer {
 
-class SkipFactory {
+class SkipProduction {
  public:
   using value_type = void;
 };
 
 template <class T>
 
-struct is_skip_factory : std::integral_constant<bool, std::is_base_of<SkipFactory, T>::value> {};
+struct is_skip_factory : std::integral_constant<bool, std::is_base_of<SkipProduction, T>::value> {};
 
 }  // namespace lexer
 
