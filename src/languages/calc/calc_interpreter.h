@@ -33,13 +33,13 @@ class CalcInterpreter {
       Visitor visitor;
       auto operand = ast.GetOperand();
       operand->Accept(visitor);
+      // auto op = ast.GetOperator().GetId();
 
-      auto type = ast.GetOpType();
-      switch (type) {
-        case base::UnaryOpType::kPositiveOp:
+      switch (ast.GetOperator().GetId()) {
+        case term_type::id_type::kPlus:
           num_ = visitor.GetNum();
           break;
-        case base::UnaryOpType::kNegativeOp:
+        case term_type::id_type::kMinus:
           num_ = -visitor.GetNum();
           break;
 
@@ -54,17 +54,17 @@ class CalcInterpreter {
       ast.GetOperandLhs()->Accept(visitor_lhs);
       ast.GetOperandRhs()->Accept(visitor_rhs);
 
-      switch (ast.GetOpType()) {
-        case base::BinaryOpType::kAdd:
+      switch (ast.GetOperator().GetId()) {
+        case term_type::id_type::kPlus:
           num_ = visitor_lhs.GetNum() + visitor_rhs.GetNum();
           break;
-        case base::BinaryOpType::kSub:
+        case term_type::id_type::kMinus:
           num_ = visitor_lhs.GetNum() - visitor_rhs.GetNum();
           break;
-        case base::BinaryOpType::kMul:
+        case term_type::id_type::kMultiply:
           num_ = visitor_lhs.GetNum() * visitor_rhs.GetNum();
           break;
-        case base::BinaryOpType::kIntegerDiv:
+        case term_type::id_type::kDiv:
           num_ = visitor_lhs.GetNum() / visitor_rhs.GetNum();
           break;
         default:

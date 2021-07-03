@@ -26,7 +26,7 @@ class AstFactory : public IAstFactory<TNonTerm, TTerm> {
   virtual nonterm_type CreateBlock(std::vector<nonterm_type> const& var_decls, nonterm_type compound_statement) override {
     return std::make_shared<AstBlock<MakeShared, TTerm>>(var_decls, compound_statement);
   }
-  
+
   virtual nonterm_type CreateId(std::string name) override { return std::make_shared<AstId<MakeShared, TTerm>>(name); }
 
   virtual nonterm_type CreateRaw(term_type term) override { return std::make_shared<AstRaw<MakeShared, TTerm>>(term); }
@@ -39,10 +39,12 @@ class AstFactory : public IAstFactory<TNonTerm, TTerm> {
     return std::make_shared<AstCompoundStatement<MakeShared, TTerm>>(statements);
   }
 
-  virtual nonterm_type CreateUnaryOp(UnaryOpType type, nonterm_type operand) override { return std::make_shared<AstUnaryOp<MakeShared, TTerm>>(type, operand); }
+  virtual nonterm_type CreateUnaryOp(term_type oper, nonterm_type operand) override {
+    return std::make_shared<AstUnaryOp<MakeShared, TTerm>>(oper, operand);
+  }
 
-  virtual nonterm_type CreateBinaryOp(BinaryOpType type, nonterm_type operand_lhs, nonterm_type operand_rhs) override {
-    return std::make_shared<AstBinaryOp<MakeShared, TTerm>>(type, operand_lhs, operand_rhs);
+  virtual nonterm_type CreateBinaryOp( nonterm_type operand_lhs, term_type oper, nonterm_type operand_rhs) override {
+    return std::make_shared<AstBinaryOp<MakeShared, TTerm>>( operand_lhs, oper, operand_rhs);
   }
 
   virtual nonterm_type CreateVariableDeclaration(term_type id, term_type type) override {

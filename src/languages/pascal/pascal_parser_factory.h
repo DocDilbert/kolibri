@@ -70,17 +70,7 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
   nonterm_type CreateTermNonTerm(parser::RuleId rule_id, term_type term, nonterm_type nonterm) override {
     switch (rule_id) {
       case parser::RuleId::kRule12: {  // factor
-        switch (term.GetId()) {
-          case PascalTokenId::kPlus: {
-            return ast_factory_.CreateUnaryOp(base::UnaryOpType::kPositiveOp, nonterm);
-          }
-          case PascalTokenId::kMinus: {
-            return ast_factory_.CreateUnaryOp(base::UnaryOpType::kNegativeOp, nonterm);
-          }
-          default: {
-            return ast_factory_.CreateNull();
-          }
-        }
+        return ast_factory_.CreateUnaryOp(term, nonterm);
       }
       default: {
         return ast_factory_.CreateNull();
@@ -110,45 +100,15 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
   nonterm_type CreateNonTermTermNonTerm(parser::RuleId rule_id, nonterm_type lhs, term_type term, nonterm_type rhs) override {
     switch (rule_id) {
       case parser::RuleId::kRule8: {  // assignment_statement
-        switch (term.GetId()) {
-          case PascalTokenId::kAssign: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kAssign, lhs, rhs);
-          }
-          default: {
-            return ast_factory_.CreateNull();
-          }
-        }
+        return ast_factory_.CreateBinaryOp(lhs, term, rhs);
       }
 
       case parser::RuleId::kRule10: {  // expr
-        switch (term.GetId()) {
-          case PascalTokenId::kPlus: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kAdd, lhs, rhs);
-          }
-          case PascalTokenId::kMinus: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kSub, lhs, rhs);
-          }
-          default: {
-            return ast_factory_.CreateNull();
-          }
-        }
+        return ast_factory_.CreateBinaryOp(lhs, term, rhs);
       }
 
       case parser::RuleId::kRule11: {  // term
-        switch (term.GetId()) {
-          case PascalTokenId::kMultiply: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kMul, lhs, rhs);
-          }
-          case PascalTokenId::kIntegerDiv: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kIntegerDiv, lhs, rhs);
-          }
-          case PascalTokenId::kFloatDiv: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kFloatDiv, lhs, rhs);
-          }
-          default: {
-            return ast_factory_.CreateNull();
-          }
-        }
+        return ast_factory_.CreateBinaryOp(lhs, term, rhs);
       }
       default: {
         return ast_factory_.CreateNull();

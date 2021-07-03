@@ -52,7 +52,7 @@ struct CalculatorGrammar : public parser::GrammarBase {
           SequenceExpr<
             OrderedChoiceExpr<
               TermExpr<CalcTokenPredicate<CalcTokenId::kMultiply>>,
-              TermExpr<CalcTokenPredicate<CalcTokenId::kDivide>>
+              TermExpr<CalcTokenPredicate<CalcTokenId::kDiv>>
             >, 
             NonTermExpr<parser::RuleId::kRule2>
           >

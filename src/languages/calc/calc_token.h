@@ -11,7 +11,7 @@ enum class CalcTokenId {
   kPlus,
   kMinus,
   kMultiply,
-  kDivide,
+  kDiv,
   kInteger,
   kNullterm,
   kLParens,
@@ -30,7 +30,7 @@ class CalcTokenIdConverter {
         return "MINUS";
       case CalcTokenId::kMultiply:
         return "MULTIPLY";
-      case CalcTokenId::kDivide:
+      case CalcTokenId::kDiv:
         return "DIVIDE";
       case CalcTokenId::kInteger:
         return "INTEGER";

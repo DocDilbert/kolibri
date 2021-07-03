@@ -91,23 +91,11 @@ class PrintAst {
     }
 
     void Visit(base::AstUnaryOp<TMakeType, term_type>& ast) override {
-      auto type = ast.GetOpType();
-      std::string label;
-      switch (type) {
-        case base::UnaryOpType::kPositiveOp:
-          label = "unary +";
-          break;
-        case base::UnaryOpType::kNegativeOp:
-          label = "unary -";
-          break;
-
-        default:
-          assert(true);
-          break;
-      }
+      auto op_val = ast.GetOperator().GetValue();
+     
       auto operand = ast.GetOperand();
 
-      stream_ << "  node" << ncount_ << " [label=\"" << label << "\"]" << std::endl;
+      stream_ << "  node" << ncount_ << " [label=\"(unary)\n" << op_val << "\"]" << std::endl;
       Visitor visitor(stream_, ncount_ + 1);
       operand->Accept(visitor);
 
@@ -131,33 +119,10 @@ class PrintAst {
     }
 
     void Visit(base::AstBinaryOp<TMakeType, term_type>& ast) override {
-      auto op = ast.GetOpType();
+      auto op_val = ast.GetOperator().GetValue();
+
       unsigned root_cnt = ncount_;
-      std::string label;
-      switch (op) {
-        case base::BinaryOpType::kAdd:
-          label = "+";
-          break;
-        case base::BinaryOpType::kSub:
-          label = "-";
-          break;
-        case base::BinaryOpType::kMul:
-          label = "*";
-          break;
-        case base::BinaryOpType::kIntegerDiv:
-          label = "div";
-          break;
-        case base::BinaryOpType::kFloatDiv:
-          label = "/";
-          break;
-        case base::BinaryOpType::kAssign:
-          label = ":=";
-          break;
-        default:
-          assert(true);
-          break;
-      }
-      stream_ << "  node" << root_cnt << " [label=\"" << label << "\"]" << std::endl;
+      stream_ << "  node" << root_cnt << " [label=\"" << op_val << "\"]" << std::endl;
 
       Visitor visitor_lhs(stream_, ncount_ + 1);
       auto operand_lhs = ast.GetOperandLhs();

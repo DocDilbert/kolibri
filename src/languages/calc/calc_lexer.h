@@ -33,7 +33,7 @@ struct CalcLexerRules : public lexer::LexerRulesBase {
       Rule<CalcLexerProduction<CalcTokenId::kPlus>, MatcherPredicate<lexer::IsChar<'+'>>>,
       Rule<CalcLexerProduction<CalcTokenId::kMinus>, MatcherPredicate<lexer::IsChar<'-'>>>, 
       Rule<CalcLexerProduction<CalcTokenId::kMultiply>, MatcherPredicate<lexer::IsChar<'*'>>>,
-      Rule<CalcLexerProduction<CalcTokenId::kDivide>, MatcherPredicate<lexer::IsChar<'/'>>>,
+      Rule<CalcLexerProduction<CalcTokenId::kDiv>, MatcherPredicate<lexer::IsChar<'/'>>>,
       Rule<CalcLexerProduction<CalcTokenId::kInteger>, MatcherRangeByPredicate<lexer::IsDigit>>
   >;
 };

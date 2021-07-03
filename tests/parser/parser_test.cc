@@ -304,7 +304,7 @@ TEST(ParserTest, Equation_2_mul_2_mul_3_div_4) {
   input.push_back(MockToken(CalcTokenId::kInteger, "2", 1));
   input.push_back(MockToken(CalcTokenId::kMultiply, "*", 1));
   input.push_back(MockToken(CalcTokenId::kInteger, "3", 1));
-  input.push_back(MockToken(CalcTokenId::kDivide, "/", 1));
+  input.push_back(MockToken(CalcTokenId::kDiv, "/", 1));
   input.push_back(MockToken(CalcTokenId::kInteger, "4", 1));
 
   MockParserFactory mock_parser_factory;
@@ -315,7 +315,7 @@ TEST(ParserTest, Equation_2_mul_2_mul_3_div_4) {
   EXPECT_CALL(mock_parser_factory, CreateNonTermTermNonTerm(RuleId::kRule1, "2", MockToken(CalcTokenId::kMultiply, "*", 1), "2")).WillOnce(Return("MUL_2_2"));
   EXPECT_CALL(mock_parser_factory, CreateNonTermTermNonTerm(RuleId::kRule1, "MUL_2_2", MockToken(CalcTokenId::kMultiply, "*", 1), "3"))
       .WillOnce(Return("MUL_*_3"));
-  EXPECT_CALL(mock_parser_factory, CreateNonTermTermNonTerm(RuleId::kRule1, "MUL_*_3", MockToken(CalcTokenId::kDivide, "/", 1), "4"))
+  EXPECT_CALL(mock_parser_factory, CreateNonTermTermNonTerm(RuleId::kRule1, "MUL_*_3", MockToken(CalcTokenId::kDiv, "/", 1), "4"))
       .WillOnce(Return("DIV_*_4"));
   EXPECT_CALL(mock_parser_factory, CreateNull()).WillRepeatedly(Return("NULL"));
   auto result = parser.Expr(input.begin(), input.end());

@@ -8,19 +8,5 @@ enum class ConstType {
   kReal
 };
 
-enum class UnaryOpType {
-  kPositiveOp,  //
-  kNegativeOp
-};
-
-enum class BinaryOpType {
-  kAdd,  //
-  kSub,
-  kMul,
-  kIntegerDiv,
-  kFloatDiv,
-  kAssign
-};
-
 }  // namespace base
 #endif

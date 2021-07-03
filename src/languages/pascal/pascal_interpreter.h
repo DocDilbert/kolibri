@@ -100,12 +100,12 @@ class PascalInterpreter {
       auto operand = ast.GetOperand();
       operand->Accept(visitor);
 
-      auto type = ast.GetOpType();
+      auto type = ast.GetOperator().GetId();
       switch (type) {
-        case base::UnaryOpType::kPositiveOp:
+        case term_type::id_type::kPlus:
           last_num_ = visitor.GetLastNum();
           break;
-        case base::UnaryOpType::kNegativeOp:
+        case term_type::id_type::kMinus:
           last_num_ = -visitor.GetLastNum();
           break;
 
@@ -116,8 +116,8 @@ class PascalInterpreter {
     void Visit(base::AstBinaryOp<TMakeType, term_type>& ast) override {
       auto operand_lhs = ast.GetOperandLhs();
       auto operand_rhs = ast.GetOperandRhs();
-      switch (ast.GetOpType()) {
-        case base::BinaryOpType::kAdd: {
+      switch (ast.GetOperator().GetId()) {
+        case term_type::id_type::kPlus: {
           Visitor visitor_lhs(*this);
           Visitor visitor_rhs(*this);
 
@@ -126,7 +126,7 @@ class PascalInterpreter {
           last_num_ = visitor_lhs.GetLastNum() + visitor_rhs.GetLastNum();
           break;
         }
-        case base::BinaryOpType::kSub: {
+        case term_type::id_type::kMinus: {
           Visitor visitor_lhs(*this);
           Visitor visitor_rhs(*this);
 
@@ -135,7 +135,7 @@ class PascalInterpreter {
           last_num_ = visitor_lhs.GetLastNum() - visitor_rhs.GetLastNum();
           break;
         }
-        case base::BinaryOpType::kMul: {
+        case term_type::id_type::kMultiply: {
           Visitor visitor_lhs(*this);
           Visitor visitor_rhs(*this);
 
@@ -144,7 +144,7 @@ class PascalInterpreter {
           last_num_ = visitor_lhs.GetLastNum() * visitor_rhs.GetLastNum();
           break;
         }
-        case base::BinaryOpType::kIntegerDiv: {
+        case term_type::id_type::kIntegerDiv: {
           Visitor visitor_lhs(*this);
           Visitor visitor_rhs(*this);
 
@@ -153,7 +153,7 @@ class PascalInterpreter {
           last_num_ = visitor_lhs.GetLastNum() / visitor_rhs.GetLastNum();
           break;
         }
-        case base::BinaryOpType::kFloatDiv: {
+        case term_type::id_type::kFloatDiv: {
           Visitor visitor_lhs(*this);
           Visitor visitor_rhs(*this);
 
@@ -162,7 +162,7 @@ class PascalInterpreter {
           last_num_ = visitor_lhs.GetLastNum() / visitor_rhs.GetLastNum();
           break;
         }
-        case base::BinaryOpType::kAssign: {
+        case term_type::id_type::kAssign: {
           Visitor visitor_rhs(*this);
 
           assert(operand_lhs->GetTypeId() == base::AstTypeId::kAstId);

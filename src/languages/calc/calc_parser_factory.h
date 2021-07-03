@@ -38,17 +38,7 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
   nonterm_type CreateTermNonTerm(parser::RuleId rule_id, term_type term, nonterm_type nonterm) override {
     switch (rule_id) {
       case parser::RuleId::kRule2: {
-        switch (term.GetId()) {
-          case CalcTokenId::kPlus: {
-            return ast_factory_.CreateUnaryOp(base::UnaryOpType::kPositiveOp, nonterm);
-          }
-          case CalcTokenId::kMinus: {
-            return ast_factory_.CreateUnaryOp(base::UnaryOpType::kNegativeOp, nonterm);
-          }
-          default: {
-            return ast_factory_.CreateNull();
-          }
-        }
+        return ast_factory_.CreateUnaryOp(term, nonterm);
       }
       default: {
         return ast_factory_.CreateNull();
@@ -63,31 +53,10 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
   nonterm_type CreateNonTermTermNonTerm(parser::RuleId rule_id, nonterm_type lhs, term_type term, nonterm_type rhs) override {
     switch (rule_id) {
       case parser::RuleId::kRule0: {
-        switch (term.GetId()) {
-          case CalcTokenId::kPlus: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kAdd, lhs, rhs);
-          }
-          case CalcTokenId::kMinus: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kSub, lhs, rhs);
-          }
-          default: {
-            return ast_factory_.CreateNull();
-          }
-        }
+        return ast_factory_.CreateBinaryOp(lhs, term, rhs);
       }
-
       case parser::RuleId::kRule1: {
-        switch (term.GetId()) {
-          case CalcTokenId::kMultiply: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kMul, lhs, rhs);
-          }
-          case CalcTokenId::kDivide: {
-            return ast_factory_.CreateBinaryOp(base::BinaryOpType::kIntegerDiv, lhs, rhs);
-          }
-          default: {
-            return ast_factory_.CreateNull();
-          }
-        }
+        return ast_factory_.CreateBinaryOp(lhs, term, rhs);
       }
       default: {
         return ast_factory_.CreateNull();
