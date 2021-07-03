@@ -1,4 +1,5 @@
 #include "base/ast.h"
+
 #include <gmock/gmock.h>  // Brings in Google Mock.
 #include <gtest/gtest.h>
 
@@ -10,6 +11,9 @@ using namespace std;
 using ::testing::_;
 using ::testing::Ref;
 using ::testing::Return;
+using ::testing::An;
+using ::testing::Matcher;
+using ::testing::MakeAction;
 
 using MockToken = std::string;
 
@@ -19,27 +23,26 @@ class MockMakePtr {
   using type = T*;
 };
 
-class MockAstVisitor : public IAstVisitor<Ast<MockMakePtr, MockToken>*, MockToken> {
+class MockAstVisitor : public IAstVisitor<MockMakePtr, MockToken> {
  public:
-  MOCK_METHOD0(VisitNop, void());
-  MOCK_METHOD2(VisitProgram, void(nonterm_type left, nonterm_type right));
-  MOCK_METHOD2(VisitBlock, void(std::vector<nonterm_type> const& var_decls, nonterm_type compound_statement));
-  MOCK_METHOD2(VisitVariableDeclaration, void(term_type id, term_type type));
-  MOCK_METHOD2(VisitIntegerConst, void(base::ConstType const_type, std::string value));
-  MOCK_METHOD1(VisitId, void(std::string));
-  MOCK_METHOD1(VisitCompoundStatement, void(std::vector<nonterm_type> const& statements));
-  MOCK_METHOD2(VisitUnaryOp, void(UnaryOpType type, nonterm_type operand));
-  MOCK_METHOD3(VisitBinaryOp, void(BinaryOpType type, nonterm_type left, nonterm_type right));
+  MOCK_METHOD(void, Visit, ((AstNop<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(void, Visit, ((AstProgram<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(void, Visit, ((AstBlock<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(void, Visit, ((AstVariableDeclaration<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(void, Visit, ((AstConst<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(void, Visit, ((AstId<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(void, Visit, ((AstCompoundStatement<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(void, Visit, ((AstUnaryOp<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(void, Visit, ((AstBinaryOp<MockMakePtr, MockToken> & ast)), (override));
 };
 
 TEST(AstTest, Num) {
   MockAstVisitor mock_visitor;
   auto num1 = AstConst<MockMakePtr, MockToken>(ConstType::kInteger, "2");
-  EXPECT_CALL(mock_visitor, VisitIntegerConst(ConstType::kInteger, "2")).Times(1);
-  EXPECT_CALL(mock_visitor, VisitId).Times(0);
-  EXPECT_CALL(mock_visitor, VisitNop).Times(0);
-  EXPECT_CALL(mock_visitor, VisitUnaryOp).Times(0);
-  EXPECT_CALL(mock_visitor, VisitBinaryOp).Times(0);
+  EXPECT_CALL(mock_visitor, Visit(
+    Matcher<AstConst<MockMakePtr, MockToken> &>(Ref(num1))
+  )).Times(1);
+ 
   num1.Accept(mock_visitor);
 }
 
@@ -49,10 +52,10 @@ TEST(AstTest, BinOp) {
   auto num2 = AstConst<MockMakePtr, MockToken>(ConstType::kInteger, "3");
   auto op = AstBinaryOp<MockMakePtr, MockToken>(BinaryOpType::kIntegerDiv, &num1, &num2);
 
-  EXPECT_CALL(mock_visitor, VisitIntegerConst).Times(0);
-  EXPECT_CALL(mock_visitor, VisitId).Times(0);
-  EXPECT_CALL(mock_visitor, VisitNop).Times(0);
-  EXPECT_CALL(mock_visitor, VisitUnaryOp).Times(0);
-  EXPECT_CALL(mock_visitor, VisitBinaryOp(BinaryOpType::kIntegerDiv, &num1, &num2)).Times(1);
+  EXPECT_CALL(mock_visitor, Visit(
+    Matcher<AstBinaryOp<MockMakePtr, MockToken> &>(Ref(op))
+  )).Times(1);
+
   op.Accept(mock_visitor);
 }
+

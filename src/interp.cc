@@ -48,14 +48,14 @@ void doPascal(string content) {
     cout << "ERROR" << endl;
   }
   cout << res.error_msg << endl;
-  PrintAst<std::shared_ptr<Ast<MakeShared, PascalToken>>, PascalToken> show_ast;
+  PrintAst<MakeShared, PascalToken> show_ast;
   cout << "Writing Ast to output.dot" << endl;
   ofstream dot_file("output.dot");
   show_ast.Print(dot_file, res.node);
 
   cout << "------------------" << endl;
 
-  PascalInterpreter<std::shared_ptr<Ast<MakeShared, PascalToken>>, PascalToken> pascal_interp;
+  PascalInterpreter<MakeShared, PascalToken> pascal_interp;
   auto result = pascal_interp.Interpret(res.node);
   auto var_list = result.ListVariables();
   cout << var_list << endl;

@@ -32,10 +32,10 @@ class PascalState {
   std::map<std::string, double> global_scope_;
 };
 
-template <typename TNonTerm, typename TTerm>
+template <template <class> class TMakeType, typename TTerm>
 class PascalInterpreter {
  public:
-  using nonterm_type = TNonTerm;
+  using nonterm_type = typename TMakeType<base::Ast<TMakeType, TTerm>>::type;
   using term_type = TTerm;
 
   struct RuleResult {
@@ -44,24 +44,27 @@ class PascalInterpreter {
     const char* error_msg;
   };
 
-  class Visitor : public base::IAstVisitor<nonterm_type, term_type> {
+  class Visitor : public base::IAstVisitor<TMakeType, term_type> {
    public:
     Visitor(PascalState& state) : state_(state), last_num_(0) {}
     Visitor(Visitor const& visitor) : state_(visitor.state_), last_num_(0) {}
 
-    void VisitProgram(nonterm_type program_id, nonterm_type program) override {
+    void Visit(base::AstProgram<TMakeType, term_type>& ast) override {
       Visitor visitor(*this);
-      program->Accept(visitor);
+      ast.GetProgram()->Accept(visitor);
     }
 
-    void VisitBlock(std::vector<nonterm_type> const& var_decls, nonterm_type compound_statement) override {
+    void Visit(base::AstBlock<TMakeType, term_type>& ast) override {
       Visitor visitor(*this);
-      compound_statement->Accept(visitor);
+      ast.GetCompoundStatement()->Accept(visitor);
     }
 
-    void VisitVariableDeclaration(term_type id, term_type type) override {}
+    void Visit(base::AstVariableDeclaration<TMakeType, term_type>& ast) override {}
 
-    void VisitIntegerConst(base::ConstType const_type, std::string value) override {
+    void Visit(base::AstConst<TMakeType, term_type>& ast) override {
+      auto const_type = ast.GetConstType();
+      auto value = ast.GetValue();
+
       switch (const_type) {
         case base::ConstType::kInteger: {
           auto value_i = std::stoi(value);
@@ -79,10 +82,11 @@ class PascalInterpreter {
       }
     }
 
-    void VisitNop() override {}
-    void VisitId(std::string name) override { last_num_ = state_.Get(name); }
+    void Visit(base::AstNop<TMakeType, term_type>& ast) override {}
+    void Visit(base::AstId<TMakeType, term_type>& ast) override { last_num_ = state_.Get(ast.GetName()); }
 
-    void VisitCompoundStatement(std::vector<nonterm_type> const& statements) override {
+    void Visit(base::AstCompoundStatement<TMakeType, term_type>& ast) override {
+      auto statements = ast.GetStatements();
       for (int i = 0; i < statements.size(); i++) {
         auto& statement = statements[i];
         Visitor visitor(*this);
@@ -91,11 +95,12 @@ class PascalInterpreter {
       }
     }
 
-    void VisitUnaryOp(base::UnaryOpType type, nonterm_type operand) override {
+    void Visit(base::AstUnaryOp<TMakeType, term_type>& ast) override {
       Visitor visitor(*this);
-
+      auto operand = ast.GetOperand();
       operand->Accept(visitor);
 
+      auto type = ast.GetOpType();
       switch (type) {
         case base::UnaryOpType::kPositiveOp:
           last_num_ = visitor.GetLastNum();
@@ -108,8 +113,10 @@ class PascalInterpreter {
           break;
       }
     }
-    void VisitBinaryOp(base::BinaryOpType op, nonterm_type operand_lhs, nonterm_type operand_rhs) override {
-      switch (op) {
+    void Visit(base::AstBinaryOp<TMakeType, term_type>& ast) override {
+      auto operand_lhs = ast.GetOperandLhs();
+      auto operand_rhs = ast.GetOperandRhs();
+      switch (ast.GetOpType()) {
         case base::BinaryOpType::kAdd: {
           Visitor visitor_lhs(*this);
           Visitor visitor_rhs(*this);
@@ -189,6 +196,6 @@ class PascalInterpreter {
   }
 };
 
-}  // namespace calc
+}  // namespace pascal
 }  // namespace languages
 #endif

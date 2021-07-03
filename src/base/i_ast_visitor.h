@@ -5,21 +5,47 @@
 
 namespace base {
 
-template <typename TNonTerm, typename TTerm>
+template <template <class> class TMakeType, typename TTerm>
+class AstNop;
+
+template <template <class> class TMakeType, typename TTerm>
+class AstId;
+
+template <template <class> class TMakeType, typename TTerm>
+class AstProgram;
+
+template <template <class> class TMakeType, typename TTerm>
+class AstBlock;
+
+template <template <class> class TMakeType, typename TTerm>
+class AstVariableDeclaration;
+
+template <template <class> class TMakeType, typename TTerm>
+class AstConst;
+
+template <template <class> class TMakeType, typename TTerm>
+class AstCompoundStatement;
+
+template <template <class> class TMakeType, typename TTerm>
+class AstUnaryOp;
+
+template <template <class> class TMakeType, typename TTerm>
+class AstBinaryOp;
+
+template <template <class> class TMakeType, typename TTerm>
 class IAstVisitor {
  public:
-  using nonterm_type = TNonTerm;
   using term_type = TTerm;
 
-  virtual void VisitId(std::string name) = 0;
-  virtual void VisitNop() = 0;
-  virtual void VisitProgram(nonterm_type program_id, nonterm_type program) = 0;
-  virtual void VisitBlock(std::vector<nonterm_type> const& var_decls, nonterm_type compound_statement) = 0;
-  virtual void VisitVariableDeclaration(term_type id, term_type type) = 0;
-  virtual void VisitIntegerConst(ConstType const_type, std::string value) = 0;
-  virtual void VisitCompoundStatement(std::vector<nonterm_type> const& statements) = 0;
-  virtual void VisitUnaryOp(UnaryOpType type, nonterm_type operand) = 0;
-  virtual void VisitBinaryOp(BinaryOpType op, nonterm_type operand_lhs, nonterm_type operand_rhs) = 0;
+  virtual void Visit(AstId<TMakeType, TTerm>& ast) = 0;
+  virtual void Visit(AstNop<TMakeType, TTerm>& ast) = 0;
+  virtual void Visit(AstProgram<TMakeType, TTerm>& ast) = 0;
+  virtual void Visit(AstBlock<TMakeType, TTerm>& ast) = 0;
+  virtual void Visit(AstVariableDeclaration<TMakeType, TTerm>& ast) = 0;
+  virtual void Visit(AstConst<TMakeType, TTerm>& ast) = 0;
+  virtual void Visit(AstCompoundStatement<TMakeType, TTerm>& ast) = 0;
+  virtual void Visit(AstUnaryOp<TMakeType, TTerm>& ast) = 0;
+  virtual void Visit(AstBinaryOp<TMakeType, TTerm>& ast) = 0;
 };
 }  // namespace base
 #endif

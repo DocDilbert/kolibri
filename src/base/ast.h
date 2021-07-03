@@ -30,7 +30,7 @@ class Ast {
   using nonterm_type = typename TMakeType<Ast<TMakeType, TTerm>>::type;
 
   virtual AstTypeId GetTypeId() = 0;
-  virtual void Accept(IAstVisitor<nonterm_type, term_type>& visitor) = 0;
+  virtual void Accept(IAstVisitor<TMakeType, term_type>& visitor) = 0;
 };
 
 template <template <class> class TMakeType, typename TTerm>
@@ -42,7 +42,7 @@ class AstNop : public Ast<TMakeType, TTerm> {
   explicit AstNop() {}
   AstTypeId GetTypeId() override { return AstTypeId::kAstNop; }
 
-  void Accept(IAstVisitor<nonterm_type, term_type>& visitor) override { visitor.VisitNop(); }
+  void Accept(IAstVisitor<TMakeType, term_type>& visitor) override { visitor.Visit(*this); }
 };
 
 template <template <class> class TMakeType, typename TTerm>
@@ -53,9 +53,9 @@ class AstId : public Ast<TMakeType, TTerm> {
 
   explicit AstId(std::string name) { name_ = name; }
   AstTypeId GetTypeId() override { return AstTypeId::kAstId; }
-  std::string GetName() { return name_; }
+  void Accept(IAstVisitor<TMakeType, term_type>& visitor) override { visitor.Visit(*this); }
 
-  void Accept(IAstVisitor<nonterm_type, term_type>& visitor) override { visitor.VisitId(name_); }
+  std::string GetName() { return name_; }
 
  private:
   std::string name_;
@@ -69,7 +69,7 @@ class AstRaw : public Ast<TMakeType, TTerm> {
   explicit AstRaw(TTerm term) { term_ = term; }
   AstTypeId GetTypeId() override { return AstTypeId::kAstRawType; }
   TTerm GetTerm() { return term_; }
-  void Accept(IAstVisitor<nonterm_type, term_type>& visitor) override {}
+  void Accept(IAstVisitor<TMakeType, term_type>& visitor) override {}
 
  private:
   TTerm term_;
@@ -87,7 +87,7 @@ class AstRawList : public Ast<TMakeType, TTerm> {
 
   std::vector<nonterm_type> Get() { return nonterms_; }
 
-  void Accept(IAstVisitor<nonterm_type, term_type>& visitor) override {}
+  void Accept(IAstVisitor<TMakeType, term_type>& visitor) override {}
 
  private:
   std::vector<nonterm_type> nonterms_;
@@ -102,7 +102,11 @@ class AstConst : public Ast<TMakeType, TTerm> {
   explicit AstConst(ConstType const_type, std::string value) : const_type_(const_type), value_(value) {}
   AstTypeId GetTypeId() override { return AstTypeId::kAstConst; }
 
-  void Accept(IAstVisitor<nonterm_type, term_type>& visitor) override { visitor.VisitIntegerConst(const_type_, value_); }
+  void Accept(IAstVisitor<TMakeType, term_type>& visitor) override { visitor.Visit(*this); }
+
+  ConstType GetConstType() { return const_type_; }
+
+  std::string GetValue() { return value_; }
 
  private:
   ConstType const_type_;
@@ -119,7 +123,7 @@ class AstCompoundStatement : public Ast<TMakeType, TTerm> {
   AstTypeId GetTypeId() override { return AstTypeId::kAstCompoundStatement; }
   std::vector<nonterm_type> GetStatements() { return statements_; }
 
-  void Accept(IAstVisitor<nonterm_type, term_type>& visitor) override { visitor.VisitCompoundStatement(statements_); }
+  void Accept(IAstVisitor<TMakeType, term_type>& visitor) override { visitor.Visit(*this); }
 
  private:
   std::vector<nonterm_type> statements_;
@@ -133,7 +137,11 @@ class AstUnaryOp : public Ast<TMakeType, TTerm> {
   explicit AstUnaryOp(UnaryOpType type, nonterm_type operand) : type_(type), operand_(operand) {}
   AstTypeId GetTypeId() override { return AstTypeId::kAstUnaryOp; }
 
-  void Accept(IAstVisitor<nonterm_type, term_type>& visitor) override { visitor.VisitUnaryOp(type_, operand_); }
+  void Accept(IAstVisitor<TMakeType, term_type>& visitor) override { visitor.Visit(*this); }
+
+  UnaryOpType GetOpType() { return type_; }
+
+  nonterm_type GetOperand() { return operand_; }
 
  private:
   UnaryOpType type_;
@@ -149,7 +157,13 @@ class AstBinaryOp : public Ast<TMakeType, TTerm> {
       : type_(type), operand_lhs_(operand_lhs), operand_rhs_(operand_rhs) {}
   AstTypeId GetTypeId() override { return AstTypeId::kAstBinaryOp; }
 
-  void Accept(IAstVisitor<nonterm_type, term_type>& visitor) override { visitor.VisitBinaryOp(type_, operand_lhs_, operand_rhs_); }
+  void Accept(IAstVisitor<TMakeType, term_type>& visitor) override { visitor.Visit(*this); }
+
+  BinaryOpType GetOpType() { return type_; }
+
+  nonterm_type GetOperandLhs() { return operand_lhs_; }
+
+  nonterm_type GetOperandRhs() { return operand_rhs_; }
 
  private:
   BinaryOpType type_;
@@ -166,7 +180,11 @@ class AstProgram : public Ast<TMakeType, TTerm> {
 
   AstTypeId GetTypeId() override { return AstTypeId::kAstProgram; }
 
-  void Accept(IAstVisitor<nonterm_type, term_type>& visitor) override { visitor.VisitProgram(program_id_, program_); }
+  void Accept(IAstVisitor<TMakeType, term_type>& visitor) override { visitor.Visit(*this); }
+
+  nonterm_type GetProgramId() { return program_id_; }
+
+  nonterm_type GetProgram() { return program_; }
 
  private:
   nonterm_type program_id_;
@@ -186,7 +204,7 @@ class AstVariableDeclaration : public Ast<TMakeType, TTerm> {
   term_type GetId() { return id_; }
   term_type GetType() { return type_; }
 
-  void Accept(IAstVisitor<nonterm_type, term_type>& visitor) override { visitor.VisitVariableDeclaration(id_, type_); }
+  void Accept(IAstVisitor<TMakeType, term_type>& visitor) override { visitor.Visit(*this); }
 
  private:
   term_type id_;
@@ -205,8 +223,8 @@ class AstBlock : public Ast<TMakeType, TTerm> {
   AstTypeId GetTypeId() override { return AstTypeId::kAstRawListType; }
 
   std::vector<nonterm_type> GetVarDeclarations() { return var_decls_; }
-
-  void Accept(IAstVisitor<nonterm_type, term_type>& visitor) override { visitor.VisitBlock(var_decls_, compound_statement_); }
+  nonterm_type GetCompoundStatement() { return compound_statement_; }
+  void Accept(IAstVisitor<TMakeType, term_type>& visitor) override { visitor.Visit(*this); }
 
  private:
   std::vector<nonterm_type> var_decls_;

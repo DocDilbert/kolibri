@@ -3,15 +3,15 @@
 
 #include <string>
 
-#include "base/i_ast_visitor.h"
+#include "base/ast.h"
 
 namespace languages {
 namespace calc {
 
-template <typename TNormType, typename TTerm>
+template <template <class> class TMakeType, typename TTerm>
 class CalcInterpreter {
  public:
-  using nonterm_type = TNormType;
+  using nonterm_type = typename TMakeType<base::Ast<TMakeType, TTerm>>::type;
   using term_type = TTerm;
 
   struct RuleResult {
@@ -20,20 +20,21 @@ class CalcInterpreter {
     const char* error_msg;
   };
 
-  class Visitor : public base::IAstVisitor<nonterm_type, term_type> {
+  class Visitor : public base::IAstVisitor<TMakeType, term_type> {
    public:
-    void VisitIntegerConst(base::ConstType const_type, std::string value) override { num_ = std::stoi(value); }
-    void VisitProgram(nonterm_type program_id, nonterm_type program) override {}
-    void VisitBlock(std::vector<nonterm_type> const& var_decls, nonterm_type compound_statement) override {}
-    void VisitVariableDeclaration(term_type id, term_type type) override {}
-    void VisitNop() override {}
-    void VisitId(std::string) override {}
-    void VisitCompoundStatement(std::vector<nonterm_type> const& statements) override {}
-    void VisitUnaryOp(base::UnaryOpType type, nonterm_type operand) override {
+    void Visit(base::AstConst<TMakeType, term_type>& ast) override { num_ = std::stoi(ast.GetValue()); }
+    void Visit(base::AstProgram<TMakeType, term_type>& ast) override {}
+    void Visit(base::AstBlock<TMakeType, term_type>& ast) override {}
+    void Visit(base::AstVariableDeclaration<TMakeType, term_type>& ast) override {}
+    void Visit(base::AstNop<TMakeType, term_type>& ast) override {}
+    void Visit(base::AstId<TMakeType, term_type>& ast) override {}
+    void Visit(base::AstCompoundStatement<TMakeType, term_type>& ast) override {}
+    void Visit(base::AstUnaryOp<TMakeType, term_type>& ast) override {
       Visitor visitor;
-
+      auto operand = ast.GetOperand();
       operand->Accept(visitor);
 
+      auto type = ast.GetOpType();
       switch (type) {
         case base::UnaryOpType::kPositiveOp:
           num_ = visitor.GetNum();
@@ -46,14 +47,14 @@ class CalcInterpreter {
           break;
       }
     }
-    void VisitBinaryOp(base::BinaryOpType op, nonterm_type operand_lhs, nonterm_type operand_rhs) override {
+    void Visit(base::AstBinaryOp<TMakeType, term_type>& ast) override {
       Visitor visitor_lhs;
       Visitor visitor_rhs;
 
-      operand_lhs->Accept(visitor_lhs);
-      operand_rhs->Accept(visitor_rhs);
+      ast.GetOperandLhs()->Accept(visitor_lhs);
+      ast.GetOperandRhs()->Accept(visitor_rhs);
 
-      switch (op) {
+      switch (ast.GetOpType()) {
         case base::BinaryOpType::kAdd:
           num_ = visitor_lhs.GetNum() + visitor_rhs.GetNum();
           break;

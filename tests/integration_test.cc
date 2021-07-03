@@ -31,7 +31,7 @@ TEST(IntegrationTest, Num) {
   CalcParser parser(parser_factory);
 
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
-  CalcInterpreter<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> CalcInterpreter;
+  CalcInterpreter<base::MakeShared, CalcToken> CalcInterpreter;
 
   auto CalcInterpreter_res = CalcInterpreter.Interpret(parser_res.node);
   EXPECT_EQ("1", CalcInterpreter_res.expr);
@@ -47,7 +47,7 @@ TEST(IntegrationTest, Minus_Num) {
   CalcParser parser(parser_factory);
 
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
-  CalcInterpreter<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> CalcInterpreter;
+  CalcInterpreter<base::MakeShared, CalcToken> CalcInterpreter;
 
   auto CalcInterpreter_res = CalcInterpreter.Interpret(parser_res.node);
   EXPECT_EQ("-1", CalcInterpreter_res.expr);
@@ -63,7 +63,7 @@ TEST(IntegrationTest, Equation_1_plus_2) {
   CalcParser parser(parser_factory);
 
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
-  CalcInterpreter<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> CalcInterpreter;
+  CalcInterpreter<base::MakeShared, CalcToken> CalcInterpreter;
 
   auto CalcInterpreter_res = CalcInterpreter.Interpret(parser_res.node);
   EXPECT_EQ("3", CalcInterpreter_res.expr);
@@ -79,7 +79,7 @@ TEST(IntegrationTest, Equation_m_1_p_2) {
   CalcParser parser(parser_factory);
 
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
-  CalcInterpreter<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> CalcInterpreter;
+  CalcInterpreter<base::MakeShared, CalcToken> CalcInterpreter;
 
   auto CalcInterpreter_res = CalcInterpreter.Interpret(parser_res.node);
   EXPECT_EQ("1", CalcInterpreter_res.expr);
@@ -95,7 +95,7 @@ TEST(IntegrationTest, Equation_lp_1_p_2_rp) {
   CalcParser parser(parser_factory);
 
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
-  CalcInterpreter<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> CalcInterpreter;
+  CalcInterpreter<base::MakeShared, CalcToken> CalcInterpreter;
 
   auto CalcInterpreter_res = CalcInterpreter.Interpret(parser_res.node);
   EXPECT_EQ("3", CalcInterpreter_res.expr);
@@ -111,7 +111,7 @@ TEST(IntegrationTest, Equation_lp_1_p_2_rp_mul_3) {
   CalcParser parser(parser_factory);
 
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
-  CalcInterpreter<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> CalcInterpreter;
+  CalcInterpreter<base::MakeShared, CalcToken> CalcInterpreter;
 
   auto CalcInterpreter_res = CalcInterpreter.Interpret(parser_res.node);
   EXPECT_EQ("9", CalcInterpreter_res.expr);
@@ -127,7 +127,7 @@ TEST(IntegrationTest, Equation_lp_1_p_2_rp_mul_lp_2_p_1_rp) {
   CalcParser parser(parser_factory);
 
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
-  CalcInterpreter<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> CalcInterpreter;
+  CalcInterpreter<base::MakeShared, CalcToken> CalcInterpreter;
 
   auto CalcInterpreter_res = CalcInterpreter.Interpret(parser_res.node);
   EXPECT_EQ("9", CalcInterpreter_res.expr);
