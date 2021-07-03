@@ -22,7 +22,7 @@ class CalcInterpreter {
 
   class Visitor : public base::IAstVisitor<TMakeType, term_type> {
    public:
-    void Visit(base::AstConst<TMakeType, term_type>& ast) override { num_ = std::stoi(ast.GetValue()); }
+    void Visit(base::AstConst<TMakeType, term_type>& ast) override { num_ = std::stoi(std::string(ast.GetValue().GetValue())); }
     void Visit(base::AstProgram<TMakeType, term_type>& ast) override {}
     void Visit(base::AstBlock<TMakeType, term_type>& ast) override {}
     void Visit(base::AstVariableDeclaration<TMakeType, term_type>& ast) override {}

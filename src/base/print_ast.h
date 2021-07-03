@@ -73,10 +73,10 @@ class PrintAst {
 
       switch (const_type) {
         case ConstType::kInteger:
-          stream_ << "  node" << ncount_ << " [label=\"(int)\n" << value << "\"]" << std::endl;
+          stream_ << "  node" << ncount_ << " [label=\"(int)\n" << value.GetValue() << "\"]" << std::endl;
           break;
         case ConstType::kReal:
-          stream_ << "  node" << ncount_ << " [label=\"(float)\n" << value << "\"]" << std::endl;
+          stream_ << "  node" << ncount_ << " [label=\"(float)\n" << value.GetValue() << "\"]" << std::endl;
           break;
         default:
           assert(true);

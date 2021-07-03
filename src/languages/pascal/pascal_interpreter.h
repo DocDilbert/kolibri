@@ -67,12 +67,12 @@ class PascalInterpreter {
 
       switch (const_type) {
         case base::ConstType::kInteger: {
-          auto value_i = std::stoi(value);
+          auto value_i = std::stoi(std::string(value.GetValue()));
           last_num_ = static_cast<double>(value_i);
           break;
         }
         case base::ConstType::kReal: {
-          auto value_d = std::stod(value);
+          auto value_d = std::stod(std::string(value.GetValue()));
           last_num_ = value_d;
           break;
         }

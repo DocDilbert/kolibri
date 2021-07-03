@@ -31,7 +31,7 @@ class AstFactory : public IAstFactory<TNonTerm, TTerm> {
 
   virtual nonterm_type CreateRaw(term_type term) override { return std::make_shared<AstRaw<MakeShared, TTerm>>(term); }
 
-  virtual nonterm_type CreateConst(ConstType const_type, std::string value) override {
+  virtual nonterm_type CreateConst(ConstType const_type, term_type value) override {
     return std::make_shared<AstConst<MakeShared, TTerm>>(const_type, value);
   }
 

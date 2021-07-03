@@ -21,7 +21,7 @@ class IAstFactory {
   virtual nonterm_type CreateProgram(nonterm_type left, nonterm_type right) = 0;
   virtual nonterm_type CreateBlock(std::vector<nonterm_type> const& var_decls, nonterm_type compound_statement) = 0;
   virtual nonterm_type CreateId(std::string name) = 0;
-  virtual nonterm_type CreateConst(ConstType const_type, std::string value) = 0;
+  virtual nonterm_type CreateConst(ConstType const_type, term_type value) = 0;
   virtual nonterm_type CreateCompoundStatement(std::vector<nonterm_type> statements) = 0;
   virtual nonterm_type CreateUnaryOp(term_type oper, nonterm_type operand) = 0;
   virtual nonterm_type CreateBinaryOp(nonterm_type left, term_type oper, nonterm_type right) = 0;

@@ -99,18 +99,18 @@ class AstConst : public Ast<TMakeType, TTerm> {
   using nonterm_type = typename Ast<TMakeType, TTerm>::nonterm_type;
   using term_type = typename Ast<TMakeType, TTerm>::term_type;
 
-  explicit AstConst(ConstType const_type, std::string value) : const_type_(const_type), value_(value) {}
+  explicit AstConst(ConstType const_type, term_type value) : const_type_(const_type), value_(value) {}
   AstTypeId GetTypeId() override { return AstTypeId::kAstConst; }
 
   void Accept(IAstVisitor<TMakeType, term_type>& visitor) override { visitor.Visit(*this); }
 
   ConstType GetConstType() { return const_type_; }
 
-  std::string GetValue() { return value_; }
+  term_type GetValue() { return value_; }
 
  private:
   ConstType const_type_;
-  std::string value_;
+  term_type value_;
 };
 
 template <template <class> class TMakeType, typename TTerm>

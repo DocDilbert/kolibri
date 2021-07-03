@@ -23,7 +23,7 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
   nonterm_type CreateTerm(parser::RuleId rule_id, term_type term) override {
     switch (rule_id) {
       case parser::RuleId::kRule2: {
-        return ast_factory_.CreateConst(base::ConstType::kInteger, std::string(term.GetValue()));
+        return ast_factory_.CreateConst(base::ConstType::kInteger, term);
       }
       default: {
         return ast_factory_.CreateNull();

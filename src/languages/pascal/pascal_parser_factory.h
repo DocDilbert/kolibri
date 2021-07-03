@@ -29,10 +29,10 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
       case parser::RuleId::kRule12: {  // factor
         switch (term.GetId()) {
           case PascalTokenId::kIntegerConst: {
-            return ast_factory_.CreateConst(base::ConstType::kInteger, std::string(term.GetValue()));
+            return ast_factory_.CreateConst(base::ConstType::kInteger, term);
           }
           case PascalTokenId::kRealConst: {
-            return ast_factory_.CreateConst(base::ConstType::kReal, std::string(term.GetValue()));
+            return ast_factory_.CreateConst(base::ConstType::kReal, term);
           }
           default: {
             return ast_factory_.CreateNull();

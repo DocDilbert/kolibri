@@ -17,13 +17,16 @@ enum class MockTokenId { kNone, kPlus, kMinus, kMultiply, kDiv };
 struct MockToken {
   using id_type = MockTokenId;
 
-  MockToken() : id_(MockTokenId::kNone) {}
-  MockToken(MockTokenId id) : id_(id) {}
+  MockToken() : id_(MockTokenId::kNone), value_("None") {}
+  MockToken(std::string value) : id_(MockTokenId::kNone), value_(value) {}
+  MockToken(MockTokenId id) : id_(id), value_("None") {}
 
+  std::string GetValue() { return value_; }
   MockTokenId GetId() { return id_; }
 
  private:
   MockTokenId id_;
+  std::string value_;
 };
 
 template <typename T>
@@ -43,7 +46,7 @@ class MockType {
 
 class MockAstConst : public AstConst<MockMakeSharedPtr, MockToken> {
  public:
-  explicit MockAstConst(ConstType const_type, std::string value) : AstConst<MockMakeSharedPtr, MockToken>(const_type, value) {}
+  explicit MockAstConst(ConstType const_type, term_type value) : AstConst<MockMakeSharedPtr, MockToken>(const_type, value) {}
   MOCK_METHOD1(Accept, void(IAstVisitor<MockMakeSharedPtr, MockToken>& value));
 };
 
@@ -61,7 +64,7 @@ class MockAstBinaryOp : public AstBinaryOp<MockMakeSharedPtr, MockToken> {
 };
 
 TEST(CalcInterpreterTest, Visit_Num) {
-  auto ast_const = std::make_shared<MockAstConst>(ConstType::kInteger, "3");
+  auto ast_const = std::make_shared<MockAstConst>(ConstType::kInteger, MockToken("3"));
 
   EXPECT_CALL(*ast_const, Accept(_)).WillOnce([&](IAstVisitor<MockMakeSharedPtr, MockToken>& value) { value.Visit(*ast_const); });
 
@@ -71,7 +74,7 @@ TEST(CalcInterpreterTest, Visit_Num) {
 }
 
 TEST(CalcInterpreterTest, Visit_Unary_Num) {
-  auto ast_const = std::make_shared<MockAstConst>(ConstType::kInteger, "3");
+  auto ast_const = std::make_shared<MockAstConst>(ConstType::kInteger, MockToken("3"));
   EXPECT_CALL(*ast_const, Accept(_)).WillOnce([&](IAstVisitor<MockMakeSharedPtr, MockToken>& value) { value.Visit(*ast_const); });
 
   auto ast_unary = make_shared<MockAstUnaryOp>(MockTokenId::kMinus, ast_const);
@@ -85,12 +88,12 @@ TEST(CalcInterpreterTest, Visit_Unary_Num) {
 }
 
 TEST(CalcInterpreterTest, Visit_BinOp_Add_2Factors) {
-  auto ast_const3 = std::make_shared<MockAstConst>(ConstType::kInteger, "3");
+  auto ast_const3 = std::make_shared<MockAstConst>(ConstType::kInteger, MockToken("3"));
   EXPECT_CALL(*ast_const3, Accept(_)).WillOnce([&](IAstVisitor<MockMakeSharedPtr, MockToken>& value) {
     value.Visit(*ast_const3);  //
   });
 
-  auto ast_const5 = std::make_shared<MockAstConst>(ConstType::kInteger, "5");
+  auto ast_const5 = std::make_shared<MockAstConst>(ConstType::kInteger, MockToken("5"));
   EXPECT_CALL(*ast_const5, Accept(_)).WillOnce([&](IAstVisitor<MockMakeSharedPtr, MockToken>& value) {
     value.Visit(*ast_const5);  //
   });
@@ -106,17 +109,17 @@ TEST(CalcInterpreterTest, Visit_BinOp_Add_2Factors) {
 }
 
 TEST(CalcInterpreterTest, Visit_BinOp_Add_3Factors) {
-  auto ast_const1 = std::make_shared<MockAstConst>(ConstType::kInteger, "1");
+  auto ast_const1 = std::make_shared<MockAstConst>(ConstType::kInteger, MockToken("1"));
   EXPECT_CALL(*ast_const1, Accept(_)).WillOnce([&](IAstVisitor<MockMakeSharedPtr, MockToken>& value) {
     value.Visit(*ast_const1);  //
   });
 
-  auto ast_const2 = std::make_shared<MockAstConst>(ConstType::kInteger, "2");
+  auto ast_const2 = std::make_shared<MockAstConst>(ConstType::kInteger, MockToken("2"));
   EXPECT_CALL(*ast_const2, Accept(_)).WillOnce([&](IAstVisitor<MockMakeSharedPtr, MockToken>& value) {
     value.Visit(*ast_const2);  //
   });
 
-  auto ast_const3 = std::make_shared<MockAstConst>(ConstType::kInteger, "3");
+  auto ast_const3 = std::make_shared<MockAstConst>(ConstType::kInteger, MockToken("3"));
   EXPECT_CALL(*ast_const3, Accept(_)).WillOnce([&](IAstVisitor<MockMakeSharedPtr, MockToken>& value) {
     value.Visit(*ast_const3);  //
   });
@@ -136,12 +139,12 @@ TEST(CalcInterpreterTest, Visit_BinOp_Add_3Factors) {
 }
 
 TEST(CalcInterpreterTest, Visit_BinOp_Mul_2Factors) {
-  auto ast_const3 = std::make_shared<MockAstConst>(ConstType::kInteger, "3");
+  auto ast_const3 = std::make_shared<MockAstConst>(ConstType::kInteger, MockToken("3"));
   EXPECT_CALL(*ast_const3, Accept(_)).WillOnce([&](IAstVisitor<MockMakeSharedPtr, MockToken>& value) {
     value.Visit(*ast_const3);  //
   });
 
-  auto ast_const5 = std::make_shared<MockAstConst>(ConstType::kInteger, "5");
+  auto ast_const5 = std::make_shared<MockAstConst>(ConstType::kInteger, MockToken("5"));
   EXPECT_CALL(*ast_const5, Accept(_)).WillOnce([&](IAstVisitor<MockMakeSharedPtr, MockToken>& value) {
     value.Visit(*ast_const5);  //
   });
