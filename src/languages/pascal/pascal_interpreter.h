@@ -83,7 +83,11 @@ class PascalInterpreter {
     }
 
     void Visit(base::AstNop<TMakeType, term_type>& ast) override {}
-    void Visit(base::AstId<TMakeType, term_type>& ast) override { last_num_ = state_.Get(ast.GetName()); }
+    void Visit(base::AstId<TMakeType, term_type>& ast) override {
+      std::string var_name = std::string(ast.GetName().GetValue());
+      std::for_each(var_name.begin(), var_name.end(), [](char& c) { c = ::tolower(c); });
+      last_num_ = state_.Get(std::string(var_name));
+    }
 
     void Visit(base::AstCompoundStatement<TMakeType, term_type>& ast) override {
       auto statements = ast.GetStatements();
@@ -169,7 +173,9 @@ class PascalInterpreter {
           auto& id = dynamic_cast<base::AstId<base::MakeShared, term_type>&>(*operand_lhs);
           operand_rhs->Accept(visitor_rhs);
 
-          state_.Assign(id.GetName(), visitor_rhs.GetLastNum());
+          std::string var_name = std::string(id.GetName().GetValue());
+          std::for_each(var_name.begin(), var_name.end(), [](char& c) { c = ::tolower(c); });
+          state_.Assign(var_name, visitor_rhs.GetLastNum());
           break;
         }
         default:

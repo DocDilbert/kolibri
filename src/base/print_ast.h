@@ -24,7 +24,7 @@ class PrintAst {
 
       auto& pname = dynamic_cast<AstId<MakeShared, term_type>&>(*program_id);
 
-      stream_ << "  node" << ncount_ << " [label=\"Program\n" << pname.GetName() << "\"]" << std::endl;
+      stream_ << "  node" << ncount_ << " [label=\"Program\n" << pname.GetName().GetValue() << "\"]" << std::endl;
       stream_ << "  node" << ncount_ << " -> node" << ncount_ + 1 << std::endl;
       Visitor visitor(stream_, ncount_ + 1);
 
@@ -87,7 +87,7 @@ class PrintAst {
     void Visit(base::AstNop<TMakeType, term_type>& ast) override { stream_ << "  node" << ncount_ << " [label=\"Nop\"]" << std::endl; }
 
     void Visit(base::AstId<TMakeType, term_type>& ast) override {
-      stream_ << "  node" << ncount_ << " [label=\"Var:\\n" << ast.GetName() << "\"]" << std::endl;
+      stream_ << "  node" << ncount_ << " [label=\"Var:\\n" << ast.GetName().GetValue() << "\"]" << std::endl;
     }
 
     void Visit(base::AstUnaryOp<TMakeType, term_type>& ast) override {

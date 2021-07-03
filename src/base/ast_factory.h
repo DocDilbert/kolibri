@@ -27,7 +27,7 @@ class AstFactory : public IAstFactory<TNonTerm, TTerm> {
     return std::make_shared<AstBlock<MakeShared, TTerm>>(var_decls, compound_statement);
   }
 
-  virtual nonterm_type CreateId(std::string name) override { return std::make_shared<AstId<MakeShared, TTerm>>(name); }
+  virtual nonterm_type CreateId(term_type name) override { return std::make_shared<AstId<MakeShared, TTerm>>(name); }
 
   virtual nonterm_type CreateRaw(term_type term) override { return std::make_shared<AstRaw<MakeShared, TTerm>>(term); }
 

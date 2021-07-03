@@ -41,8 +41,7 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
       }
       case parser::RuleId::kRule13: {  // variable
         auto var_name = std::string(term.GetValue());
-        std::for_each(var_name.begin(), var_name.end(), [](char& c) { c = ::tolower(c); });
-        return ast_factory_.CreateId(var_name);
+        return ast_factory_.CreateId(term);
       }
       default: {
         return ast_factory_.CreateNull();

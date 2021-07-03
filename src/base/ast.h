@@ -51,14 +51,14 @@ class AstId : public Ast<TMakeType, TTerm> {
   using nonterm_type = typename Ast<TMakeType, TTerm>::nonterm_type;
   using term_type = typename Ast<TMakeType, TTerm>::term_type;
 
-  explicit AstId(std::string name) { name_ = name; }
+  explicit AstId(term_type name) { name_ = name; }
   AstTypeId GetTypeId() override { return AstTypeId::kAstId; }
   void Accept(IAstVisitor<TMakeType, term_type>& visitor) override { visitor.Visit(*this); }
 
-  std::string GetName() { return name_; }
+  term_type GetName() { return name_; }
 
  private:
-  std::string name_;
+  term_type name_;
 };
 
 template <template <class> class TMakeType, typename TTerm>
@@ -139,7 +139,7 @@ class AstUnaryOp : public Ast<TMakeType, TTerm> {
 
   void Accept(IAstVisitor<TMakeType, term_type>& visitor) override { visitor.Visit(*this); }
 
-  term_type GetOperator() { return operator_;};
+  term_type GetOperator() { return operator_; };
   nonterm_type GetOperand() { return operand_; }
 
  private:
@@ -153,18 +153,17 @@ class AstBinaryOp : public Ast<TMakeType, TTerm> {
   using nonterm_type = typename Ast<TMakeType, TTerm>::nonterm_type;
   using term_type = typename Ast<TMakeType, TTerm>::term_type;
 
-  explicit AstBinaryOp( nonterm_type operand_lhs, term_type oper, nonterm_type operand_rhs)
-      :  operand_lhs_(operand_lhs), operator_(oper), operand_rhs_(operand_rhs) {}
+  explicit AstBinaryOp(nonterm_type operand_lhs, term_type oper, nonterm_type operand_rhs)
+      : operand_lhs_(operand_lhs), operator_(oper), operand_rhs_(operand_rhs) {}
   AstTypeId GetTypeId() override { return AstTypeId::kAstBinaryOp; }
 
   void Accept(IAstVisitor<TMakeType, term_type>& visitor) override { visitor.Visit(*this); }
 
   nonterm_type GetOperandLhs() { return operand_lhs_; }
-  term_type GetOperator() { return operator_;};
+  term_type GetOperator() { return operator_; };
   nonterm_type GetOperandRhs() { return operand_rhs_; }
 
  private:
-
   nonterm_type operand_lhs_;
   term_type operator_;
   nonterm_type operand_rhs_;
