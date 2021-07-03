@@ -166,7 +166,7 @@ class PrintAst {
       ncount_ = visitor_lhs.ncount_;
 
       Visitor visitor_rhs(stream_, ncount_ + 1);
-      auto operand_rhs = ast.GetOperandLhs();
+      auto operand_rhs = ast.GetOperandRhs();
       operand_rhs->Accept(visitor_rhs);
       stream_ << "  node" << root_cnt << " -> node" << ncount_ + 1 << std::endl;
       ncount_ = visitor_rhs.ncount_;
