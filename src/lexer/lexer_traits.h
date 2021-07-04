@@ -12,7 +12,7 @@ class SkipProduction {
 
 template <class T>
 
-struct is_skip_factory : std::integral_constant<bool, std::is_base_of<SkipProduction, T>::value> {};
+struct is_skip_production_class : std::integral_constant<bool, std::is_base_of<SkipProduction, T>::value> {};
 
 }  // namespace lexer
 

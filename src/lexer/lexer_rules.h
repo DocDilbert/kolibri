@@ -200,7 +200,7 @@ class LexerRules {
     auto it = t1.Match(begin, end);
     if (it != begin) {
       it_ = it;
-      return SelectCreateOrRedirect<is_skip_factory<typename T1::production_type>::value>::impl(*this, t1, begin, it_, end);
+      return SelectCreateOrRedirect<is_skip_production_class<typename T1::production_type>::value>::impl(*this, t1, begin, it_, end);
     }
     it_ = begin + 1;
     return TProductionUNK().Create(begin, it_);
@@ -213,7 +213,7 @@ class LexerRules {
 
     if (it != begin) {
       it_ = it;
-      return SelectCreateOrRedirect<is_skip_factory<typename T1::production_type>::value>::impl(*this, t1, begin, it_, end);
+      return SelectCreateOrRedirect<is_skip_production_class<typename T1::production_type>::value>::impl(*this, t1, begin, it_, end);
     }
 
     return MatchRecursive<T2, URules...>(begin, end);

@@ -50,7 +50,7 @@ void doPascal(string content) {
   PascalParserFactory parser_factory(ast_factory);
   PascalParser pparser(parser_factory);
 
-  cout << is_skip_factory<SkipProduction>::value<<endl<<flush;
+  cout << is_skip_production_class<SkipProduction>::value<<endl<<flush;
   // CalcLexer lexer(content.c_str(), strlen(content.c_str()));
   // AstFactory<CalcAstTraits> ast_factory;
   // Parser<CGrammar> pparser(ast_factory);
