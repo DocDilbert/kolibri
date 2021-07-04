@@ -26,48 +26,46 @@ class PrintAst {
       auto& pname = dynamic_cast<AstId<MakeShared, term_type>&>(*program_id);
 
       stream_ << "  node" << ncount_ << " [label=\"Program\n" << pname.GetName().GetValue() << "\"]" << std::endl;
-      stream_ << "  node" << ncount_ << " -> node" << ncount_ + 1 << std::endl;
-      Visitor visitor(stream_, ncount_ + 1);
+      auto orig_count = ncount_;
+
+      ncount_++;
+      stream_ << "  node" << orig_count << " -> node" << ncount_ << std::endl;
 
       auto program = ast.GetProgram();
-      program->Accept(visitor);
-      ncount_ = visitor.ncount_;
+      program->Accept(*this);
     }
 
     void Visit(AstBlock<TMakeType, term_type>& ast) override {
-      auto root_cnt = ncount_;
-      stream_ << "  node" << root_cnt << " [label=\"Block\"]" << std::endl;
+      auto orig_cnt = ncount_;
+      stream_ << "  node" << orig_cnt << " [label=\"Block\"]" << std::endl;
       auto var_decls = ast.GetVarDeclarations();
       for (int i = 0; i < var_decls.size(); i++) {
         ncount_++;
-        Visitor visitor(stream_, ncount_);
-        var_decls[i]->Accept(visitor);
-        stream_ << "  node" << root_cnt << " -> node" << ncount_ << std::endl;
-        ncount_ = visitor.ncount_;
+        stream_ << "  node" << orig_cnt << " -> node" << ncount_ << std::endl;
+        var_decls[i]->Accept(*this);
       }
 
       ncount_++;
-      stream_ << "  node" << root_cnt << " -> node" << ncount_ << std::endl;
+      stream_ << "  node" << orig_cnt << " -> node" << ncount_ << std::endl;
       auto compound_statement = ast.GetCompoundStatement();
-      Visitor visitor(stream_, ncount_);
-      compound_statement->Accept(visitor);
-      ncount_ = visitor.ncount_;
+      compound_statement->Accept(*this);
     }
 
     void Visit(AstVariableDeclaration<TMakeType, term_type>& ast) override {
       // auto& var_decls_cast = dynamic_cast<AstVariableDeclaration<pointer_type, TTerm>&>(*var_decls[i]);
       stream_ << "  node" << ncount_ << " [label=\"VarDecl\"]" << std::endl;
-      auto root_cnt = ncount_;
+      auto orig_cnt = ncount_;
       ncount_++;
       auto id = ast.GetId();
       stream_ << "  node" << ncount_ << " [label=\"" << id.GetValue() << "\"]" << std::endl;
-      stream_ << "  node" << root_cnt << " -> node" << ncount_ << std::endl;
+      stream_ << "  node" << orig_cnt << " -> node" << ncount_ << std::endl;
 
       ncount_++;
       auto type = ast.GetType();
       stream_ << "  node" << ncount_ << " [label=\"" << type.GetValue() << "\"]" << std::endl;
-      stream_ << "  node" << root_cnt << " -> node" << ncount_ << std::endl;
+      stream_ << "  node" << orig_cnt << " -> node" << ncount_ << std::endl;
     }
+
     void Visit(AstConst<TMakeType, term_type>& ast) override {
       auto const_type = ast.GetConstType();
       auto value = ast.GetValue();
@@ -97,51 +95,48 @@ class PrintAst {
       auto operand = ast.GetOperand();
 
       stream_ << "  node" << ncount_ << " [label=\"(unary)\n" << op_val << "\"]" << std::endl;
-      Visitor visitor(stream_, ncount_ + 1);
-      operand->Accept(visitor);
+      auto orig_cnt = ncount_;
+      ncount_++;
 
-      stream_ << "  node" << ncount_ << " -> node" << ncount_ + 1 << std::endl;
-      ncount_ = visitor.ncount_;
+      stream_ << "  node" << orig_cnt << " -> node" << ncount_ << std::endl;
+
+      operand->Accept(*this);
     }
 
     void Visit(AstCompoundStatement<TMakeType, term_type>& ast) override {
-      root_cnt_ = ncount_;
+      auto orig_cnt_ = ncount_;
       std::string label = "CompoundStatement";
-      stream_ << "  node" << root_cnt_ << " [label=\"" << label << "\"]" << std::endl;
+      stream_ << "  node" << orig_cnt_ << " [label=\"" << label << "\"]" << std::endl;
       auto statements = ast.GetStatements();
       for (int i = 0; i < statements.size(); i++) {
         auto& statement = statements[i];
-        Visitor visitor(stream_, ncount_ + 1);
+        ncount_++;
 
-        statement->Accept(visitor);
-        stream_ << "  node" << root_cnt_ << " -> node" << ncount_ + 1 << std::endl;
-        ncount_ = visitor.ncount_;
+        stream_ << "  node" << orig_cnt_ << " -> node" << ncount_ << std::endl;
+        statement->Accept(*this);
       }
     }
 
     void Visit(AstBinaryOp<TMakeType, term_type>& ast) override {
       auto op_val = ast.GetOperator().GetValue();
 
-      unsigned root_cnt = ncount_;
-      stream_ << "  node" << root_cnt << " [label=\"" << op_val << "\"]" << std::endl;
+      unsigned orig_cnt = ncount_;
+      stream_ << "  node" << orig_cnt << " [label=\"" << op_val << "\"]" << std::endl;
 
-      Visitor visitor_lhs(stream_, ncount_ + 1);
       auto operand_lhs = ast.GetOperandLhs();
-      operand_lhs->Accept(visitor_lhs);
-      stream_ << "  node" << root_cnt << " -> node" << ncount_ + 1 << std::endl;
-      ncount_ = visitor_lhs.ncount_;
+      ncount_++;
+      stream_ << "  node" << orig_cnt << " -> node" << ncount_ << std::endl;
+      operand_lhs->Accept(*this);
 
-      Visitor visitor_rhs(stream_, ncount_ + 1);
       auto operand_rhs = ast.GetOperandRhs();
-      operand_rhs->Accept(visitor_rhs);
-      stream_ << "  node" << root_cnt << " -> node" << ncount_ + 1 << std::endl;
-      ncount_ = visitor_rhs.ncount_;
+      ncount_++;
+      stream_ << "  node" << orig_cnt << " -> node" << ncount_ << std::endl;
+      operand_rhs->Accept(*this);
     }
 
    private:
     std::ostream& stream_;
     unsigned ncount_;
-    unsigned root_cnt_;
   };
 
   void Print(std::ostream& stream, nonterm_type node) {
