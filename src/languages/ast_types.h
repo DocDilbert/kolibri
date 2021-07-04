@@ -1,7 +1,7 @@
 #ifndef KOLIBRI_SRC_AST_TYPES_H_
 #define KOLIBRI_SRC_AST_TYPES_H_
 
-namespace base {
+namespace languages {
 template <typename T>
 class MakeShared {
  public:

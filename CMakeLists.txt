@@ -43,13 +43,13 @@ add_library(intertest_lib STATIC
 include_directories(src)
 add_executable(
   tests
-  tests/integration_test.cc
-  tests/base/ast_test.cc
-  tests/interpreter/interpreter_test.cc
+  tests/languages/calc/calc_integration_test.cc
+  tests/languages/calc/calc_interpreter_test.cc
+  tests/languages/calc/calc_parser_test.cc
+  tests/languages/calc/calc_lexer_test.cc
+  tests/languages/ast_test.cc
   tests/parser/parser_rules_test.cc
   tests/parser/parser_productions_test.cc
-  tests/parser/parser_test.cc
-  tests/lexer/lexer_test.cc
   tests/lexer/lexer_rules_test.cc
   tests/base/token_test.cc
 )

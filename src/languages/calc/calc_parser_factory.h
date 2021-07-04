@@ -1,21 +1,21 @@
 #ifndef KOLIBRI_SRC_CALC_PARSER_FACTORY_H_
 #define KOLIBRI_SRC_CALC_PARSER_FACTORY_H_
 
-#include "base/ast.h"
-#include "base/ast_types.h"
-#include "base/i_ast_factory.h"
+#include "languages/ast.h"
+#include "languages/ast_types.h"
+#include "languages/i_ast_factory.h"
 #include "languages/calc/calc_token.h"
 #include "parser/i_parser_factory.h"
 
 namespace languages {
 namespace calc {
 
-class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcToken> {
+class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<Ast<MakeShared, CalcToken>>, CalcToken> {
  public:
-  using nonterm_type = std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>;
+  using nonterm_type = std::shared_ptr<Ast<MakeShared, CalcToken>>;
   using term_type = CalcToken;
 
-  CalcParserFactory(base::IAstFactory<nonterm_type, term_type>& ast_factory) : ast_factory_(ast_factory) {}
+  CalcParserFactory(IAstFactory<nonterm_type, term_type>& ast_factory) : ast_factory_(ast_factory) {}
 
   nonterm_type CreateNull() override { return ast_factory_.CreateNull(); }
   nonterm_type CreateEmpty(parser::RuleId rule_id) override { return ast_factory_.CreateNop(); }
@@ -23,7 +23,7 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
   nonterm_type CreateTerm(parser::RuleId rule_id, term_type term) override {
     switch (rule_id) {
       case parser::RuleId::kRule2: {
-        return ast_factory_.CreateConst(base::ConstType::kInteger, term);
+        return ast_factory_.CreateConst(ConstType::kInteger, term);
       }
       default: {
         return ast_factory_.CreateNull();
@@ -75,7 +75,7 @@ class CalcParserFactory : public parser::IParserFactory<std::shared_ptr<base::As
   }
 
  private:
-  base::IAstFactory<nonterm_type, term_type>& ast_factory_;
+  IAstFactory<nonterm_type, term_type>& ast_factory_;
 };
 
 }  // namespace calc

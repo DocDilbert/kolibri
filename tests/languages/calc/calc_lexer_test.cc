@@ -30,7 +30,7 @@ using namespace lexer;
     EXPECT_EQ(token.GetId(), __equal_to__);    \
   }
 
-TEST(LexerTest, Lexer_Empty) {
+TEST(CalcLexerTest, Lexer_Empty) {
   stringstream ss;
   const char* line = "";
   CalcLexer lexer(line, 0);
@@ -39,7 +39,7 @@ TEST(LexerTest, Lexer_Empty) {
   NEXT_TOKEN_STRING_EQ(it, "Token(ENDOFFILE)");
 }
 
-TEST(LexerTest, Lexer_Empty_With_Whitespaces) {
+TEST(CalcLexerTest, Lexer_Empty_With_Whitespaces) {
   stringstream ss;
   const char* line = "   ";
   CalcLexer lexer(line, strlen(line));
@@ -48,7 +48,7 @@ TEST(LexerTest, Lexer_Empty_With_Whitespaces) {
   NEXT_TOKEN_STRING_EQ(it, "Token(ENDOFFILE)");
 }
 
-TEST(LexerTest, Lexer_Integer_Delimited_By_Null) {
+TEST(CalcLexerTest, Lexer_Integer_Delimited_By_Null) {
   stringstream ss;
   const char* line = "1\0002\0003";
   CalcLexer lexer(line, 5);
@@ -62,7 +62,7 @@ TEST(LexerTest, Lexer_Integer_Delimited_By_Null) {
   NEXT_TOKEN_STRING_EQ(it, "Token(ENDOFFILE)");
 }
 
-TEST(LexerTest, Lexer_Integer_OneDigit) {
+TEST(CalcLexerTest, Lexer_Integer_OneDigit) {
   stringstream ss;
   const char* line = "1";
 
@@ -73,7 +73,7 @@ TEST(LexerTest, Lexer_Integer_OneDigit) {
   NEXT_TOKEN_STRING_EQ(it, "Token(ENDOFFILE)");
 }
 
-TEST(LexerTest, Lexer_Equation_WithParenthesis) {
+TEST(CalcLexerTest, Lexer_Equation_WithParenthesis) {
   stringstream ss;
   const char* line = "(1+2)";
 
@@ -88,7 +88,7 @@ TEST(LexerTest, Lexer_Equation_WithParenthesis) {
   NEXT_TOKEN_STRING_EQ(it, "Token(ENDOFFILE)");
 }
 
-TEST(LexerTest, Lexer_Atomic_Plus) {
+TEST(CalcLexerTest, Lexer_Atomic_Plus) {
   stringstream ss;
   const char* line = "+";
 
@@ -99,7 +99,7 @@ TEST(LexerTest, Lexer_Atomic_Plus) {
   NEXT_TOKEN_STRING_EQ(it, "Token(ENDOFFILE)");
 }
 
-TEST(LexerTest, Lexer_Atomic_Minus) {
+TEST(CalcLexerTest, Lexer_Atomic_Minus) {
   stringstream ss;
   const char* line = "-";
 
@@ -110,7 +110,7 @@ TEST(LexerTest, Lexer_Atomic_Minus) {
   NEXT_TOKEN_STRING_EQ(it, "Token(ENDOFFILE)");
 }
 
-TEST(LexerTest, Lexer_Equation_3_p_2) {
+TEST(CalcLexerTest, Lexer_Equation_3_p_2) {
   stringstream ss;
   const char* line = "3+2";
 
@@ -123,7 +123,7 @@ TEST(LexerTest, Lexer_Equation_3_p_2) {
   NEXT_TOKEN_STRING_EQ(it, "Token(ENDOFFILE)");
 }
 
-TEST(LexerTest, Lexer_Equation_33_p_237) {
+TEST(CalcLexerTest, Lexer_Equation_33_p_237) {
   stringstream ss;
   const char* line = "33+237";
 
@@ -136,7 +136,7 @@ TEST(LexerTest, Lexer_Equation_33_p_237) {
   NEXT_TOKEN_STRING_EQ(it, "Token(ENDOFFILE)");
 }
 
-TEST(LexerTest, Lexer_Equation_33_p_237_With_Spaces) {
+TEST(CalcLexerTest, Lexer_Equation_33_p_237_With_Spaces) {
   stringstream ss;
   const char* line = "  33 + 237  ";
 
@@ -149,7 +149,7 @@ TEST(LexerTest, Lexer_Equation_33_p_237_With_Spaces) {
   NEXT_TOKEN_STRING_EQ(it, "Token(ENDOFFILE)");
 }
 
-TEST(LexerTest, Lexer_Two_Integers_With_Space) {
+TEST(CalcLexerTest, Lexer_Two_Integers_With_Space) {
   stringstream ss;
   const char* line = "33 237";
 
@@ -161,7 +161,7 @@ TEST(LexerTest, Lexer_Two_Integers_With_Space) {
   NEXT_TOKEN_STRING_EQ(it, "Token(ENDOFFILE)");
 }
 
-TEST(LexerTest, Lexer_Equation_33_p_237_With_Unkown_Char) {
+TEST(CalcLexerTest, Lexer_Equation_33_p_237_With_Unkown_Char) {
   stringstream ss;
   const char* line = "33\005+237";
 
@@ -175,7 +175,7 @@ TEST(LexerTest, Lexer_Equation_33_p_237_With_Unkown_Char) {
   NEXT_TOKEN_STRING_EQ(it, "Token(ENDOFFILE)");
 }
 
-TEST(LexerTest, Lexer_Equation_Iterator_Compare) {
+TEST(CalcLexerTest, Lexer_Equation_Iterator_Compare) {
   stringstream ss;
   const char* line = "33+237";
 
@@ -198,7 +198,7 @@ TEST(LexerTest, Lexer_Equation_Iterator_Compare) {
   EXPECT_EQ(it1, it2);
 }
 
-TEST(LexerTest, Lexer_Equation_Iterator_Compare_With_End) {
+TEST(CalcLexerTest, Lexer_Equation_Iterator_Compare_With_End) {
   stringstream ss;
   const char* line = "33+237\0";
 

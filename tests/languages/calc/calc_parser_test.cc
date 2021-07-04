@@ -41,7 +41,7 @@ class MockParserFactory : public IParserFactory<NonTermType, CalcToken> {
 };
 
 
-TEST(ParserTest, Integer) {
+TEST(CalcParserTest, Integer) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kInteger, "3", 1));
 
@@ -54,7 +54,7 @@ TEST(ParserTest, Integer) {
   EXPECT_EQ(result.node, "3");
 }
 
-TEST(ParserTest, Integer_With_Brace) {
+TEST(CalcParserTest, Integer_With_Brace) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kLParens, "(", 1));
   input.push_back(MockToken(CalcTokenId::kInteger, "3", 1));
@@ -69,7 +69,7 @@ TEST(ParserTest, Integer_With_Brace) {
   EXPECT_EQ(result.node, "3");
 }
 
-TEST(ParserTest, Integer_With_Double_Brace) {
+TEST(CalcParserTest, Integer_With_Double_Brace) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kLParens, "(", 1));
   input.push_back(MockToken(CalcTokenId::kLParens, "(", 1));
@@ -86,7 +86,7 @@ TEST(ParserTest, Integer_With_Double_Brace) {
   EXPECT_EQ(result.node, "3");
 }
 
-TEST(ParserTest, Equation_3_plus_2) {
+TEST(CalcParserTest, Equation_3_plus_2) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kInteger, "3", 1));
   input.push_back(MockToken(CalcTokenId::kPlus));
@@ -107,7 +107,7 @@ TEST(ParserTest, Equation_3_plus_2) {
   EXPECT_EQ(result.node, "ADD_3_2");
 }
 
-TEST(ParserTest, UnaryInteger) {
+TEST(CalcParserTest, UnaryInteger) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kMinus, "-", 1));
   input.push_back(MockToken(CalcTokenId::kInteger, "3", 1));
@@ -124,7 +124,7 @@ TEST(ParserTest, UnaryInteger) {
   EXPECT_EQ(result.node, "-3");
 }
 
-TEST(ParserTest, Equation_1_plus_3) {
+TEST(CalcParserTest, Equation_1_plus_3) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kInteger, "1", 1));
   input.push_back(MockToken(CalcTokenId::kPlus));
@@ -141,7 +141,7 @@ TEST(ParserTest, Equation_1_plus_3) {
 
   EXPECT_EQ(result.node, "ADD_1_3");
 }
-TEST(ParserTest, Equation_1_plus_minus_3) {
+TEST(CalcParserTest, Equation_1_plus_minus_3) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kInteger, "1", 1));
   input.push_back(MockToken(CalcTokenId::kPlus));
@@ -160,7 +160,7 @@ TEST(ParserTest, Equation_1_plus_minus_3) {
 
   EXPECT_EQ(result.node, "ADD_1_-3");
 }
-TEST(ParserTest, Equation_1_plus_2_plus_3) {
+TEST(CalcParserTest, Equation_1_plus_2_plus_3) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kInteger, "1", 1));
   input.push_back(MockToken(CalcTokenId::kPlus));
@@ -182,7 +182,7 @@ TEST(ParserTest, Equation_1_plus_2_plus_3) {
   EXPECT_EQ(result.node, "ADD_*_3");
 }
 
-TEST(ParserTest, Equation_1_plus_2_minus_3) {
+TEST(CalcParserTest, Equation_1_plus_2_minus_3) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kInteger, "1", 1));
   input.push_back(MockToken(CalcTokenId::kPlus));
@@ -204,7 +204,7 @@ TEST(ParserTest, Equation_1_plus_2_minus_3) {
   EXPECT_EQ(result.node, "SUB_*_3");
 }
 
-TEST(ParserTest, Equation_2_mul_2_mul_3) {
+TEST(CalcParserTest, Equation_2_mul_2_mul_3) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kInteger, "2", 1));
   input.push_back(MockToken(CalcTokenId::kMultiply));
@@ -225,7 +225,7 @@ TEST(ParserTest, Equation_2_mul_2_mul_3) {
   EXPECT_EQ(result.node, "MUL_*_3");
 }
 
-TEST(ParserTest, Equation_2_plus_7_mul_4) {
+TEST(CalcParserTest, Equation_2_plus_7_mul_4) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kInteger, "2", 1));
   input.push_back(MockToken(CalcTokenId::kPlus));
@@ -246,7 +246,7 @@ TEST(ParserTest, Equation_2_plus_7_mul_4) {
   EXPECT_EQ(result.node, "MUL_2_*");
 }
 
-TEST(ParserTest, Equation_lp_2_plus_7_rp_mul_4) {
+TEST(CalcParserTest, Equation_lp_2_plus_7_rp_mul_4) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kLParens, "(", 1));
   input.push_back(MockToken(CalcTokenId::kInteger, "2", 1));
@@ -269,7 +269,7 @@ TEST(ParserTest, Equation_lp_2_plus_7_rp_mul_4) {
   EXPECT_EQ(result.node, "MUL_*_4");
 }
 
-TEST(ParserTest, Equation_lp_1_plus_2_rp_mul_lp_2_plus_1_rp) {
+TEST(CalcParserTest, Equation_lp_1_plus_2_rp_mul_lp_2_plus_1_rp) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kLParens, "(", 1));
   input.push_back(MockToken(CalcTokenId::kInteger, "1", 1));
@@ -297,7 +297,7 @@ TEST(ParserTest, Equation_lp_1_plus_2_rp_mul_lp_2_plus_1_rp) {
   EXPECT_EQ(result.node, "MUL_*_*");
 }
 
-TEST(ParserTest, Equation_2_mul_2_mul_3_div_4) {
+TEST(CalcParserTest, Equation_2_mul_2_mul_3_div_4) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kInteger, "2", 1));
   input.push_back(MockToken(CalcTokenId::kMultiply, "*", 1));
@@ -322,7 +322,7 @@ TEST(ParserTest, Equation_2_mul_2_mul_3_div_4) {
   EXPECT_EQ(result.node, "DIV_*_4");
 }
 
-TEST(ParserTest, OneInteger_With_Missing_Closing_Brace) {
+TEST(CalcParserTest, OneInteger_With_Missing_Closing_Brace) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kLParens, "(", 1));
   input.push_back(MockToken(CalcTokenId::kInteger, "3", 1));
@@ -337,7 +337,7 @@ TEST(ParserTest, OneInteger_With_Missing_Closing_Brace) {
   EXPECT_EQ(result.error_msg, "Error: Rule#0 doesnt't match");
 }
 
-TEST(ParserTest, WrongFormat) {
+TEST(CalcParserTest, WrongFormat) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kInteger, "1", 1));
   input.push_back(MockToken(CalcTokenId::kInteger, "3", 1));
@@ -351,7 +351,7 @@ TEST(ParserTest, WrongFormat) {
   EXPECT_EQ(result.error_msg, "ERROR: Tokens left");
 }
 
-TEST(ParserTest, WrongFormat2) {
+TEST(CalcParserTest, WrongFormat2) {
   vector<MockToken> input;
   input.push_back(MockToken(CalcTokenId::kInteger, "1", 1));
   input.push_back(MockToken(CalcTokenId::kPlus, "+", 1));

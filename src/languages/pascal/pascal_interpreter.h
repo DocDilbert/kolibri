@@ -5,8 +5,9 @@
 #include <sstream>
 #include <string>
 
-#include "base/ast_types.h"
-#include "base/i_ast_visitor.h"
+#include "languages/ast.h"
+#include "languages/i_ast_visitor.h"
+
 
 namespace languages {
 namespace pascal {
@@ -35,7 +36,7 @@ class PascalState {
 template <template <class> class TMakeType, typename TTerm>
 class PascalInterpreter {
  public:
-  using nonterm_type = typename TMakeType<base::Ast<TMakeType, TTerm>>::type;
+  using nonterm_type = typename TMakeType<Ast<TMakeType, TTerm>>::type;
   using term_type = TTerm;
 
   struct RuleResult {
@@ -44,34 +45,34 @@ class PascalInterpreter {
     const char* error_msg;
   };
 
-  class Visitor : public base::IAstVisitor<TMakeType, term_type> {
+  class Visitor : public IAstVisitor<TMakeType, term_type> {
    public:
     Visitor(PascalState& state) : state_(state), last_num_(0) {}
     Visitor(Visitor const& visitor) : state_(visitor.state_), last_num_(0) {}
 
-    void Visit(base::AstProgram<TMakeType, term_type>& ast) override {
+    void Visit(AstProgram<TMakeType, term_type>& ast) override {
       Visitor visitor(*this);
       ast.GetProgram()->Accept(visitor);
     }
 
-    void Visit(base::AstBlock<TMakeType, term_type>& ast) override {
+    void Visit(AstBlock<TMakeType, term_type>& ast) override {
       Visitor visitor(*this);
       ast.GetCompoundStatement()->Accept(visitor);
     }
 
-    void Visit(base::AstVariableDeclaration<TMakeType, term_type>& ast) override {}
+    void Visit(AstVariableDeclaration<TMakeType, term_type>& ast) override {}
 
-    void Visit(base::AstConst<TMakeType, term_type>& ast) override {
+    void Visit(AstConst<TMakeType, term_type>& ast) override {
       auto const_type = ast.GetConstType();
       auto value = ast.GetValue();
 
       switch (const_type) {
-        case base::ConstType::kInteger: {
+        case ConstType::kInteger: {
           auto value_i = std::stoi(std::string(value.GetValue()));
           last_num_ = static_cast<double>(value_i);
           break;
         }
-        case base::ConstType::kReal: {
+        case ConstType::kReal: {
           auto value_d = std::stod(std::string(value.GetValue()));
           last_num_ = value_d;
           break;
@@ -82,14 +83,14 @@ class PascalInterpreter {
       }
     }
 
-    void Visit(base::AstNop<TMakeType, term_type>& ast) override {}
-    void Visit(base::AstId<TMakeType, term_type>& ast) override {
+    void Visit(AstNop<TMakeType, term_type>& ast) override {}
+    void Visit(AstId<TMakeType, term_type>& ast) override {
       std::string var_name = std::string(ast.GetName().GetValue());
       std::for_each(var_name.begin(), var_name.end(), [](char& c) { c = ::tolower(c); });
       last_num_ = state_.Get(std::string(var_name));
     }
 
-    void Visit(base::AstCompoundStatement<TMakeType, term_type>& ast) override {
+    void Visit(AstCompoundStatement<TMakeType, term_type>& ast) override {
       auto statements = ast.GetStatements();
       for (int i = 0; i < statements.size(); i++) {
         auto& statement = statements[i];
@@ -99,7 +100,7 @@ class PascalInterpreter {
       }
     }
 
-    void Visit(base::AstUnaryOp<TMakeType, term_type>& ast) override {
+    void Visit(AstUnaryOp<TMakeType, term_type>& ast) override {
       Visitor visitor(*this);
       auto operand = ast.GetOperand();
       operand->Accept(visitor);
@@ -117,7 +118,7 @@ class PascalInterpreter {
           break;
       }
     }
-    void Visit(base::AstBinaryOp<TMakeType, term_type>& ast) override {
+    void Visit(AstBinaryOp<TMakeType, term_type>& ast) override {
       auto operand_lhs = ast.GetOperandLhs();
       auto operand_rhs = ast.GetOperandRhs();
       switch (ast.GetOperator().GetId()) {
@@ -169,8 +170,8 @@ class PascalInterpreter {
         case term_type::id_type::kAssign: {
           Visitor visitor_rhs(*this);
 
-          assert(operand_lhs->GetTypeId() == base::AstTypeId::kAstId);
-          auto& id = dynamic_cast<base::AstId<base::MakeShared, term_type>&>(*operand_lhs);
+          assert(operand_lhs->GetTypeId() == AstTypeId::kAstId);
+          auto& id = dynamic_cast<AstId<MakeShared, term_type>&>(*operand_lhs);
           operand_rhs->Accept(visitor_rhs);
 
           std::string var_name = std::string(id.GetName().GetValue());

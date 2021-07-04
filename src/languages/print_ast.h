@@ -4,9 +4,10 @@
 #include <iostream>
 #include <string>
 
-#include "base/i_ast_visitor.h"
+#include "languages/ast_types.h"
+#include "languages/i_ast_visitor.h"
 
-namespace base {
+namespace languages {
 
 template <template <class> class TMakeType, typename TTerm>
 class PrintAst {
@@ -14,11 +15,11 @@ class PrintAst {
   using nonterm_type = typename TMakeType<Ast<TMakeType, TTerm>>::type;
   using term_type = TTerm;
 
-  class Visitor : public base::IAstVisitor<TMakeType, term_type> {
+  class Visitor : public IAstVisitor<TMakeType, term_type> {
    public:
     Visitor(std::ostream& stream, unsigned ncount) : stream_(stream), ncount_(ncount) {}
 
-    void Visit(base::AstProgram<TMakeType, term_type>& ast) override {
+    void Visit(AstProgram<TMakeType, term_type>& ast) override {
       auto program_id = ast.GetProgramId();
       assert(program_id->GetTypeId() == AstTypeId::kAstId);
 
@@ -33,7 +34,7 @@ class PrintAst {
       ncount_ = visitor.ncount_;
     }
 
-    void Visit(base::AstBlock<TMakeType, term_type>& ast) override {
+    void Visit(AstBlock<TMakeType, term_type>& ast) override {
       auto root_cnt = ncount_;
       stream_ << "  node" << root_cnt << " [label=\"Block\"]" << std::endl;
       auto var_decls = ast.GetVarDeclarations();
@@ -53,7 +54,7 @@ class PrintAst {
       ncount_ = visitor.ncount_;
     }
 
-    void Visit(base::AstVariableDeclaration<TMakeType, term_type>& ast) override {
+    void Visit(AstVariableDeclaration<TMakeType, term_type>& ast) override {
       // auto& var_decls_cast = dynamic_cast<AstVariableDeclaration<pointer_type, TTerm>&>(*var_decls[i]);
       stream_ << "  node" << ncount_ << " [label=\"VarDecl\"]" << std::endl;
       auto root_cnt = ncount_;
@@ -67,7 +68,7 @@ class PrintAst {
       stream_ << "  node" << ncount_ << " [label=\"" << type.GetValue() << "\"]" << std::endl;
       stream_ << "  node" << root_cnt << " -> node" << ncount_ << std::endl;
     }
-    void Visit(base::AstConst<TMakeType, term_type>& ast) override {
+    void Visit(AstConst<TMakeType, term_type>& ast) override {
       auto const_type = ast.GetConstType();
       auto value = ast.GetValue();
 
@@ -84,15 +85,15 @@ class PrintAst {
       }
     }
 
-    void Visit(base::AstNop<TMakeType, term_type>& ast) override { stream_ << "  node" << ncount_ << " [label=\"Nop\"]" << std::endl; }
+    void Visit(AstNop<TMakeType, term_type>& ast) override { stream_ << "  node" << ncount_ << " [label=\"Nop\"]" << std::endl; }
 
-    void Visit(base::AstId<TMakeType, term_type>& ast) override {
+    void Visit(AstId<TMakeType, term_type>& ast) override {
       stream_ << "  node" << ncount_ << " [label=\"Var:\\n" << ast.GetName().GetValue() << "\"]" << std::endl;
     }
 
-    void Visit(base::AstUnaryOp<TMakeType, term_type>& ast) override {
+    void Visit(AstUnaryOp<TMakeType, term_type>& ast) override {
       auto op_val = ast.GetOperator().GetValue();
-     
+
       auto operand = ast.GetOperand();
 
       stream_ << "  node" << ncount_ << " [label=\"(unary)\n" << op_val << "\"]" << std::endl;
@@ -103,7 +104,7 @@ class PrintAst {
       ncount_ = visitor.ncount_;
     }
 
-    void Visit(base::AstCompoundStatement<TMakeType, term_type>& ast) override {
+    void Visit(AstCompoundStatement<TMakeType, term_type>& ast) override {
       root_cnt_ = ncount_;
       std::string label = "CompoundStatement";
       stream_ << "  node" << root_cnt_ << " [label=\"" << label << "\"]" << std::endl;
@@ -118,7 +119,7 @@ class PrintAst {
       }
     }
 
-    void Visit(base::AstBinaryOp<TMakeType, term_type>& ast) override {
+    void Visit(AstBinaryOp<TMakeType, term_type>& ast) override {
       auto op_val = ast.GetOperator().GetValue();
 
       unsigned root_cnt = ncount_;
@@ -155,5 +156,5 @@ class PrintAst {
   }
 };
 
-}  // namespace base
+}  // namespace languages
 #endif

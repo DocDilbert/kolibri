@@ -3,7 +3,8 @@
 
 #include <string>
 
-#include "base/ast.h"
+#include "languages/ast.h"
+#include "languages/i_ast_visitor.h"
 
 namespace languages {
 namespace calc {
@@ -11,7 +12,7 @@ namespace calc {
 template <template <class> class TMakeType, typename TTerm>
 class CalcInterpreter {
  public:
-  using nonterm_type = typename TMakeType<base::Ast<TMakeType, TTerm>>::type;
+  using nonterm_type = typename TMakeType<Ast<TMakeType, TTerm>>::type;
   using term_type = TTerm;
 
   struct RuleResult {
@@ -20,16 +21,16 @@ class CalcInterpreter {
     const char* error_msg;
   };
 
-  class Visitor : public base::IAstVisitor<TMakeType, term_type> {
+  class Visitor : public IAstVisitor<TMakeType, term_type> {
    public:
-    void Visit(base::AstConst<TMakeType, term_type>& ast) override { num_ = std::stoi(std::string(ast.GetValue().GetValue())); }
-    void Visit(base::AstProgram<TMakeType, term_type>& ast) override {}
-    void Visit(base::AstBlock<TMakeType, term_type>& ast) override {}
-    void Visit(base::AstVariableDeclaration<TMakeType, term_type>& ast) override {}
-    void Visit(base::AstNop<TMakeType, term_type>& ast) override {}
-    void Visit(base::AstId<TMakeType, term_type>& ast) override {}
-    void Visit(base::AstCompoundStatement<TMakeType, term_type>& ast) override {}
-    void Visit(base::AstUnaryOp<TMakeType, term_type>& ast) override {
+    void Visit(AstConst<TMakeType, term_type>& ast) override { num_ = std::stoi(std::string(ast.GetValue().GetValue())); }
+    void Visit(AstProgram<TMakeType, term_type>& ast) override {}
+    void Visit(AstBlock<TMakeType, term_type>& ast) override {}
+    void Visit(AstVariableDeclaration<TMakeType, term_type>& ast) override {}
+    void Visit(AstNop<TMakeType, term_type>& ast) override {}
+    void Visit(AstId<TMakeType, term_type>& ast) override {}
+    void Visit(AstCompoundStatement<TMakeType, term_type>& ast) override {}
+    void Visit(AstUnaryOp<TMakeType, term_type>& ast) override {
       Visitor visitor;
       auto operand = ast.GetOperand();
       operand->Accept(visitor);
@@ -47,7 +48,7 @@ class CalcInterpreter {
           break;
       }
     }
-    void Visit(base::AstBinaryOp<TMakeType, term_type>& ast) override {
+    void Visit(AstBinaryOp<TMakeType, term_type>& ast) override {
       Visitor visitor_lhs;
       Visitor visitor_rhs;
 

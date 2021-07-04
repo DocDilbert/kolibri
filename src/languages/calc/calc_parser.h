@@ -1,10 +1,9 @@
 #ifndef KOLIBRI_SRC_CALC_PARSER_H_
 #define KOLIBRI_SRC_CALC_PARSER_H_
 
-#include "base/ast.h"
-#include "base/ast_types.h"
-#include "base/i_ast_factory.h"
 #include "base/token.h"
+#include "languages/ast.h"
+#include "languages/ast_types.h"
 #include "languages/calc/calc_lexer.h"
 #include "languages/calc/calc_token.h"
 #include "parser/i_parser_factory.h"
@@ -89,7 +88,7 @@ struct CalculatorGrammar : public parser::GrammarBase {
   // clang-format on
 };
 
-using CalcGrammar = CalculatorGrammar<std::shared_ptr<base::Ast<base::MakeShared, CalcToken>>, CalcLexer::iterator_type>::type;
+using CalcGrammar = CalculatorGrammar<std::shared_ptr<Ast<MakeShared, CalcToken>>, CalcLexer::iterator_type>::type;
 using CalcParser = parser::Parser<CalcGrammar>;
 
 }  // namespace calc

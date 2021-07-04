@@ -1,21 +1,21 @@
 #ifndef KOLIBRI_SRC_PASCAL_PARSER_FACTORY_H_
 #define KOLIBRI_SRC_PASCAL_PARSER_FACTORY_H_
 
-#include "base/ast.h"
-#include "base/ast_types.h"
-#include "base/i_ast_factory.h"
+#include "languages/ast.h"
+#include "languages/ast_types.h"
+#include "languages/i_ast_factory.h"
 #include "languages/pascal/pascal_token.h"
 #include "parser/i_parser_factory.h"
 
 namespace languages {
 namespace pascal {
 
-class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::Ast<base::MakeShared, PascalToken>>, PascalToken> {
+class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<Ast<MakeShared, PascalToken>>, PascalToken> {
  public:
-  using nonterm_type = std::shared_ptr<base::Ast<base::MakeShared, PascalToken>>;
+  using nonterm_type = std::shared_ptr<Ast<MakeShared, PascalToken>>;
   using term_type = PascalToken;
 
-  PascalParserFactory(base::IAstFactory<nonterm_type, term_type>& ast_factory) : ast_factory_(ast_factory) {}
+  PascalParserFactory(IAstFactory<nonterm_type, term_type>& ast_factory) : ast_factory_(ast_factory) {}
 
   nonterm_type CreateNull() override { return ast_factory_.CreateNull(); }
 
@@ -29,10 +29,10 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
       case parser::RuleId::kRule12: {  // factor
         switch (term.GetId()) {
           case PascalTokenId::kIntegerConst: {
-            return ast_factory_.CreateConst(base::ConstType::kInteger, term);
+            return ast_factory_.CreateConst(ConstType::kInteger, term);
           }
           case PascalTokenId::kRealConst: {
-            return ast_factory_.CreateConst(base::ConstType::kReal, term);
+            return ast_factory_.CreateConst(ConstType::kReal, term);
           }
           default: {
             return ast_factory_.CreateNull();
@@ -54,8 +54,8 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
   nonterm_type CreateNonTerm(parser::RuleId rule_id, nonterm_type nonterm) override {
     switch (rule_id) {
       case parser::RuleId::kRule5: {  // compound_statement
-        assert(nonterm->GetTypeId() == base::AstTypeId::kAstRawListType);
-        auto& raw_list = dynamic_cast<base::AstRawList<base::MakeShared, term_type>&>(*nonterm);
+        assert(nonterm->GetTypeId() == AstTypeId::kAstRawListType);
+        auto& raw_list = dynamic_cast<AstRawList<MakeShared, term_type>&>(*nonterm);
         return ast_factory_.CreateCompoundStatement(raw_list.Get());
       }
 
@@ -84,8 +84,8 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
         return ast_factory_.CreateProgram(lhs, rhs);
       }
       case parser::RuleId::kRule1: {  // block
-        assert(lhs->GetTypeId() == base::AstTypeId::kAstRawListType);
-        auto& var_decl_list = dynamic_cast<base::AstRawList<base::MakeShared, term_type>&>(*lhs);
+        assert(lhs->GetTypeId() == AstTypeId::kAstRawListType);
+        auto& var_decl_list = dynamic_cast<AstRawList<MakeShared, term_type>&>(*lhs);
 
         return ast_factory_.CreateBlock(var_decl_list.Get(), rhs);
       }
@@ -122,8 +122,8 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
 
         for (int i = 0; i < nonterms.size(); ++i) {
           auto nonterm = nonterms[i];
-          if (nonterm->GetTypeId() == base::AstTypeId::kAstRawListType) {
-            auto& var_decl_list = dynamic_cast<base::AstRawList<base::MakeShared, term_type>&>(*nonterm);
+          if (nonterm->GetTypeId() == AstTypeId::kAstRawListType) {
+            auto& var_decl_list = dynamic_cast<AstRawList<MakeShared, term_type>&>(*nonterm);
             auto var_decl_vector = var_decl_list.Get();
             var_decls.insert(var_decls.end(), var_decl_vector.begin(), var_decl_vector.end());
           }
@@ -152,10 +152,10 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
     }
 
     assert(nonterms.size() == 1);
-    assert(nonterms[0]->GetTypeId() == base::AstTypeId::kAstRawType);
+    assert(nonterms[0]->GetTypeId() == AstTypeId::kAstRawType);
 
     // extract from Raw node
-    auto type_term = dynamic_cast<base::AstRaw<base::MakeShared, term_type>&>(*nonterms[0]).GetTerm();
+    auto type_term = dynamic_cast<AstRaw<MakeShared, term_type>&>(*nonterms[0]).GetTerm();
 
     std::vector<nonterm_type> var_decls;
     for (int i = 0; i < id_terms.size(); ++i) {
@@ -166,7 +166,7 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<base::
   }
 
  private:
-  base::IAstFactory<nonterm_type, term_type>& ast_factory_;
+  IAstFactory<nonterm_type, term_type>& ast_factory_;
 };
 
 }  // namespace pascal

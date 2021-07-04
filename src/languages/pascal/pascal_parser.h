@@ -1,8 +1,8 @@
 #ifndef KOLIBRI_SRC_PASCAL_PARSER_H_
 #define KOLIBRI_SRC_PASCAL_PARSER_H_
 
-#include "base/ast_factory.h"
-#include "base/ast_types.h"
+#include "languages/ast_factory.h"
+#include "languages/ast_types.h"
 #include "languages/pascal/pascal_lexer.h"
 #include "languages/pascal/pascal_token.h"
 #include "parser/i_parser_factory.h"
@@ -208,7 +208,7 @@ struct PascalGrammar : public parser::GrammarBase {
 
   // clang-format on
 };
-using PascGrammar = PascalGrammar<std::shared_ptr<base::Ast<base::MakeShared, PascalToken>>, PascalLexer::iterator_type>::type;
+using PascGrammar = PascalGrammar<std::shared_ptr<Ast<MakeShared, PascalToken>>, PascalLexer::iterator_type>::type;
 using PascalParser = parser::Parser<PascGrammar>;
 
 }  // namespace pascal

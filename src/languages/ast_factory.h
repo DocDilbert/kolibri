@@ -6,10 +6,10 @@
 #include <string>
 #include <vector>
 
-#include "base/ast.h"
-#include "base/ast_types.h"
-#include "base/i_ast_factory.h"
-namespace base {
+#include "languages/ast.h"
+#include "languages/ast_types.h"
+#include "languages/i_ast_factory.h"
+namespace languages {
 
 template <typename TNonTerm, typename TTerm>
 class AstFactory : public IAstFactory<TNonTerm, TTerm> {
@@ -31,20 +31,16 @@ class AstFactory : public IAstFactory<TNonTerm, TTerm> {
 
   virtual nonterm_type CreateRaw(term_type term) override { return std::make_shared<AstRaw<MakeShared, TTerm>>(term); }
 
-  virtual nonterm_type CreateConst(ConstType const_type, term_type value) override {
-    return std::make_shared<AstConst<MakeShared, TTerm>>(const_type, value);
-  }
+  virtual nonterm_type CreateConst(ConstType const_type, term_type value) override { return std::make_shared<AstConst<MakeShared, TTerm>>(const_type, value); }
 
   virtual nonterm_type CreateCompoundStatement(std::vector<nonterm_type> statements) override {
     return std::make_shared<AstCompoundStatement<MakeShared, TTerm>>(statements);
   }
 
-  virtual nonterm_type CreateUnaryOp(term_type oper, nonterm_type operand) override {
-    return std::make_shared<AstUnaryOp<MakeShared, TTerm>>(oper, operand);
-  }
+  virtual nonterm_type CreateUnaryOp(term_type oper, nonterm_type operand) override { return std::make_shared<AstUnaryOp<MakeShared, TTerm>>(oper, operand); }
 
-  virtual nonterm_type CreateBinaryOp( nonterm_type operand_lhs, term_type oper, nonterm_type operand_rhs) override {
-    return std::make_shared<AstBinaryOp<MakeShared, TTerm>>( operand_lhs, oper, operand_rhs);
+  virtual nonterm_type CreateBinaryOp(nonterm_type operand_lhs, term_type oper, nonterm_type operand_rhs) override {
+    return std::make_shared<AstBinaryOp<MakeShared, TTerm>>(operand_lhs, oper, operand_rhs);
   }
 
   virtual nonterm_type CreateVariableDeclaration(term_type id, term_type type) override {
@@ -53,5 +49,5 @@ class AstFactory : public IAstFactory<TNonTerm, TTerm> {
 
   virtual nonterm_type CreateRawList(std::vector<TNonTerm> const& var_decls) override { return std::make_shared<AstRawList<MakeShared, TTerm>>(var_decls); }
 };
-}  // namespace base
+}  // namespace languages
 #endif

@@ -1,11 +1,11 @@
-#include "base/ast.h"
+#include "languages/ast.h"
 
 #include <gmock/gmock.h>  // Brings in Google Mock.
 #include <gtest/gtest.h>
 
 #include <memory>
 
-using namespace base;
+using namespace languages;
 using namespace std;
 
 using ::testing::_;

@@ -5,9 +5,9 @@
 
 #include "languages/calc/calc_interpreter.h"
 
-using namespace base;
 using namespace languages::calc;
 using namespace std;
+using namespace languages;
 
 using ::testing::_;
 using ::testing::Ref;

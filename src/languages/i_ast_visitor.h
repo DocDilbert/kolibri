@@ -1,9 +1,9 @@
 #ifndef KOLIBRI_SRC_I_AST_VISITOR_H_
 #define KOLIBRI_SRC_I_AST_VISITOR_H_
 
-#include "base/ast_id.h"
+#include "languages/ast_id.h"
 
-namespace base {
+namespace languages {
 
 template <template <class> class TMakeType, typename TTerm>
 class AstNop;

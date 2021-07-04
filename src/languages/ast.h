@@ -5,10 +5,10 @@
 #include <string>
 #include <vector>
 
-#include "base/ast_id.h"
-#include "base/i_ast_visitor.h"
+#include "languages/ast_id.h"
+#include "languages/i_ast_visitor.h"
 
-namespace base {
+namespace languages {
 
 enum class AstTypeId {
   kAstNop,

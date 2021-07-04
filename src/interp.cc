@@ -3,9 +3,9 @@
 #include <fstream>
 #include <iostream>
 #include <type_traits>
-#include "base/ast_factory.h"
-#include "base/ast_types.h"
-#include "base/print_ast.h"
+#include "languages/ast_factory.h"
+#include "languages/ast_types.h"
+#include "languages/print_ast.h"
 #include "languages/calc/calc_lexer.h"
 #include "languages/calc/calc_parser.h"
 #include "languages/pascal/pascal_interpreter.h"
@@ -19,6 +19,7 @@
 using namespace base;
 using namespace std;
 using namespace lexer;
+using namespace languages;
 using namespace languages::pascal;
 using namespace languages::calc;
 using namespace parser;
