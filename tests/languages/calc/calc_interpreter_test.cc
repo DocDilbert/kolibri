@@ -62,7 +62,7 @@ TEST(CalcInterpreterTest, Visit_Num) {
 
   CalcInterpreter<MockMakePtr, MockToken> CalcInterpreter;
   auto res = CalcInterpreter.Interpret(&ast_const);
-  EXPECT_EQ("3", res.expr);
+  EXPECT_EQ("3", res);
 }
 
 TEST(CalcInterpreterTest, Visit_Unary_Num) {
@@ -76,7 +76,7 @@ TEST(CalcInterpreterTest, Visit_Unary_Num) {
 
   CalcInterpreter<MockMakePtr, MockToken> CalcInterpreter;
   auto res = CalcInterpreter.Interpret(&ast_unary);
-  EXPECT_EQ("-3", res.expr);
+  EXPECT_EQ("-3", res);
 }
 
 TEST(CalcInterpreterTest, Visit_BinOp_Add_2Factors) {
@@ -97,7 +97,7 @@ TEST(CalcInterpreterTest, Visit_BinOp_Add_2Factors) {
 
   CalcInterpreter<MockMakePtr, MockToken> CalcInterpreter;
   auto res = CalcInterpreter.Interpret(&ast_bin_op);
-  EXPECT_EQ("8", res.expr);
+  EXPECT_EQ("8", res);
 }
 
 TEST(CalcInterpreterTest, Visit_BinOp_Add_3Factors) {
@@ -127,7 +127,7 @@ TEST(CalcInterpreterTest, Visit_BinOp_Add_3Factors) {
 
   CalcInterpreter<MockMakePtr, MockToken> CalcInterpreter;
   auto res = CalcInterpreter.Interpret(&ast_bin_op_2);
-  EXPECT_EQ("6", res.expr);
+  EXPECT_EQ("6", res);
 }
 
 TEST(CalcInterpreterTest, Visit_BinOp_Mul_2Factors) {
@@ -148,5 +148,5 @@ TEST(CalcInterpreterTest, Visit_BinOp_Mul_2Factors) {
 
   CalcInterpreter<MockMakePtr, MockToken> CalcInterpreter;
   auto res = CalcInterpreter.Interpret(&ast_bin_op);
-  EXPECT_EQ("15", res.expr);
+  EXPECT_EQ("15", res);
 }

@@ -24,7 +24,7 @@ using namespace languages::pascal;
 using namespace languages::calc;
 using namespace parser;
 
-#undef __NEW_HOOKS__
+#define __NEW_HOOKS__
 #ifdef __NEW_HOOKS__
 void * operator new(size_t size){
     int *p=(int*)malloc(size);

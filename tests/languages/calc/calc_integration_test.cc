@@ -34,8 +34,8 @@ TEST(CalcIntegrationTest, Num) {
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
   CalcInterpreter<MakeShared, CalcToken> CalcInterpreter;
 
-  auto CalcInterpreter_res = CalcInterpreter.Interpret(parser_res.node);
-  EXPECT_EQ("1", CalcInterpreter_res.expr);
+  auto res = CalcInterpreter.Interpret(parser_res.node);
+  EXPECT_EQ("1", res);
 }
 
 TEST(CalcIntegrationTest, Minus_Num) {
@@ -50,8 +50,8 @@ TEST(CalcIntegrationTest, Minus_Num) {
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
   CalcInterpreter<MakeShared, CalcToken> CalcInterpreter;
 
-  auto CalcInterpreter_res = CalcInterpreter.Interpret(parser_res.node);
-  EXPECT_EQ("-1", CalcInterpreter_res.expr);
+  auto res = CalcInterpreter.Interpret(parser_res.node);
+  EXPECT_EQ("-1", res);
 }
 
 TEST(CalcIntegrationTest, Equation_1_plus_2) {
@@ -66,8 +66,8 @@ TEST(CalcIntegrationTest, Equation_1_plus_2) {
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
   CalcInterpreter<MakeShared, CalcToken> CalcInterpreter;
 
-  auto CalcInterpreter_res = CalcInterpreter.Interpret(parser_res.node);
-  EXPECT_EQ("3", CalcInterpreter_res.expr);
+  auto res = CalcInterpreter.Interpret(parser_res.node);
+  EXPECT_EQ("3", res);
 }
 
 TEST(CalcIntegrationTest, Equation_m_1_p_2) {
@@ -82,8 +82,8 @@ TEST(CalcIntegrationTest, Equation_m_1_p_2) {
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
   CalcInterpreter<MakeShared, CalcToken> CalcInterpreter;
 
-  auto CalcInterpreter_res = CalcInterpreter.Interpret(parser_res.node);
-  EXPECT_EQ("1", CalcInterpreter_res.expr);
+  auto res = CalcInterpreter.Interpret(parser_res.node);
+  EXPECT_EQ("1", res);
 }
 
 TEST(CalcIntegrationTest, Equation_lp_1_p_2_rp) {
@@ -98,8 +98,8 @@ TEST(CalcIntegrationTest, Equation_lp_1_p_2_rp) {
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
   CalcInterpreter<MakeShared, CalcToken> CalcInterpreter;
 
-  auto CalcInterpreter_res = CalcInterpreter.Interpret(parser_res.node);
-  EXPECT_EQ("3", CalcInterpreter_res.expr);
+  auto res = CalcInterpreter.Interpret(parser_res.node);
+  EXPECT_EQ("3", res);
 }
 
 TEST(CalcIntegrationTest, Equation_lp_1_p_2_rp_mul_3) {
@@ -114,8 +114,8 @@ TEST(CalcIntegrationTest, Equation_lp_1_p_2_rp_mul_3) {
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
   CalcInterpreter<MakeShared, CalcToken> CalcInterpreter;
 
-  auto CalcInterpreter_res = CalcInterpreter.Interpret(parser_res.node);
-  EXPECT_EQ("9", CalcInterpreter_res.expr);
+  auto res = CalcInterpreter.Interpret(parser_res.node);
+  EXPECT_EQ("9", res);
 }
 
 TEST(CalcIntegrationTest, Equation_lp_1_p_2_rp_mul_lp_2_p_1_rp) {
@@ -130,6 +130,6 @@ TEST(CalcIntegrationTest, Equation_lp_1_p_2_rp_mul_lp_2_p_1_rp) {
   auto parser_res = parser.Expr(lexer.begin(), lexer.end());
   CalcInterpreter<MakeShared, CalcToken> CalcInterpreter;
 
-  auto CalcInterpreter_res = CalcInterpreter.Interpret(parser_res.node);
-  EXPECT_EQ("9", CalcInterpreter_res.expr);
+  auto res = CalcInterpreter.Interpret(parser_res.node);
+  EXPECT_EQ("9", res);
 }

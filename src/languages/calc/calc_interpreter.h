@@ -15,12 +15,6 @@ class CalcInterpreter {
   using nonterm_type = typename TMakeType<Ast<TMakeType, TTerm>>::type;
   using term_type = TTerm;
 
-  struct RuleResult {
-    std::string expr;
-    bool error;
-    const char* error_msg;
-  };
-
   class Visitor : public IAstVisitor<TMakeType, term_type> {
    public:
     VisitorReturn Visit(AstConst<TMakeType, term_type>& ast) override {
@@ -74,13 +68,13 @@ class CalcInterpreter {
     }
   };
 
-  RuleResult Interpret(nonterm_type node) {
+  std::string Interpret(nonterm_type node) {
     Visitor visitor;
 
     auto res = node->Accept(visitor);
     std::string expr = std::to_string(res.GetIntRepresentation());
 
-    return {expr, false, ""};
+    return expr;
   }
 };
 
