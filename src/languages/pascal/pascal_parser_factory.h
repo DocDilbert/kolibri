@@ -93,6 +93,7 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<Ast<Ma
         return ast_factory_.CreateNull();
       }
     }
+     // this should not happen
     return ast_factory_.CreateNull();
   }
 
@@ -113,6 +114,8 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<Ast<Ma
         return ast_factory_.CreateNull();
       }
     }
+     // this should not happen
+    return ast_factory_.CreateNull();
   }
 
   nonterm_type CreateNonTermList(parser::RuleId rule_id, std::vector<nonterm_type> nonterms) override {
@@ -137,8 +140,9 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<Ast<Ma
       default: {
         return ast_factory_.CreateNull();
       }
-        return ast_factory_.CreateNull();
     }
+     // this should not happen
+    return ast_factory_.CreateNull();
   }
 
   nonterm_type CreateTermNonTermList(parser::RuleId rule_id, std::vector<term_type> terms, std::vector<nonterm_type> nonterms) override {
@@ -162,6 +166,7 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<Ast<Ma
       auto id = id_terms[i];
       var_decls.push_back(ast_factory_.CreateVariableDeclaration(id, type_term));
     }
+     // this should not happen
     return ast_factory_.CreateRawList(var_decls);
   }
 
