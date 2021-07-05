@@ -5,13 +5,13 @@
 
 namespace languages {
 
-enum ReturnType { kNone, kInteger, kDouble };
+enum VisitorReturnType { kNone, kInteger, kDouble };
 
-struct VisitorReturnType {
-  VisitorReturnType() : return_type(kNone) {}
-  VisitorReturnType(int value) : return_type(kInteger), return_dbl(0.0f), return_int(value) {}
-  VisitorReturnType(double value) : return_type(kDouble), return_dbl(value), return_int(0) {}
-  ReturnType return_type;
+struct VisitorReturn {
+  VisitorReturn() : return_type(kNone) {}
+  VisitorReturn(int value) : return_type(kInteger), return_dbl(0.0f), return_int(value) {}
+  VisitorReturn(double value) : return_type(kDouble), return_dbl(value), return_int(0) {}
+  VisitorReturnType return_type;
   double return_dbl;
   int return_int;
 };
@@ -48,15 +48,15 @@ class IAstVisitor {
  public:
   using term_type = TTerm;
 
-  virtual VisitorReturnType Visit(AstId<TMakeType, TTerm>& ast) = 0;
-  virtual VisitorReturnType Visit(AstNop<TMakeType, TTerm>& ast) = 0;
-  virtual VisitorReturnType Visit(AstProgram<TMakeType, TTerm>& ast) = 0;
-  virtual VisitorReturnType Visit(AstBlock<TMakeType, TTerm>& ast) = 0;
-  virtual VisitorReturnType Visit(AstVariableDeclaration<TMakeType, TTerm>& ast) = 0;
-  virtual VisitorReturnType Visit(AstConst<TMakeType, TTerm>& ast) = 0;
-  virtual VisitorReturnType Visit(AstCompoundStatement<TMakeType, TTerm>& ast) = 0;
-  virtual VisitorReturnType Visit(AstUnaryOp<TMakeType, TTerm>& ast) = 0;
-  virtual VisitorReturnType Visit(AstBinaryOp<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturn Visit(AstId<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturn Visit(AstNop<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturn Visit(AstProgram<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturn Visit(AstBlock<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturn Visit(AstVariableDeclaration<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturn Visit(AstConst<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturn Visit(AstCompoundStatement<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturn Visit(AstUnaryOp<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturn Visit(AstBinaryOp<TMakeType, TTerm>& ast) = 0;
 };
 }  // namespace languages
 #endif

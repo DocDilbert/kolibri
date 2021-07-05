@@ -25,15 +25,15 @@ class MockMakePtr {
 
 class MockAstVisitor : public IAstVisitor<MockMakePtr, MockToken> {
  public:
-  MOCK_METHOD(VisitorReturnType, Visit, ((AstNop<MockMakePtr, MockToken> & ast)), (override));
-  MOCK_METHOD(VisitorReturnType, Visit, ((AstProgram<MockMakePtr, MockToken> & ast)), (override));
-  MOCK_METHOD(VisitorReturnType, Visit, ((AstBlock<MockMakePtr, MockToken> & ast)), (override));
-  MOCK_METHOD(VisitorReturnType, Visit, ((AstVariableDeclaration<MockMakePtr, MockToken> & ast)), (override));
-  MOCK_METHOD(VisitorReturnType, Visit, ((AstConst<MockMakePtr, MockToken> & ast)), (override));
-  MOCK_METHOD(VisitorReturnType, Visit, ((AstId<MockMakePtr, MockToken> & ast)), (override));
-  MOCK_METHOD(VisitorReturnType, Visit, ((AstCompoundStatement<MockMakePtr, MockToken> & ast)), (override));
-  MOCK_METHOD(VisitorReturnType, Visit, ((AstUnaryOp<MockMakePtr, MockToken> & ast)), (override));
-  MOCK_METHOD(VisitorReturnType, Visit, ((AstBinaryOp<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(VisitorReturn, Visit, ((AstNop<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(VisitorReturn, Visit, ((AstProgram<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(VisitorReturn, Visit, ((AstBlock<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(VisitorReturn, Visit, ((AstVariableDeclaration<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(VisitorReturn, Visit, ((AstConst<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(VisitorReturn, Visit, ((AstId<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(VisitorReturn, Visit, ((AstCompoundStatement<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(VisitorReturn, Visit, ((AstUnaryOp<MockMakePtr, MockToken> & ast)), (override));
+  MOCK_METHOD(VisitorReturn, Visit, ((AstBinaryOp<MockMakePtr, MockToken> & ast)), (override));
 };
 
 TEST(AstTest, Num) {

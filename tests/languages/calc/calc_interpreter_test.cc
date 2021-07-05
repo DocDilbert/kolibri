@@ -39,20 +39,20 @@ class MockMakePtr {
 class MockAstConst : public AstConst<MockMakePtr, MockToken> {
  public:
   explicit MockAstConst(ConstType const_type, term_type value) : AstConst<MockMakePtr, MockToken>(const_type, value) {}
-  MOCK_METHOD1(Accept, VisitorReturnType(IAstVisitor<MockMakePtr, MockToken>& value));
+  MOCK_METHOD1(Accept, VisitorReturn(IAstVisitor<MockMakePtr, MockToken>& value));
 };
 
 class MockAstUnaryOp : public AstUnaryOp<MockMakePtr, MockToken> {
  public:
   explicit MockAstUnaryOp(MockTokenId oper, nonterm_type operand) : AstUnaryOp<MockMakePtr, MockToken>(MockToken(oper), operand) {}
-  MOCK_METHOD1(Accept, VisitorReturnType(IAstVisitor<MockMakePtr, MockToken>& value));
+  MOCK_METHOD1(Accept, VisitorReturn(IAstVisitor<MockMakePtr, MockToken>& value));
 };
 
 class MockAstBinaryOp : public AstBinaryOp<MockMakePtr, MockToken> {
  public:
   explicit MockAstBinaryOp(MockTokenId oper, nonterm_type operand_lhs, nonterm_type operand_rhs)
       : AstBinaryOp<MockMakePtr, MockToken>(operand_lhs, MockToken(oper), operand_rhs) {}
-  MOCK_METHOD1(Accept, VisitorReturnType(IAstVisitor<MockMakePtr, MockToken>& value));
+  MOCK_METHOD1(Accept, VisitorReturn(IAstVisitor<MockMakePtr, MockToken>& value));
 };
 
 TEST(CalcInterpreterTest, Visit_Num) {

@@ -23,17 +23,17 @@ class CalcInterpreter {
 
   class Visitor : public IAstVisitor<TMakeType, term_type> {
    public:
-    VisitorReturnType Visit(AstConst<TMakeType, term_type>& ast) override {
+    VisitorReturn Visit(AstConst<TMakeType, term_type>& ast) override {
       int return_int = std::stoi(std::string(ast.GetValue().GetValue()));
-      return VisitorReturnType(return_int);
+      return VisitorReturn(return_int);
     }
-    VisitorReturnType Visit(AstProgram<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
-    VisitorReturnType Visit(AstBlock<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
-    VisitorReturnType Visit(AstVariableDeclaration<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
-    VisitorReturnType Visit(AstNop<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
-    VisitorReturnType Visit(AstId<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
-    VisitorReturnType Visit(AstCompoundStatement<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
-    VisitorReturnType Visit(AstUnaryOp<TMakeType, term_type>& ast) override {
+    VisitorReturn Visit(AstProgram<TMakeType, term_type>& ast) override { return VisitorReturn(); }
+    VisitorReturn Visit(AstBlock<TMakeType, term_type>& ast) override { return VisitorReturn(); }
+    VisitorReturn Visit(AstVariableDeclaration<TMakeType, term_type>& ast) override { return VisitorReturn(); }
+    VisitorReturn Visit(AstNop<TMakeType, term_type>& ast) override { return VisitorReturn(); }
+    VisitorReturn Visit(AstId<TMakeType, term_type>& ast) override { return VisitorReturn(); }
+    VisitorReturn Visit(AstCompoundStatement<TMakeType, term_type>& ast) override { return VisitorReturn(); }
+    VisitorReturn Visit(AstUnaryOp<TMakeType, term_type>& ast) override {
       auto operand = ast.GetOperand();
       auto res = operand->Accept(*this);
       int return_int = 0;
@@ -48,9 +48,9 @@ class CalcInterpreter {
         default:
           break;
       }
-      return VisitorReturnType(return_int);
+      return VisitorReturn(return_int);
     }
-    VisitorReturnType Visit(AstBinaryOp<TMakeType, term_type>& ast) override {
+    VisitorReturn Visit(AstBinaryOp<TMakeType, term_type>& ast) override {
       auto lhs_res = ast.GetOperandLhs()->Accept(*this);
       auto rhs_res = ast.GetOperandRhs()->Accept(*this);
       int return_int = 0;
@@ -70,7 +70,7 @@ class CalcInterpreter {
         default:
           break;
       }
-      return VisitorReturnType(return_int);
+      return VisitorReturn(return_int);
     }
   };
 
