@@ -133,7 +133,7 @@ class PascalParserFactory : public parser::IParserFactory<std::shared_ptr<Ast<Ma
         }
         return ast_factory_.CreateRawList(var_decls);
       }
-      case parser::RuleId::kRule6: {
+      case parser::RuleId::kRule6: { // statement_list
         return ast_factory_.CreateRawList(nonterms);
       }
 
