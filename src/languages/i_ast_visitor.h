@@ -9,10 +9,10 @@ enum VisitorReturnType { kNone, kInteger, kDouble };
 
 struct VisitorReturn {
   VisitorReturn() : return_type(kNone) {}
-  VisitorReturn(int value) : return_type(kInteger), return_dbl(0.0f), return_int(value) {}
-  VisitorReturn(double value) : return_type(kDouble), return_dbl(value), return_int(0) {}
+  VisitorReturn(int value) : return_type(kInteger), return_double(0.0f), return_int(value) {}
+  VisitorReturn(double value) : return_type(kDouble), return_double(value), return_int(0) {}
   VisitorReturnType return_type;
-  double return_dbl;
+  double return_double;
   int return_int;
 };
 

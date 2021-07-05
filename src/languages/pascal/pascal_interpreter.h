@@ -46,24 +46,24 @@ class PascalInterpreter {
 
   class Visitor : public IAstVisitor<TMakeType, term_type> {
    public:
-    Visitor(PascalState& state) : state_(state), return_double_(0) {}
+    Visitor(PascalState& state) : state_(state) {}
 
     VisitorReturn Visit(AstProgram<TMakeType, term_type>& ast) override {
       ast.GetProgram()->Accept(*this);
-      return VisitorReturn();  
+      return VisitorReturn();
     }
 
     VisitorReturn Visit(AstBlock<TMakeType, term_type>& ast) override {
       ast.GetCompoundStatement()->Accept(*this);
-      return VisitorReturn();  
+      return VisitorReturn();
     }
 
-    VisitorReturn Visit(AstVariableDeclaration<TMakeType, term_type>& ast) override {return VisitorReturn();  }
+    VisitorReturn Visit(AstVariableDeclaration<TMakeType, term_type>& ast) override { return VisitorReturn(); }
 
     VisitorReturn Visit(AstConst<TMakeType, term_type>& ast) override {
       auto const_type = ast.GetConstType();
       auto value = ast.GetValue();
-
+      double return_double_ = 0.0f;
       switch (const_type) {
         case ConstType::kInteger: {
           auto value_i = std::stoi(std::string(value.GetValue()));
@@ -79,17 +79,16 @@ class PascalInterpreter {
           break;
         }
       }
-      return VisitorReturn();  
+      return VisitorReturn(return_double_);
     }
 
-    VisitorReturn Visit(AstNop<TMakeType, term_type>& ast) override {return VisitorReturn();  }
-
+    VisitorReturn Visit(AstNop<TMakeType, term_type>& ast) override { return VisitorReturn(); }
 
     VisitorReturn Visit(AstId<TMakeType, term_type>& ast) override {
       std::string var_name = std::string(ast.GetName().GetValue());
       std::for_each(var_name.begin(), var_name.end(), [](char& c) { c = ::tolower(c); });
-      return_double_ = state_.Get(std::string(var_name));
-      return VisitorReturn();  
+      auto return_double_ = state_.Get(std::string(var_name));
+      return VisitorReturn(return_double_);
     }
 
     VisitorReturn Visit(AstCompoundStatement<TMakeType, term_type>& ast) override {
@@ -98,96 +97,83 @@ class PascalInterpreter {
         auto& statement = statements[i];
         statement->Accept(*this);
       }
-      return VisitorReturn();  
+      return VisitorReturn();
     }
 
     VisitorReturn Visit(AstUnaryOp<TMakeType, term_type>& ast) override {
       auto operand = ast.GetOperand();
-      operand->Accept(*this);
+      auto operand_result = operand->Accept(*this);
 
       auto type = ast.GetOperator().GetId();
+      double return_double_ = 0.0f;
       switch (type) {
         case term_type::id_type::kPlus: {
-          return_double_ = +return_double_; 
+          return_double_ = +operand_result.return_double;
           break;
         }
         case term_type::id_type::kMinus: {
-          return_double_ = -return_double_;
+          return_double_ = -operand_result.return_double;
           break;
         }
 
         default:
           break;
       }
-      return VisitorReturn();  
+      return VisitorReturn(return_double_);
     }
     VisitorReturn Visit(AstBinaryOp<TMakeType, term_type>& ast) override {
       auto operand_lhs = ast.GetOperandLhs();
       auto operand_rhs = ast.GetOperandRhs();
+      double return_double_ = 0.0f;
       switch (ast.GetOperator().GetId()) {
         case term_type::id_type::kPlus: {
-          operand_lhs->Accept(*this);
-          auto lhs = return_double_;
-          operand_rhs->Accept(*this);
-          auto rhs = return_double_;
-          return_double_ = lhs + rhs;
-          break;
+          auto lhs = operand_lhs->Accept(*this);
+          auto rhs = operand_rhs->Accept(*this);
+          return_double_ = lhs.return_double + rhs.return_double;
+          return VisitorReturn(return_double_);
         }
         case term_type::id_type::kMinus: {
-          operand_lhs->Accept(*this);
-          auto lhs = return_double_;
-          operand_rhs->Accept(*this);
-          auto rhs = return_double_;
-          return_double_ = lhs - rhs;
-          break;
+          auto lhs = operand_lhs->Accept(*this);
+          auto rhs = operand_rhs->Accept(*this);
+          return_double_ = lhs.return_double - rhs.return_double;
+          return VisitorReturn(return_double_);
         }
         case term_type::id_type::kMultiply: {
-          operand_lhs->Accept(*this);
-          auto lhs = return_double_;
-          operand_rhs->Accept(*this);
-          auto rhs = return_double_;
-          return_double_ = lhs * rhs;
-          break;
+          auto lhs = operand_lhs->Accept(*this);
+          auto rhs = operand_rhs->Accept(*this);
+          return_double_ = lhs.return_double * rhs.return_double;
+          return VisitorReturn(return_double_);
         }
         case term_type::id_type::kIntegerDiv: {
-          operand_lhs->Accept(*this);
-          auto lhs = return_double_;
-          operand_rhs->Accept(*this);
-          auto rhs = return_double_;
-          return_double_ = lhs / rhs;
-          break;
+          auto lhs = operand_lhs->Accept(*this);
+          auto rhs = operand_rhs->Accept(*this);
+          return_double_ = lhs.return_double / rhs.return_double;
+          return VisitorReturn(return_double_);
         }
         case term_type::id_type::kFloatDiv: {
-          operand_lhs->Accept(*this);
-          auto lhs = return_double_;
-          operand_rhs->Accept(*this);
-          auto rhs = return_double_;
-          return_double_ = lhs / rhs;
-          break;
+          auto lhs = operand_lhs->Accept(*this);
+          auto rhs = operand_rhs->Accept(*this);
+          return_double_ = lhs.return_double / rhs.return_double;
+          return VisitorReturn(return_double_);
         }
         case term_type::id_type::kAssign: {
           assert(operand_lhs->GetTypeId() == AstTypeId::kAstId);
           auto& id = dynamic_cast<AstId<MakeShared, term_type>&>(*operand_lhs);
-          
+
           std::string var_name = std::string(id.GetName().GetValue());
           std::for_each(var_name.begin(), var_name.end(), [](char& c) { c = ::tolower(c); });
 
-          operand_rhs->Accept(*this);
+          auto rhs = operand_rhs->Accept(*this);
 
-          state_.Assign(var_name, return_double_);
-          break;
+          state_.Assign(var_name, rhs.return_double);
+          return VisitorReturn();
         }
         default:
           break;
       }
-      return VisitorReturn();  
+      return VisitorReturn();
     }
-
-    double GetReturnDouble() { return return_double_; }
-
-
    private:
-    double return_double_;
     PascalState& state_;
   };
 
@@ -195,8 +181,6 @@ class PascalInterpreter {
     PascalState state;
     Visitor visitor(state);
     node->Accept(visitor);
-
-    std::string expr = std::to_string(visitor.GetReturnDouble());
 
     return state;
   }
