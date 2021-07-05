@@ -39,10 +39,10 @@ class CalcInterpreter {
       int return_int = 0;
       switch (ast.GetOperator().GetId()) {
         case term_type::id_type::kPlus:
-          return_int = res.return_int;
+          return_int = res.ret.int_;
           break;
         case term_type::id_type::kMinus:
-          return_int = -res.return_int;
+          return_int = -res.ret.int_;
           break;
 
         default:
@@ -56,16 +56,16 @@ class CalcInterpreter {
       int return_int = 0;
       switch (ast.GetOperator().GetId()) {
         case term_type::id_type::kPlus:
-          return_int = lhs_res.return_int + rhs_res.return_int;
+          return_int = lhs_res.ret.int_ + rhs_res.ret.int_;
           break;
         case term_type::id_type::kMinus:
-          return_int = lhs_res.return_int - rhs_res.return_int;
+          return_int = lhs_res.ret.int_ - rhs_res.ret.int_;
           break;
         case term_type::id_type::kMultiply:
-          return_int = lhs_res.return_int * rhs_res.return_int;
+          return_int = lhs_res.ret.int_ * rhs_res.ret.int_;
           break;
         case term_type::id_type::kDiv:
-          return_int = lhs_res.return_int / rhs_res.return_int;
+          return_int = lhs_res.ret.int_ / rhs_res.ret.int_;
           break;
         default:
           break;
@@ -78,7 +78,7 @@ class CalcInterpreter {
     Visitor visitor;
 
     auto res = node->Accept(visitor);
-    std::string expr = std::to_string(res.return_int);
+    std::string expr = std::to_string(res.ret.int_);
 
     return {expr, false, ""};
   }

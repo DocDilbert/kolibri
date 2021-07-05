@@ -6,14 +6,22 @@
 namespace languages {
 
 enum VisitorReturnType { kNone, kInteger, kDouble };
+union ReturnValues {
+  double double_;
+  int int_;
+};
 
 struct VisitorReturn {
   VisitorReturn() : return_type(kNone) {}
-  VisitorReturn(int value) : return_type(kInteger), return_double(0.0f), return_int(value) {}
-  VisitorReturn(double value) : return_type(kDouble), return_double(value), return_int(0) {}
+  VisitorReturn(int value) : return_type(kInteger), ret() {
+    ret.int_ = value;
+  }
+  VisitorReturn(double value) : return_type(kDouble), ret() {
+    ret.double_ = value;
+  }
+
   VisitorReturnType return_type;
-  double return_double;
-  int return_int;
+  ReturnValues ret;
 };
 
 template <template <class> class TMakeType, typename TTerm>
