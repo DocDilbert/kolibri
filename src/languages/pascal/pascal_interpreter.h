@@ -108,11 +108,11 @@ class PascalInterpreter {
       double return_double_ = 0.0f;
       switch (type) {
         case term_type::id_type::kPlus: {
-          return_double_ = +operand_result.ret.double_;
+          return_double_ = +operand_result.GetDoubleRepresentation();
           break;
         }
         case term_type::id_type::kMinus: {
-          return_double_ = -operand_result.ret.double_;
+          return_double_ = -operand_result.GetDoubleRepresentation();
           break;
         }
 
@@ -129,31 +129,31 @@ class PascalInterpreter {
         case term_type::id_type::kPlus: {
           auto lhs = operand_lhs->Accept(*this);
           auto rhs = operand_rhs->Accept(*this);
-          return_double_ = lhs.ret.double_ + rhs.ret.double_;
+          return_double_ = lhs.GetDoubleRepresentation() + rhs.GetDoubleRepresentation();
           return VisitorReturn(return_double_);
         }
         case term_type::id_type::kMinus: {
           auto lhs = operand_lhs->Accept(*this);
           auto rhs = operand_rhs->Accept(*this);
-          return_double_ = lhs.ret.double_ - rhs.ret.double_;
+          return_double_ = lhs.GetDoubleRepresentation() - rhs.GetDoubleRepresentation();
           return VisitorReturn(return_double_);
         }
         case term_type::id_type::kMultiply: {
           auto lhs = operand_lhs->Accept(*this);
           auto rhs = operand_rhs->Accept(*this);
-          return_double_ = lhs.ret.double_ * rhs.ret.double_;
+          return_double_ = lhs.GetDoubleRepresentation() * rhs.GetDoubleRepresentation();
           return VisitorReturn(return_double_);
         }
         case term_type::id_type::kIntegerDiv: {
           auto lhs = operand_lhs->Accept(*this);
           auto rhs = operand_rhs->Accept(*this);
-          return_double_ = lhs.ret.double_ / rhs.ret.double_;
+          return_double_ = lhs.GetDoubleRepresentation() / rhs.GetDoubleRepresentation();
           return VisitorReturn(return_double_);
         }
         case term_type::id_type::kFloatDiv: {
           auto lhs = operand_lhs->Accept(*this);
           auto rhs = operand_rhs->Accept(*this);
-          return_double_ = lhs.ret.double_ / rhs.ret.double_;
+          return_double_ = lhs.GetDoubleRepresentation() / rhs.GetDoubleRepresentation();
           return VisitorReturn(return_double_);
         }
         case term_type::id_type::kAssign: {
@@ -165,7 +165,7 @@ class PascalInterpreter {
 
           auto rhs = operand_rhs->Accept(*this);
 
-          state_.Assign(var_name, rhs.ret.double_);
+          state_.Assign(var_name, rhs.GetDoubleRepresentation());
           return VisitorReturn();
         }
         default:

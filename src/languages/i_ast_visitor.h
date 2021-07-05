@@ -13,14 +13,12 @@ union ReturnValues {
 
 struct VisitorReturn {
   VisitorReturn() : return_type(kNone) {}
-  VisitorReturn(int value) : return_type(kInteger), ret() {
-    ret.int_ = value;
-  }
-  VisitorReturn(double value) : return_type(kDouble), ret() {
-    ret.double_ = value;
-  }
-
+  VisitorReturn(int value) : return_type(kInteger), ret() { ret.int_ = value; }
+  VisitorReturn(double value) : return_type(kDouble), ret() { ret.double_ = value; }
+  double& GetDoubleRepresentation() { return ret.double_; }
+  int& GetIntRepresentation() { return ret.int_; }
   VisitorReturnType return_type;
+private:
   ReturnValues ret;
 };
 
