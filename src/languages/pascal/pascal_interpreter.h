@@ -48,17 +48,19 @@ class PascalInterpreter {
    public:
     Visitor(PascalState& state) : state_(state), return_double_(0) {}
 
-    void Visit(AstProgram<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstProgram<TMakeType, term_type>& ast) override {
       ast.GetProgram()->Accept(*this);
+      return VisitorReturnType();  
     }
 
-    void Visit(AstBlock<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstBlock<TMakeType, term_type>& ast) override {
       ast.GetCompoundStatement()->Accept(*this);
+      return VisitorReturnType();  
     }
 
-    void Visit(AstVariableDeclaration<TMakeType, term_type>& ast) override {}
+    VisitorReturnType Visit(AstVariableDeclaration<TMakeType, term_type>& ast) override {return VisitorReturnType();  }
 
-    void Visit(AstConst<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstConst<TMakeType, term_type>& ast) override {
       auto const_type = ast.GetConstType();
       auto value = ast.GetValue();
 
@@ -77,26 +79,29 @@ class PascalInterpreter {
           break;
         }
       }
+      return VisitorReturnType();  
     }
 
-    void Visit(AstNop<TMakeType, term_type>& ast) override {}
+    VisitorReturnType Visit(AstNop<TMakeType, term_type>& ast) override {return VisitorReturnType();  }
 
 
-    void Visit(AstId<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstId<TMakeType, term_type>& ast) override {
       std::string var_name = std::string(ast.GetName().GetValue());
       std::for_each(var_name.begin(), var_name.end(), [](char& c) { c = ::tolower(c); });
       return_double_ = state_.Get(std::string(var_name));
+      return VisitorReturnType();  
     }
 
-    void Visit(AstCompoundStatement<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstCompoundStatement<TMakeType, term_type>& ast) override {
       auto statements = ast.GetStatements();
       for (int i = 0; i < statements.size(); i++) {
         auto& statement = statements[i];
         statement->Accept(*this);
       }
+      return VisitorReturnType();  
     }
 
-    void Visit(AstUnaryOp<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstUnaryOp<TMakeType, term_type>& ast) override {
       auto operand = ast.GetOperand();
       operand->Accept(*this);
 
@@ -114,8 +119,9 @@ class PascalInterpreter {
         default:
           break;
       }
+      return VisitorReturnType();  
     }
-    void Visit(AstBinaryOp<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstBinaryOp<TMakeType, term_type>& ast) override {
       auto operand_lhs = ast.GetOperandLhs();
       auto operand_rhs = ast.GetOperandRhs();
       switch (ast.GetOperator().GetId()) {
@@ -174,6 +180,7 @@ class PascalInterpreter {
         default:
           break;
       }
+      return VisitorReturnType();  
     }
 
     double GetReturnDouble() { return return_double_; }
@@ -188,7 +195,7 @@ class PascalInterpreter {
     PascalState state;
     Visitor visitor(state);
     node->Accept(visitor);
-    
+
     std::string expr = std::to_string(visitor.GetReturnDouble());
 
     return state;

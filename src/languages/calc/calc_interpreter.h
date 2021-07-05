@@ -23,17 +23,19 @@ class CalcInterpreter {
 
   class Visitor : public IAstVisitor<TMakeType, term_type> {
    public:
-    void Visit(AstConst<TMakeType, term_type>& ast) override { return_int_ = std::stoi(std::string(ast.GetValue().GetValue())); }
-    void Visit(AstProgram<TMakeType, term_type>& ast) override {}
-    void Visit(AstBlock<TMakeType, term_type>& ast) override {}
-    void Visit(AstVariableDeclaration<TMakeType, term_type>& ast) override {}
-    void Visit(AstNop<TMakeType, term_type>& ast) override {}
-    void Visit(AstId<TMakeType, term_type>& ast) override {}
-    void Visit(AstCompoundStatement<TMakeType, term_type>& ast) override {}
-    void Visit(AstUnaryOp<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstConst<TMakeType, term_type>& ast) override {
+      return_int_ = std::stoi(std::string(ast.GetValue().GetValue()));
+      return VisitorReturnType();
+    }
+    VisitorReturnType Visit(AstProgram<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
+    VisitorReturnType Visit(AstBlock<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
+    VisitorReturnType Visit(AstVariableDeclaration<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
+    VisitorReturnType Visit(AstNop<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
+    VisitorReturnType Visit(AstId<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
+    VisitorReturnType Visit(AstCompoundStatement<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
+    VisitorReturnType Visit(AstUnaryOp<TMakeType, term_type>& ast) override {
       auto operand = ast.GetOperand();
       operand->Accept(*this);
-  
 
       switch (ast.GetOperator().GetId()) {
         case term_type::id_type::kPlus:
@@ -46,13 +48,13 @@ class CalcInterpreter {
         default:
           break;
       }
+      return VisitorReturnType();
     }
-    void Visit(AstBinaryOp<TMakeType, term_type>& ast) override {
-
+    VisitorReturnType Visit(AstBinaryOp<TMakeType, term_type>& ast) override {
       ast.GetOperandLhs()->Accept(*this);
-      auto lhs_res = return_int_; 
+      auto lhs_res = return_int_;
       ast.GetOperandRhs()->Accept(*this);
-      auto rhs_res = return_int_; 
+      auto rhs_res = return_int_;
 
       switch (ast.GetOperator().GetId()) {
         case term_type::id_type::kPlus:
@@ -70,6 +72,7 @@ class CalcInterpreter {
         default:
           break;
       }
+      return VisitorReturnType();
     }
 
     int GetReturnInt() { return return_int_; }

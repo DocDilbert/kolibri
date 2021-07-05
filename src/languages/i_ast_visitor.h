@@ -5,6 +5,9 @@
 
 namespace languages {
 
+struct VisitorReturnType {
+};
+
 template <template <class> class TMakeType, typename TTerm>
 class AstNop;
 
@@ -37,15 +40,15 @@ class IAstVisitor {
  public:
   using term_type = TTerm;
 
-  virtual void Visit(AstId<TMakeType, TTerm>& ast) = 0;
-  virtual void Visit(AstNop<TMakeType, TTerm>& ast) = 0;
-  virtual void Visit(AstProgram<TMakeType, TTerm>& ast) = 0;
-  virtual void Visit(AstBlock<TMakeType, TTerm>& ast) = 0;
-  virtual void Visit(AstVariableDeclaration<TMakeType, TTerm>& ast) = 0;
-  virtual void Visit(AstConst<TMakeType, TTerm>& ast) = 0;
-  virtual void Visit(AstCompoundStatement<TMakeType, TTerm>& ast) = 0;
-  virtual void Visit(AstUnaryOp<TMakeType, TTerm>& ast) = 0;
-  virtual void Visit(AstBinaryOp<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturnType Visit(AstId<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturnType Visit(AstNop<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturnType Visit(AstProgram<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturnType Visit(AstBlock<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturnType Visit(AstVariableDeclaration<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturnType Visit(AstConst<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturnType Visit(AstCompoundStatement<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturnType Visit(AstUnaryOp<TMakeType, TTerm>& ast) = 0;
+  virtual VisitorReturnType Visit(AstBinaryOp<TMakeType, TTerm>& ast) = 0;
 };
 }  // namespace base
 #endif

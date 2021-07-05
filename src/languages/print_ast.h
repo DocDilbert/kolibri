@@ -19,7 +19,7 @@ class PrintAst {
    public:
     Visitor(std::ostream& stream) : stream_(stream), node_id_(0) {}
 
-    void Visit(AstProgram<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstProgram<TMakeType, term_type>& ast) override {
       auto program_id = ast.GetProgramId();
       assert(program_id->GetTypeId() == AstTypeId::kAstId);
 
@@ -33,9 +33,10 @@ class PrintAst {
 
       auto program = ast.GetProgram();
       program->Accept(*this);
+      return VisitorReturnType();  
     }
 
-    void Visit(AstBlock<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstBlock<TMakeType, term_type>& ast) override {
       auto rood_node_id = node_id_;
       stream_ << "  node" << rood_node_id << " [label=\"Block\"]" << std::endl;
       auto var_decls = ast.GetVarDeclarations();
@@ -49,9 +50,10 @@ class PrintAst {
       stream_ << "  node" << rood_node_id << " -> node" << node_id_ << std::endl;
       auto compound_statement = ast.GetCompoundStatement();
       compound_statement->Accept(*this);
+      return VisitorReturnType();  
     }
 
-    void Visit(AstVariableDeclaration<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstVariableDeclaration<TMakeType, term_type>& ast) override {
       // auto& var_decls_cast = dynamic_cast<AstVariableDeclaration<pointer_type, TTerm>&>(*var_decls[i]);
       stream_ << "  node" << node_id_ << " [label=\"VarDecl\"]" << std::endl;
       auto rood_node_id = node_id_;
@@ -64,9 +66,10 @@ class PrintAst {
       auto type = ast.GetType();
       stream_ << "  node" << node_id_ << " [label=\"" << type.GetValue() << "\"]" << std::endl;
       stream_ << "  node" << rood_node_id << " -> node" << node_id_ << std::endl;
+      return VisitorReturnType();  
     }
 
-    void Visit(AstConst<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstConst<TMakeType, term_type>& ast) override {
       auto const_type = ast.GetConstType();
       auto value = ast.GetValue();
 
@@ -81,15 +84,17 @@ class PrintAst {
           assert(true);
           break;
       }
+      return VisitorReturnType();  
     }
 
-    void Visit(AstNop<TMakeType, term_type>& ast) override { stream_ << "  node" << node_id_ << " [label=\"Nop\"]" << std::endl; }
+    VisitorReturnType Visit(AstNop<TMakeType, term_type>& ast) override { stream_ << "  node" << node_id_ << " [label=\"Nop\"]" << std::endl;return VisitorReturnType();   }
 
-    void Visit(AstId<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstId<TMakeType, term_type>& ast) override {
       stream_ << "  node" << node_id_ << " [label=\"Var:\\n" << ast.GetName().GetValue() << "\"]" << std::endl;
+      return VisitorReturnType();  
     }
 
-    void Visit(AstUnaryOp<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstUnaryOp<TMakeType, term_type>& ast) override {
       auto op_val = ast.GetOperator().GetValue();
 
       auto operand = ast.GetOperand();
@@ -100,9 +105,10 @@ class PrintAst {
 
       stream_ << "  node" << rood_node_id << " -> node" << node_id_ << std::endl;
       operand->Accept(*this);
+      return VisitorReturnType();  
     }
 
-    void Visit(AstCompoundStatement<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstCompoundStatement<TMakeType, term_type>& ast) override {
       auto rood_node_id = node_id_;
       std::string label = "CompoundStatement";
       stream_ << "  node" << rood_node_id << " [label=\"" << label << "\"]" << std::endl;
@@ -114,9 +120,10 @@ class PrintAst {
         stream_ << "  node" << rood_node_id << " -> node" << node_id_ << std::endl;
         statement->Accept(*this);
       }
+      return VisitorReturnType();  
     }
 
-    void Visit(AstBinaryOp<TMakeType, term_type>& ast) override {
+    VisitorReturnType Visit(AstBinaryOp<TMakeType, term_type>& ast) override {
       auto op_val = ast.GetOperator().GetValue();
 
       unsigned rood_node_id = node_id_;
@@ -131,6 +138,7 @@ class PrintAst {
       node_id_++;
       stream_ << "  node" << rood_node_id << " -> node" << node_id_ << std::endl;
       operand_rhs->Accept(*this);
+      return VisitorReturnType();  
     }
 
    private:
