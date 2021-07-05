@@ -131,7 +131,11 @@ struct PascalGrammar : public parser::GrammarBase {
     // Rule #8 - assignment_statement
     // assignment_statement : variable ASSIGN expr
     Rule<parser::NonTermTermNonTermProduction,
-      SequenceExpr< NonTermExpr<parser::RuleId::kRule13>, TermExpr<PascalTokenPredicate<PascalTokenId::kAssign>>, NonTermExpr<parser::RuleId::kRule10>>
+      SequenceExpr< 
+        NonTermExpr<parser::RuleId::kRule13>, 
+        TermExpr<PascalTokenPredicate<PascalTokenId::kAssign>>, 
+        NonTermExpr<parser::RuleId::kRule10>
+      >
     >,
 
     // Rule #9 - empty
@@ -139,7 +143,7 @@ struct PascalGrammar : public parser::GrammarBase {
     Rule<parser::EmptyProduction, EmptyExpr>,
 
     // Rule #10 - expr
-    // expr : term ((kPlus | kMinus) term)*
+    // expr : term ((PLUS | MINUS) term)*
     Rule<parser::NonTermTermNonTermSequenceProduction,
       SequenceExpr<
         NonTermExpr<parser::RuleId::kRule11>,
@@ -174,8 +178,8 @@ struct PascalGrammar : public parser::GrammarBase {
     >,
 
     // Rule #12 - factor
-    // factor : kPlus factor
-    //        | kMinus factor
+    // factor : PLUS factor
+    //        | MINUS factor
     //        | INTEGER_CONST
     //        | REAL_CONST
     //        | LPAREN expr RPAREN
