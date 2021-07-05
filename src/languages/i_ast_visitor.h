@@ -5,7 +5,15 @@
 
 namespace languages {
 
+enum ReturnType { kNone, kInteger, kDouble };
+
 struct VisitorReturnType {
+  VisitorReturnType() : return_type(kNone) {}
+  VisitorReturnType(int value) : return_type(kInteger), return_dbl(0.0f), return_int(value) {}
+  VisitorReturnType(double value) : return_type(kDouble), return_dbl(value), return_int(0) {}
+  ReturnType return_type;
+  double return_dbl;
+  int return_int;
 };
 
 template <template <class> class TMakeType, typename TTerm>
@@ -50,5 +58,5 @@ class IAstVisitor {
   virtual VisitorReturnType Visit(AstUnaryOp<TMakeType, TTerm>& ast) = 0;
   virtual VisitorReturnType Visit(AstBinaryOp<TMakeType, TTerm>& ast) = 0;
 };
-}  // namespace base
+}  // namespace languages
 #endif

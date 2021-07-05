@@ -24,8 +24,8 @@ class CalcInterpreter {
   class Visitor : public IAstVisitor<TMakeType, term_type> {
    public:
     VisitorReturnType Visit(AstConst<TMakeType, term_type>& ast) override {
-      return_int_ = std::stoi(std::string(ast.GetValue().GetValue()));
-      return VisitorReturnType();
+      int return_int = std::stoi(std::string(ast.GetValue().GetValue()));
+      return VisitorReturnType(return_int);
     }
     VisitorReturnType Visit(AstProgram<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
     VisitorReturnType Visit(AstBlock<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
@@ -35,57 +35,50 @@ class CalcInterpreter {
     VisitorReturnType Visit(AstCompoundStatement<TMakeType, term_type>& ast) override { return VisitorReturnType(); }
     VisitorReturnType Visit(AstUnaryOp<TMakeType, term_type>& ast) override {
       auto operand = ast.GetOperand();
-      operand->Accept(*this);
-
+      auto res = operand->Accept(*this);
+      int return_int = 0;
       switch (ast.GetOperator().GetId()) {
         case term_type::id_type::kPlus:
-          return_int_ = +return_int_;
+          return_int = res.return_int;
           break;
         case term_type::id_type::kMinus:
-          return_int_ = -return_int_;
+          return_int = -res.return_int;
           break;
 
         default:
           break;
       }
-      return VisitorReturnType();
+      return VisitorReturnType(return_int);
     }
     VisitorReturnType Visit(AstBinaryOp<TMakeType, term_type>& ast) override {
-      ast.GetOperandLhs()->Accept(*this);
-      auto lhs_res = return_int_;
-      ast.GetOperandRhs()->Accept(*this);
-      auto rhs_res = return_int_;
-
+      auto lhs_res = ast.GetOperandLhs()->Accept(*this);
+      auto rhs_res = ast.GetOperandRhs()->Accept(*this);
+      int return_int = 0;
       switch (ast.GetOperator().GetId()) {
         case term_type::id_type::kPlus:
-          return_int_ = lhs_res + rhs_res;
+          return_int = lhs_res.return_int + rhs_res.return_int;
           break;
         case term_type::id_type::kMinus:
-          return_int_ = lhs_res - rhs_res;
+          return_int = lhs_res.return_int - rhs_res.return_int;
           break;
         case term_type::id_type::kMultiply:
-          return_int_ = lhs_res * rhs_res;
+          return_int = lhs_res.return_int * rhs_res.return_int;
           break;
         case term_type::id_type::kDiv:
-          return_int_ = lhs_res / rhs_res;
+          return_int = lhs_res.return_int / rhs_res.return_int;
           break;
         default:
           break;
       }
-      return VisitorReturnType();
+      return VisitorReturnType(return_int);
     }
-
-    int GetReturnInt() { return return_int_; }
-
-   private:
-    int return_int_;
   };
 
   RuleResult Interpret(nonterm_type node) {
     Visitor visitor;
 
-    node->Accept(visitor);
-    std::string expr = std::to_string(visitor.GetReturnInt());
+    auto res = node->Accept(visitor);
+    std::string expr = std::to_string(res.return_int);
 
     return {expr, false, ""};
   }
